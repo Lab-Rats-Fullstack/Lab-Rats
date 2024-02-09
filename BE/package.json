@@ -1,0 +1,19 @@
+{
+  "name": "capstone-be",
+  "version": "1.0.0",
+  "description": "backend folder for capstone project",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+ssh://git@github.com/ljreaux/Lab-Rats.git"
+  },
+  "author": "Lisa Barry, Allison Meadors, Larry Reaux, Jared May",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ljreaux/Lab-Rats/issues"
+  },
+  "homepage": "https://github.com/ljreaux/Lab-Rats#readme"
+}
