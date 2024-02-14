@@ -163,6 +163,154 @@ async function getRecipesByUser(userId) {
     }
   }
 
+// CREATE RECIPE IN DB
+async function createRecipe({
+  userId,
+  title,
+  ingredients,
+  content,
+  imgUrl,
+  tags = []
+}) {
+  try {
+    const { rows: [ recipe ] } = await client.query(`
+      INSERT INTO recipes(user, title, ingredients, content, imgUrl) 
+      VALUES($1, $2, $3, $4, $5)
+      RETURNING *;
+    `, [userId, title, ingredients, content, imgUrl]);
+
+    const tagList = await createTags(tags); 
+
+    return await addTagsToRecipe(recipe.id, tagList); 
+  } catch (error) {
+    throw error;
+  }
+}
+
+// EDIT RECIPE IN DB
+async function updateRecipe(recipeId, fields = {}) {
+  // read off the tags & remove that field 
+  const { tags } = fields; // might be undefined
+  delete fields.tags;
+
+  // build the set string
+  const setString = Object.keys(fields).map(
+    (key, index) => `"${ key }"=$${ index + 1 }`
+  ).join(', ');
+
+  try {
+    // update any fields that need to be updated
+    if (setString.length > 0) {
+      await client.query(`
+        UPDATE recipes
+        SET ${ setString }
+        WHERE id=${ recipeId }
+        RETURNING *;
+      `, Object.values(fields));
+    }
+
+    // return early if there's no tags to update
+    if (tags === undefined) {
+      return await getRecipeById(recipeId);
+    }
+
+    // make any new tags that need to be made
+    const tagList = await createTags(tags); 
+    const tagListIdString = tagList.map(
+      tag => `${ tag.id }`
+    ).join(', ');
+
+    // delete any recipe_tags from the database which aren't in that tagList
+    await client.query(`
+      DELETE FROM recipe_tags
+      WHERE tagId
+      NOT IN (${ tagListIdString })
+      AND recipeId=$1;
+    `, [recipeId]);
+    
+    // and create post_tags as necessary
+    await addTagsToRecipe(recipeId, tagList); 
+
+    return await getRecipeById(recipeId);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * TAGS Methods
+ */
+
+// CREATE TAGS IN DB
+async function createTags(tagList) {
+  if (tagList.length === 0) {
+    return;
+  }
+
+  const valuesStringInsert = tagList.map(
+    (_, index) => `$${index + 1}`
+  ).join('), (');
+
+  const valuesStringSelect = tagList.map(
+    (_, index) => `$${index + 1}`
+  ).join(', ');
+
+  try {
+    // insert all, ignoring duplicates
+    await client.query(`
+      INSERT INTO tags(name)
+      VALUES (${ valuesStringInsert })
+      ON CONFLICT (name) DO NOTHING;
+    `, tagList);
+
+    // grab all and return
+    const { rows } = await client.query(`
+      SELECT * FROM tags
+      WHERE name
+      IN (${ valuesStringSelect });
+    `, tagList);
+
+    return rows;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// CREATE ALL RECIPE_TAGS NECESSARY
+async function addTagsToRecipe(recipeId, tagList) {
+  if (!tagList) {
+    return await getRecipeById(recipeId);
+  }
+
+  try {
+    const createRecipeTagPromises = tagList.map(
+      tag => createRecipeTag(postId, tag.id)
+    );
+
+    await Promise.all(createRecipeTagPromises);
+
+    return await getRecipeById(postId);
+  } catch (error) {
+    throw error;
+  }
+}
+
+/**
+ * RECIPE_TAGS Methods
+ */
+
+// CREATE RECIPE_TAG IN JUNCTION TABLE FROM DB
+async function createRecipeTag(recipeId, tagId) {
+  try {
+    await client.query(`
+      INSERT INTO recipe_tags(recipeId, tagId)
+      VALUES ($1, $2)
+      ON CONFLICT (recipeId, tagId) DO NOTHING;
+    `, [ recipeId, tagId ]);
+  } catch (error) {
+    throw error;
+  }
+}
 
 /**
  * REVIEWS Methods

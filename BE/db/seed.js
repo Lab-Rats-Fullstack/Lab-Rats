@@ -3,8 +3,8 @@ const {
     updateUser, //done
     getAllUsers, //done
     getUserById, //done
-    createRecipe,
-    updateRecipe,
+    createRecipe, //done
+    updateRecipe,//done
     getAllRecipes,
     getRecipesByTagName,
     getAllTags,
