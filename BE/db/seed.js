@@ -7,7 +7,13 @@ const {
     updateRecipe,
     getAllRecipes,
     getRecipesByTagName,
-    getAllTags
+    getAllTags,
+    createReview,
+    updateReview,
+    getAllReviews,
+    createComment,
+    updateComment,
+    getAllComments
   } = require('./index');
   
   async function dropTables() {
@@ -122,7 +128,7 @@ const {
   
       console.log("Starting to create recipes...");
       await createRecipe({
-        authorId: adminTest.id,
+        userId: adminTest.id,
         title: 
         ingredients: 
         content: 
