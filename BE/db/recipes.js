@@ -2,6 +2,7 @@ const recipes = [
     {
         title: "Butter Chicken",
         ingredients: [
+            "Time: 1 hour",
             "1.5 lbs Chicken Thighs", 
             "1 cup full-fat yogurt", 
             "1 tbsp grated or crushed garlic", 
@@ -31,9 +32,34 @@ const recipes = [
         imgUrl: "https://www.foodiesfeed.com/wp-content/uploads/2023/03/close-up-of-butter-chicken-indian-dish.jpg"
     },
     {
-        title: "",
-        ingredients: [],
-        content: [],
+        title: "Chicken and Sausage Gumbo",
+        ingredients: [
+            "1 Onion, finely diced",
+            "1 Bell Pepper, finely diced",
+            "3 Stalks Celery, finely diced",
+            "3-5 Cloves Garlic finely minced",
+            "1 lbs Andoullie Sausage",
+            "2 lbs Boneless Skinless Chicken Thighs",
+            "1-2 quarts Chicken Stock",
+            "2 tbsp flour",
+            "2 tbsp vegetable oil",
+            "Tony Chachere's to taste",
+            "Cayenne Pepper to taste",
+            "Salt to taste",
+            "Fresh Ground Black Pepper to taste",
+            "MSG to taste"
+        ],
+        content: [
+            "Time: 4-5 hours",
+            "Place your flour and oil in a heavy bottom pot or dutch oven that can hold around 4 quarts.",
+            "Constantly stir your roux (flour/oil mixture) over medium heat until it is as dark as possible without being burnt. You should aim for what's called a \"red roux\" which is just past a dark dirt brown. This step takes practice to get right.",
+            "While your roux is going, I like to brown my andouille and chicken in a separate pan. You'll want to go ahead and slice the sasauge, but leave the chicken thighs whole for now. You can alternatively brown these before you start the roux in the same pot/dutch oven, but you have to be careful not to burn the fond when making the roux.",
+            "When roux is the desired color, carefully add your holy trinity (diced vegetables) and garlic and stir vigorously. Alternatively a frozen store mix works fine. It\'s for flavor and thickening not for texture of the vegetables.",
+            "After 2-3 minutes, or once you notice the vegetables soften slowly add the chicken stock around a cup at a time, allowing the mixture to come to a boil between additions. Quick note on stock, homemade is best, but Better than Bouillon Roasted Chicken Base works better than any carton stock. Just reconstitute according to package directions.",
+            "Chop the chicken thighs and add them along with the sausage to your gumbo. Leave on medium low heat for at least thirty minutes, but preferably a few hours. DO NOT let the gumbo get above a bare simer or you will end up with rubbery, dry sausage.",
+            "Season to taste. I like to start with the Tony's until it is most of the way there, then make small adjustments to heat and salinity with the others. If your nose dosen't run, it's not spicy enough.",
+            "Serve with rice and plenty of hot sauce. Garlic bread is also a great addition."
+        ],
         imgUrl: ""
     },
     {
