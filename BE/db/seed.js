@@ -1,8 +1,8 @@
 const {  
-    createUser,
-    updateUser,
-    getAllUsers,
-    getUserById,
+    createUser, //done
+    updateUser, //done
+    getAllUsers, //done
+    getUserById, //done
     createRecipe,
     updateRecipe,
     getAllRecipes,
