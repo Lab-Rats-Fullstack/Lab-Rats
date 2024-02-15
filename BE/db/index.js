@@ -103,6 +103,11 @@ async function getUserById(userId) {
  * RECIPES Methods
  */
 
+//UTIL ARRAYIFYSTRING (FOR DB EXPORT)
+function arrayifyString(string){
+  return string.split("/n");
+}
+
 // GET RECIPE BY ID IN DB
 async function getRecipeById(recipeId) {
     try {
@@ -118,6 +123,10 @@ async function getRecipeById(recipeId) {
           message: "Could not find a recipe with that recipeId"
         };
       }
+
+      recipe.ingredients = arrayifyString(recipe.ingredients);
+      recipe.procedure = arrayifyString(recipe.procedure);
+      recipe.notes = arrayifyString(recipe.notes);
   
       const { rows: tags } = await client.query(`
         SELECT tags.*
@@ -202,21 +211,34 @@ async function getAllRecipes() {
   }
 }
 
+//UTIL STRINGIFY ARRAY (FOR DB)
+function stringifyArray(array){
+  return array.reduce((acc, item) => {
+    return acc.concat("/n", item);
+  });
+}
+
 // CREATE RECIPE IN DB
 async function createRecipe({
   userId,
   title,
   ingredients,
-  content,
+  procedure,
   imgUrl,
+  notes,
   tags = []
 }) {
   try {
+
+    const ingredientsString = stringifyArray(ingredients);
+    const procedureString = stringifyArray(procedure);
+    const notesString = stringifyArray(notes);
+
     const { rows: [ recipe ] } = await client.query(`
-      INSERT INTO recipes(userId, title, ingredients, content, imgUrl) 
-      VALUES($1, $2, $3, $4, $5)
+      INSERT INTO recipes(userId, title, ingredients, procedure, imgUrl, notes) 
+      VALUES($1, $2, $3, $4, $5, $6)
       RETURNING *;
-    `, [userId, title, ingredients, content, imgUrl]);
+    `, [userId, title, ingredientsString, procedureString, imgUrl, notesString]);
 
     const tagList = await createTags(tags); 
 
@@ -231,6 +253,18 @@ async function updateRecipe(recipeId, fields = {}) {
   // read off the tags & remove that field 
   const { tags } = fields; // might be undefined
   delete fields.tags;
+
+  if (fields.ingredients){
+    fields.ingredients = stringifyArray(fields.ingredients);
+  }
+
+  if (fields.procedure){
+    fields.procedure = stringifyArray(fields.procedure);
+  }
+
+  if (fields.notes){
+    fields.notes = stringifyArray(fields.notes);
+  }
 
   // build the set string
   const setString = Object.keys(fields).map(
