@@ -48,6 +48,17 @@ usersRouter.get("/me", async (req, res) => {
     res.status(500).json(err);
   }
 });
+
+usersRouter.patch("/me", async (req, res) => {
+  try {
+    res.json({
+      message: "testing patch my information",
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 usersRouter.get("/:userId/", async (req, res) => {
   const { userId } = req.params;
   try {
