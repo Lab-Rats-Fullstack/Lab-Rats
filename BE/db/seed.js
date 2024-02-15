@@ -140,6 +140,43 @@ const {
       throw error;
     }
   }
+
+  async function createInitialReviews(){
+    try {
+      const [userTest] = await getAllUsers();
+      const recipes = await getAllRecipes();
+  
+      console.log("Starting to create reviews...");
+      await createReview({
+        userId: userTest.id,
+        recipeId: recipes[0].id,
+        content: "this is cool",
+        rating: 4
+      });
+      console.log("Finished creating reviews!");
+    } catch (error) {
+      console.log("Error creating reviews!");
+      throw error;
+    }
+  }
+
+  async function createInitialComments(){
+    try {
+      const [adminTest] = await getAllUsers();
+      const reviews = await getAllReviews();
+  
+      console.log("Starting to create comments...");
+      await createComment({
+        userId: adminTest.id,
+        reviewId: reviews[0].id,
+        content: "thanks bruh",
+      });
+      console.log("Finished creating comments!");
+    } catch (error) {
+      console.log("Error creating comments!");
+      throw error;
+    }
+  }
   
   async function rebuildDB() {
     try {
@@ -149,6 +186,8 @@ const {
       await createTables();
       await createInitialUsers();
       await createInitialRecipes();
+      await createInitialReviews();
+      await createInitialComments();
     } catch (error) {
       console.log("Error during rebuildDB")
       throw error;
@@ -185,6 +224,26 @@ const {
         tags: ["stuff-with-hot-sauce", "something-from-yo-grandma", "dance-and-eat"]
       });
       console.log("Result:", updateRecipeTagsResult);
+
+      console.log("Calling getAllReviews");
+      const reviews = await getAllReviews();
+      console.log("Result:", reviews);
+  
+      console.log("Calling updateReview on reviews[0]");
+      const updateReviewResult = await updateReview(reviews[0].id, {
+        content: "Updated Content"
+      });
+      console.log("Result:", updateReviewResult);
+
+      console.log("Calling getAllComments");
+      const comments = await getAllComments();
+      console.log("Result:", comments);
+  
+      console.log("Calling updateComment on comments[0]");
+      const updateCommentResult = await updateComment(comments[0].id, {
+        content: "Updated Content"
+      });
+      console.log("Result:", updateCommentResult);
   
       console.log("Calling getUserById with 1");
       const admin = await getUserById(1);
