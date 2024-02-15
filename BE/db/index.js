@@ -144,6 +144,8 @@ async function getRecipeById(recipeId) {
     }
 }
 
+
+
 // GET RECIPES BY USER IN DB
 async function getRecipesByUser(userId) {
     try {
@@ -163,6 +165,43 @@ async function getRecipesByUser(userId) {
     }
   }
 
+// GET RECIPES BY TAG NAME IN DB
+async function getRecipesByTagName(tagName) {
+  try {
+    const { rows: recipeIds } = await client.query(`
+      SELECT recipes.id
+      FROM recipes
+      JOIN recipe_tags ON recipes.id=recipe_tags.recipeId
+      JOIN tags ON tags.id=recipe_tags.tagId
+      WHERE tags.name=$1;
+    `, [tagName]);
+    
+    return await Promise.all(recipeIds.map(
+      recipe => getRecipeById(recipe.id)
+    ));
+  } catch (error) {
+    throw error;
+  }
+} 
+
+// GET ALL RECIPES IN DB
+async function getAllRecipes() {
+  try {
+    const { rows: recipeIds } = await client.query(`
+      SELECT id
+      FROM recipes;
+    `);
+
+    const recipes = await Promise.all(recipeIds.map(
+      recipe => getRecipeById( recipe.id )
+    ));
+
+    return recipes;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // CREATE RECIPE IN DB
 async function createRecipe({
   userId,
@@ -174,7 +213,7 @@ async function createRecipe({
 }) {
   try {
     const { rows: [ recipe ] } = await client.query(`
-      INSERT INTO recipes(user, title, ingredients, content, imgUrl) 
+      INSERT INTO recipes(userId, title, ingredients, content, imgUrl) 
       VALUES($1, $2, $3, $4, $5)
       RETURNING *;
     `, [userId, title, ingredients, content, imgUrl]);
@@ -240,6 +279,20 @@ async function updateRecipe(recipeId, fields = {}) {
 /**
  * TAGS Methods
  */
+
+// GETS ALL TAGS FROM DB
+async function getAllTags() {
+  try {
+    const { rows } = await client.query(`
+      SELECT * 
+      FROM tags;
+    `);
+
+    return { rows }
+  } catch (error) {
+    throw error;
+  }
+}
 
 // CREATE TAGS IN DB
 async function createTags(tagList) {
@@ -386,6 +439,68 @@ async function getReviewsByRecipe(recipeId) {
     }
   }
 
+// GET ALL REVIEWS IN DB
+async function getAllReviews() {
+  try {
+    const { rows: reviewIds } = await client.query(`
+      SELECT id
+      FROM reviews;
+    `);
+
+    const reviews = await Promise.all(reviewIds.map(
+      review => getReviewById( review.id )
+    ));
+
+    return reviews;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// CREATE REVIEW IN DB
+async function createReview({
+  userId,
+  recipeId,
+  content,
+  rating
+}) {
+  try {
+    const { rows: [ review ] } = await client.query(`
+      INSERT INTO reviews(userId, recipeId, content, rating) 
+      VALUES($1, $2, $3, $4)
+      RETURNING *;
+    `, [userId, recipeId, content, rating]);
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+// EDIT REVIEW IN DB
+async function updateReview(reviewId, fields = {}) {
+
+  // build the set string
+  const setString = Object.keys(fields).map(
+    (key, index) => `"${ key }"=$${ index + 1 }`
+  ).join(', ');
+
+  try {
+    // update any fields that need to be updated
+    if (setString.length > 0) {
+      await client.query(`
+        UPDATE reviews
+        SET ${ setString }
+        WHERE id=${ reviewId }
+        RETURNING *;
+      `, Object.values(fields));
+    }
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+
 /**
  * COMMENTS Methods
  */
@@ -451,3 +566,82 @@ async function getCommentsByUser(userId) {
         throw error;
       }
   }
+
+// GET ALL COMMENTS IN DB
+async function getAllComments() {
+  try {
+    const { rows: commentIds } = await client.query(`
+      SELECT id
+      FROM comments;
+    `);
+
+    const comments = await Promise.all(commentIds.map(
+      comment => getCommentById( comment.id )
+    ));
+
+    return comments;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// CREATE COMMENT IN DB
+async function createComment({
+  userId,
+  reviewId,
+  content
+}) {
+  try {
+    const { rows: [ review ] } = await client.query(`
+      INSERT INTO reviews(userId, reviewId, content) 
+      VALUES($1, $2, $3)
+      RETURNING *;
+    `, [userId, reviewId, content]);
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+// EDIT COMMENT IN DB
+async function updateComment(commentId, fields = {}) {
+
+  // build the set string
+  const setString = Object.keys(fields).map(
+    (key, index) => `"${ key }"=$${ index + 1 }`
+  ).join(', ');
+
+  try {
+    // update any fields that need to be updated
+    if (setString.length > 0) {
+      await client.query(`
+        UPDATE comments
+        SET ${ setString }
+        WHERE id=${ commentId }
+        RETURNING *;
+      `, Object.values(fields));
+    }
+
+  } catch (error) {
+    throw error;
+  }
+}
+
+module.exports = {  
+  client,
+  createUser,
+  updateUser,
+  getAllUsers,
+  getUserById,
+  createRecipe,
+  updateRecipe, 
+  getAllRecipes, 
+  getRecipesByTagName, 
+  getAllTags, 
+  createReview, 
+  updateReview, 
+  getAllReviews, 
+  createComment, 
+  updateComment, 
+  getAllComments 
+}

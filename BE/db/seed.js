@@ -1,19 +1,19 @@
 const {  
-    createUser, //done
-    updateUser, //done
-    getAllUsers, //done
-    getUserById, //done
-    createRecipe, //done
-    updateRecipe,//done
-    getAllRecipes,
-    getRecipesByTagName,
-    getAllTags,
-    createReview,
-    updateReview,
-    getAllReviews,
-    createComment,
-    updateComment,
-    getAllComments
+    createUser,
+    updateUser,
+    getAllUsers,
+    getUserById,
+    createRecipe,
+    updateRecipe, 
+    getAllRecipes, 
+    getRecipesByTagName, 
+    getAllTags, 
+    createReview, 
+    updateReview, 
+    getAllReviews, 
+    createComment, 
+    updateComment, 
+    getAllComments 
   } = require('./index');
   
   async function dropTables() {
