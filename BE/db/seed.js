@@ -1,4 +1,5 @@
 const {  
+    client,
     createUser,
     updateUser,
     getAllUsers,
@@ -57,7 +58,8 @@ const {
           userId INTEGER REFERENCES users(id),
           title varchar(255) NOT NULL,
           ingredients TEXT NOT NULL,
-          content TEXT NOT NULL,
+          procedure TEXT NOT NULL,
+          notes TEXT,
           imgUrl varchar(255)
         );
   
@@ -367,7 +369,7 @@ const {
       console.log("Calling updateRecipe on recipes[0]");
       const updateRecipeResult = await updateRecipe(recipes[0].id, {
         title: "New Title",
-        content: "Updated Content"
+        procedure: ["Updated Content"]
       });
       console.log("Result:", updateRecipeResult);
   
@@ -382,6 +384,7 @@ const {
       console.log("Result:", reviews);
   
       console.log("Calling updateReview on reviews[0]");
+      console.log(reviews[0]);
       const updateReviewResult = await updateReview(reviews[0].id, {
         content: "Updated Content"
       });

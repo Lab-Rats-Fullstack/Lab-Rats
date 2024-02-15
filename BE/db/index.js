@@ -1,7 +1,7 @@
 const { Client } = require('pg') // imports the pg module
 
 const client = new Client({
-  connectionString: process.env.DATABASE_URL || 'postgres://localhost:5432/recipes-dev',
+  connectionString: process.env.DATABASE_URL || 'postgres://localhost:5432/lab-rats-dev',
   ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
 });
 
@@ -18,6 +18,11 @@ async function createUser({
     imgUrl,
     admin
 }) {
+
+  if (admin == null){
+    admin = false;
+  }
+
   try {
     const { rows: [ user ] } = await client.query(`
       INSERT INTO users(email, password, username, name, imgUrl, admin) 
@@ -105,7 +110,12 @@ async function getUserById(userId) {
 
 //UTIL ARRAYIFYSTRING (FOR DB EXPORT)
 function arrayifyString(string){
-  return string.split("/n");
+  if (string == '' || string == null){
+    return [];
+  } else {
+    return string.split("/n");
+  }
+
 }
 
 // GET RECIPE BY ID IN DB
@@ -141,13 +151,16 @@ async function getRecipeById(recipeId) {
         SELECT id, email, username, name, imgUrl, admin
         FROM users
         WHERE id=$1;
-      `, [recipe.userId])
+      `, [recipe.userid])
+
+      const recipeObject = {
+        recipeInfo: recipe,
+        tags: tags,
+        reviews: reviews,
+        user: user
+      }
   
-      recipe.tags = tags;
-      recipe.reviews = reviews;
-        recipe.user = user;
-  
-      return recipe;
+      return recipeObject;
     } catch (error) {
       throw error;
     }
@@ -213,9 +226,13 @@ async function getAllRecipes() {
 
 //UTIL STRINGIFY ARRAY (FOR DB)
 function stringifyArray(array){
-  return array.reduce((acc, item) => {
-    return acc.concat("/n", item);
-  });
+  if (!array.length){
+    return '';
+  } else {
+    return array.reduce((acc, item) => {
+      return acc.concat("/n", item);
+    });
+  }
 }
 
 // CREATE RECIPE IN DB
@@ -232,7 +249,13 @@ async function createRecipe({
 
     const ingredientsString = stringifyArray(ingredients);
     const procedureString = stringifyArray(procedure);
-    const notesString = stringifyArray(notes);
+    let notesString;
+    if (!notes.length || notes == null){
+      notesString = '';
+    } else {
+      notesString = stringifyArray(notes);
+    }
+    
 
     const { rows: [ recipe ] } = await client.query(`
       INSERT INTO recipes(userId, title, ingredients, procedure, imgUrl, notes) 
@@ -242,7 +265,9 @@ async function createRecipe({
 
     const tagList = await createTags(tags); 
 
-    return await addTagsToRecipe(recipe.id, tagList); 
+    await addTagsToRecipe(recipe.id, tagList); 
+
+    return recipe;
   } catch (error) {
     throw error;
   }
@@ -262,14 +287,20 @@ async function updateRecipe(recipeId, fields = {}) {
     fields.procedure = stringifyArray(fields.procedure);
   }
 
-  if (fields.notes){
+  if (fields.notes && fields.notes.length){
     fields.notes = stringifyArray(fields.notes);
+  } else if (fields.notes && !fields.notes.length){
+    fields.notes = '';
   }
+
 
   // build the set string
   const setString = Object.keys(fields).map(
     (key, index) => `"${ key }"=$${ index + 1 }`
   ).join(', ');
+
+  console.log(fields);
+  console.log(setString);
 
   try {
     // update any fields that need to be updated
@@ -371,12 +402,12 @@ async function addTagsToRecipe(recipeId, tagList) {
 
   try {
     const createRecipeTagPromises = tagList.map(
-      tag => createRecipeTag(postId, tag.id)
+      tag => createRecipeTag(recipeId, tag.id)
     );
 
     await Promise.all(createRecipeTagPromises);
 
-    return await getRecipeById(postId);
+    return await getRecipeById(recipeId);
   } catch (error) {
     throw error;
   }
@@ -424,12 +455,15 @@ async function getReviewById(reviewId){
         SELECT id, email, username, name, imgUrl, admin
         FROM users
         WHERE id=$1;
-      `, [review.userId]);
+      `, [review.userid]);
 
-        review.comments = comments;
-        review.user = user;
+        const reviewObject = {
+          reviewInfo: review,
+          comments: comments,
+          user: user
+        }
 
-        return review;
+        return reviewObject;
     } catch (error){
         throw error;
     }
@@ -505,6 +539,8 @@ async function createReview({
       RETURNING *;
     `, [userId, recipeId, content, rating]);
 
+  return review;
+
   } catch (error) {
     throw error;
   }
@@ -552,11 +588,14 @@ async function getCommentById(commentId){
         SELECT id, email, username, name, imgUrl, admin
         FROM users
         WHERE id=$1;
-      `, [comment.userId]);
+      `, [comment.userid]);
 
-        comment.user = user;
+      const commentObject = {
+        commentInfo: comment,
+        user: user
+      }
 
-        return comment;
+        return commentObject;
     } catch (error) {
         throw error;
       }
@@ -626,11 +665,13 @@ async function createComment({
   content
 }) {
   try {
-    const { rows: [ review ] } = await client.query(`
-      INSERT INTO reviews(userId, reviewId, content) 
+    const { rows: [ comment ] } = await client.query(`
+      INSERT INTO comments(userId, reviewId, content) 
       VALUES($1, $2, $3)
       RETURNING *;
     `, [userId, reviewId, content]);
+
+    return comment;
 
   } catch (error) {
     throw error;
