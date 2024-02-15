@@ -10,7 +10,7 @@ const jwt = require("jsonwebtoken");
 usersRouter.get("/", (req, res) => {
   try {
     res.json({
-      message: "Hello World!",
+      message: "testing get all users",
     });
   } catch (err) {
     res.status(500).json(err);
@@ -18,9 +18,10 @@ usersRouter.get("/", (req, res) => {
 });
 
 usersRouter.post("/register", async (req, res) => {
+  console.log(req.body);
   try {
     res.json({
-      message: "Hello World!",
+      message: "testing register a user",
     });
   } catch (err) {
     res.status(500).json(err);
@@ -28,9 +29,10 @@ usersRouter.post("/register", async (req, res) => {
 });
 
 usersRouter.post("/login", async (req, res) => {
+  console.log(req.body);
   try {
     res.json({
-      message: "Hello World!",
+      message: "testing login a user",
     });
   } catch (err) {
     res.status(500).json(err);
@@ -40,25 +42,27 @@ usersRouter.post("/login", async (req, res) => {
 usersRouter.get("/me", async (req, res) => {
   try {
     res.json({
-      message: "Hello World!",
+      message: "testing get my information",
     });
   } catch (err) {
     res.status(500).json(err);
   }
 });
 usersRouter.get("/:userId/", async (req, res) => {
+  const { userId } = req.params;
   try {
     res.json({
-      message: "Hello World!",
+      message: `testing get a user with the id: ${userId}`,
     });
   } catch (err) {
     res.status(500).json(err);
   }
 });
 usersRouter.get("/:userId/recipes", async (req, res) => {
+  const { userId } = req.params;
   try {
     res.json({
-      message: "Hello World!",
+      message: `testing get all recipes for a user with the id: ${userId}`,
     });
   } catch (err) {
     res.status(500).json(err);
@@ -66,9 +70,10 @@ usersRouter.get("/:userId/recipes", async (req, res) => {
 });
 
 usersRouter.get("/:userId/reviews", async (req, res) => {
+  const { userId } = req.params;
   try {
     res.json({
-      message: "Hello World!",
+      message: `testing get all reviews for a user with the id: ${userId}`,
     });
   } catch (err) {
     res.status(500).json(err);
@@ -76,9 +81,10 @@ usersRouter.get("/:userId/reviews", async (req, res) => {
 });
 
 usersRouter.get("/:userId/comments", async (req, res) => {
+  const { userId } = req.params;
   try {
     res.json({
-      message: "Hello World!",
+      message: `testing get all comments for a user with the id: ${userId}`,
     });
   } catch (err) {
     res.status(500).json(err);

@@ -1,38 +1,44 @@
 const express = require("express");
-const commentsRouter = express.Router();
+const commentRouter = express.Router();
 
 // require user function
 
 // db functions
 
-commentsRouter.get("/", (req, res) => {
+commentRouter.post("/:reviewId", (req, res) => {
+  const { recipeId } = req.params;
+  // requireUser eventually
+  try {
+    console.log(req.body);
+    res.json({
+      message: `testing post a comment for recipe with the id: ${recipeId}`,
+    });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+commentRouter.patch("/:commentId", (req, res) => {
+  const { commentId } = req.params;
+  // requireUser or requireAdmin eventually
   try {
     res.json({
-      message: "Hello World!",
+      message: `testing patch a comment with the id: ${commentId}`,
     });
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-commentsRouter.post("/", async (req, res) => {
-  // requireAdmin eventually
+commentRouter.delete("/:commentId", (req, res) => {
+  const { commentId } = req.params;
+  // requireUser or requireAdmin eventually
   try {
     res.json({
-      message: "Hello World!",
+      message: `testing delete a comment with the id: ${commentId}`,
     });
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
-commentsRouter.get("/reviewedRecipes", async (req, res) => {
-  // requireAdmin eventually
-  try {
-    res.json({
-      message: "Hello World!",
-    });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+module.exports = commentRouter;

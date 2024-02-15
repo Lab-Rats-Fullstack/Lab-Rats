@@ -6,10 +6,12 @@ const reviewRouter = express.Router();
 // db functions
 
 reviewRouter.post("/:recipeId", (req, res) => {
+  const { recipeId } = req.params;
   // requireUser eventually
   try {
+    console.log(req.body);
     res.json({
-      message: "Hello World!",
+      message: `testing post a review for recipe with the id: ${recipeId}`,
     });
   } catch (err) {
     res.status(500).json(err);
@@ -17,10 +19,11 @@ reviewRouter.post("/:recipeId", (req, res) => {
 });
 
 reviewRouter.patch("/:reviewId", (req, res) => {
+  const { reviewId } = req.params;
   // requireUser or requireAdmin eventually
   try {
     res.json({
-      message: "Hello World!",
+      message: `testing patch a review with the id: ${reviewId}`,
     });
   } catch (err) {
     res.status(500).json(err);
@@ -28,10 +31,11 @@ reviewRouter.patch("/:reviewId", (req, res) => {
 });
 
 reviewRouter.delete("/:reviewId", (req, res) => {
+  const { reviewId } = req.params;
   // requireUser or requireAdmin eventually
   try {
     res.json({
-      message: "Hello World!",
+      message: `testing delete a review with the id: ${reviewId}`,
     });
   } catch (err) {
     res.status(500).json(err);

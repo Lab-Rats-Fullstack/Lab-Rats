@@ -13,9 +13,12 @@ const recipesRouter = require("./recipes");
 apiRouter.use("/recipes", recipesRouter);
 
 const reviewRouter = require("./reviews");
-apiRouter.use("/comments", reviewRouter);
+apiRouter.use("/reviews", reviewRouter);
 
-const commentsRouter = require("./comments");
-apiRouter.use("/comments", commentsRouter);
+const commentRouter = require("./comments");
+apiRouter.use("/comments", commentRouter);
+
+const tagsRouter = require("./tags");
+apiRouter.use("/tags", tagsRouter);
 
 module.exports = apiRouter;
