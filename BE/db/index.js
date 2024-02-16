@@ -118,25 +118,36 @@ function arrayifyString(string){
 
 }
 
+// GET RECIPE INFO BY ID IN DB
+async function getRecipeInfoById(recipeId) {
+  try {
+    const { rows: [ recipe ]  } = await client.query(`
+      SELECT *
+      FROM recipes
+      WHERE id=$1;
+    `, [recipeId]);
+
+    if (!recipe) {
+      throw {
+        name: "RecipeNotFoundError",
+        message: "Could not find a recipe with that recipeId"
+      };
+    }
+
+    recipe.ingredients = arrayifyString(recipe.ingredients);
+    recipe.procedure = arrayifyString(recipe.procedure);
+    recipe.notes = arrayifyString(recipe.notes);
+
+    return recipe;
+  } catch (error) {
+    throw (error);
+  }
+}
+
 // GET RECIPE BY ID IN DB
 async function getRecipeById(recipeId) {
     try {
-      const { rows: [ recipe ]  } = await client.query(`
-        SELECT *
-        FROM recipes
-        WHERE id=$1;
-      `, [recipeId]);
-  
-      if (!recipe) {
-        throw {
-          name: "RecipeNotFoundError",
-          message: "Could not find a recipe with that recipeId"
-        };
-      }
- 
-      recipe.ingredients = arrayifyString(recipe.ingredients);
-      recipe.procedure = arrayifyString(recipe.procedure);
-      recipe.notes = arrayifyString(recipe.notes);
+      const recipe = await getRecipeInfoById(recipeId);
   
       const { rows: tags } = await client.query(`
         SELECT tags.*
@@ -154,7 +165,7 @@ async function getRecipeById(recipeId) {
       `, [recipe.userid])
 
       const recipeObject = {
-        recipeInfo: recipe,
+        ...recipe,
         tags: tags,
         reviews: reviews,
         user: user
@@ -267,7 +278,7 @@ async function createRecipe({
 
     await addTagsToRecipe(recipe.id, tagList); 
 
-    return recipe;
+    return getRecipeById(recipe.id);
   } catch (error) {
     throw error;
   }
@@ -313,7 +324,7 @@ async function updateRecipe(recipeId, fields = {}) {
 
     // return early if there's no tags to update
     if (tags === undefined) {
-      return (await getRecipeById(recipeId))?.recipeInfo;
+      return await getRecipeById(recipeId);
     }
 
     // make any new tags that need to be made
@@ -333,7 +344,7 @@ async function updateRecipe(recipeId, fields = {}) {
     // and create post_tags as necessary
     await addTagsToRecipe(recipeId, tagList); 
 
-    return (await getRecipeById(recipeId))?.recipeInfo;
+    return await getRecipeById(recipeId);
   } catch (error) {
     throw error;
   }
@@ -431,21 +442,32 @@ async function createRecipeTag(recipeId, tagId) {
 /**
  * REVIEWS Methods
  */
+
+//GET REVIEW INFO BY ID IN DB
+async function getReviewInfoById(reviewId){
+  try{
+    const {rows: [review]} = await client.query(`
+    SELECT *
+    FROM reviews
+    WHERE id = ${reviewId};
+    `);
+  
+    if (!review) {
+        throw {
+          name: "ReviewNotFoundError",
+          message: "Could not find a review with that reviewId"
+        };
+      }
+    return review;
+  } catch (error){
+    throw (error);
+  }
+}
+
 // GET REVIEW BY ID IN DB
 async function getReviewById(reviewId){
     try{
-        const {rows: [review]} = await client.query(`
-        SELECT *
-        FROM reviews
-        WHERE id = ${reviewId};
-        `);
-
-        if (!review) {
-            throw {
-              name: "ReviewNotFoundError",
-              message: "Could not find a review with that reviewId"
-            };
-          }
+        const review = await getReviewInfoById(reviewId);
 
         const comments = await getCommentsByReview(reviewId);
 
@@ -456,7 +478,7 @@ async function getReviewById(reviewId){
       `, [review.userid]);
 
         const reviewObject = {
-          reviewInfo: review,
+          ...review,
           comments: comments,
           user: user
         }
@@ -537,7 +559,7 @@ async function createReview({
       RETURNING *;
     `, [userId, recipeId, content, rating]);
 
-  return review;
+  return await getReviewById(review.id);
 
   } catch (error) {
     throw error;
@@ -561,12 +583,8 @@ async function updateReview(reviewId, fields = {}) {
         WHERE id=${ reviewId }
         RETURNING *;
       `, Object.values(fields));
-
-      return review;
-    } else {
-      return (await getReviewById(reviewId))?.reviewInfo;
-    }
-
+    } 
+      return await getReviewById(reviewId);
 
   } catch (error) {
     throw error;
@@ -578,27 +596,38 @@ async function updateReview(reviewId, fields = {}) {
  * COMMENTS Methods
  */
 
+// GET COMMENT INFO BY ID IN DB
+async function getCommentInfoById(commentId){
+  try{
+      const { rows: [comment] } = await client.query(`
+      SELECT *
+      FROM comments
+      WHERE id=$1;
+  `, [commentId])
+
+    return comment;
+  } catch (error){
+    throw (error);
+  }
+}
+
 // GET COMMENT BY ID IN DB
 async function getCommentById(commentId){
     try{
-        const { rows: [comment] } = await client.query(`
-        SELECT *
-        FROM comments
-        WHERE id=$1;
-    `, [commentId])
+      const comment = await getCommentInfoById(commentId);
 
-        const { rows: [user] } = await client.query(`
-        SELECT id, email, username, name, imgUrl, admin
-        FROM users
-        WHERE id=$1;
-      `, [comment.userid]);
+      const { rows: [user] } = await client.query(`
+      SELECT id, email, username, name, imgUrl, admin
+      FROM users
+      WHERE id=$1;
+    `, [comment.userid]);
 
-      const commentObject = {
-        commentInfo: comment,
-        user: user
-      }
+    const commentObject = {
+      ...comment,
+      user: user
+    }
 
-        return commentObject;
+      return commentObject;
     } catch (error) {
         throw error;
       }
@@ -674,7 +703,7 @@ async function createComment({
       RETURNING *;
     `, [userId, reviewId, content]);
 
-    return comment;
+    return await getCommentById(comment.id);
 
   } catch (error) {
     throw error;
@@ -698,11 +727,8 @@ async function updateComment(commentId, fields = {}) {
         WHERE id=${ commentId }
         RETURNING *;
       `, Object.values(fields));
-
-      return comment;
-    } else {
-      return (await getCommentById(commentId))?.commentInfo;
-    }
+    } 
+      return await getCommentById(commentId);
 
   } catch (error) {
     throw error;

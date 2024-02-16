@@ -303,7 +303,7 @@ const {
       console.log("Starting to create reviews...");
       await createReview({
         userId: userTest.id,
-        recipeId: recipes[0].recipeInfo.id,
+        recipeId: recipes[0].id,
         content: "this is cool",
         rating: 4
       });
@@ -322,7 +322,7 @@ const {
       console.log("Starting to create comments...");
       await createComment({
         userId: adminTest.id,
-        reviewId: reviews[0].reviewInfo.id,
+        reviewId: reviews[0].id,
         content: "thanks bruh",
       });
       console.log("Finished creating comments!");
@@ -367,14 +367,14 @@ const {
       console.log("Result:", recipes);
   
       console.log("Calling updateRecipe on recipes[0]");
-      const updateRecipeResult = await updateRecipe(recipes[0].recipeInfo.id, {
+      const updateRecipeResult = await updateRecipe(recipes[0].id, {
         title: "New Title",
         procedure: ["Updated Content"]
       });
       console.log("Result:", updateRecipeResult);
   
       console.log("Calling updateRecipe on recipes[1], only updating tags");
-      const updateRecipeTagsResult = await updateRecipe(recipes[1].recipeInfo.id, {
+      const updateRecipeTagsResult = await updateRecipe(recipes[1].id, {
         tags: ["stuff-with-hot-sauce", "something-from-yo-grandma", "dance-and-eat"]
       });
       console.log("Result:", updateRecipeTagsResult);
@@ -384,7 +384,7 @@ const {
       console.log("Result:", reviews);
   
       console.log("Calling updateReview on reviews[0]");
-      const updateReviewResult = await updateReview(reviews[0].reviewInfo.id, {
+      const updateReviewResult = await updateReview(reviews[0].id, {
         content: "Updated Content"
       });
       console.log("Result:", updateReviewResult);
@@ -394,7 +394,7 @@ const {
       console.log("Result:", comments);
   
       console.log("Calling updateComment on comments[0]");
-      const updateCommentResult = await updateComment(comments[0].commentInfo.id, {
+      const updateCommentResult = await updateComment(comments[0].id, {
         content: "Updated Content"
       });
       console.log("Result:", updateCommentResult);
