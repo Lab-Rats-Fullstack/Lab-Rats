@@ -133,7 +133,7 @@ async function getRecipeById(recipeId) {
           message: "Could not find a recipe with that recipeId"
         };
       }
-
+ 
       recipe.ingredients = arrayifyString(recipe.ingredients);
       recipe.procedure = arrayifyString(recipe.procedure);
       recipe.notes = arrayifyString(recipe.notes);
@@ -299,23 +299,21 @@ async function updateRecipe(recipeId, fields = {}) {
     (key, index) => `"${ key }"=$${ index + 1 }`
   ).join(', ');
 
-  console.log(fields);
-  console.log(setString);
-
   try {
     // update any fields that need to be updated
     if (setString.length > 0) {
-      await client.query(`
+      const { rows: [recipe] } = await client.query(`
         UPDATE recipes
         SET ${ setString }
         WHERE id=${ recipeId }
         RETURNING *;
       `, Object.values(fields));
+      
     }
 
     // return early if there's no tags to update
     if (tags === undefined) {
-      return await getRecipeById(recipeId);
+      return (await getRecipeById(recipeId))?.recipeInfo;
     }
 
     // make any new tags that need to be made
@@ -335,7 +333,7 @@ async function updateRecipe(recipeId, fields = {}) {
     // and create post_tags as necessary
     await addTagsToRecipe(recipeId, tagList); 
 
-    return await getRecipeById(recipeId);
+    return (await getRecipeById(recipeId))?.recipeInfo;
   } catch (error) {
     throw error;
   }
@@ -436,7 +434,7 @@ async function createRecipeTag(recipeId, tagId) {
 // GET REVIEW BY ID IN DB
 async function getReviewById(reviewId){
     try{
-        const {rows: review} = await client.query(`
+        const {rows: [review]} = await client.query(`
         SELECT *
         FROM reviews
         WHERE id = ${reviewId};
@@ -557,13 +555,18 @@ async function updateReview(reviewId, fields = {}) {
   try {
     // update any fields that need to be updated
     if (setString.length > 0) {
-      await client.query(`
+      const {rows: [review]} = await client.query(`
         UPDATE reviews
         SET ${ setString }
         WHERE id=${ reviewId }
         RETURNING *;
       `, Object.values(fields));
+
+      return review;
+    } else {
+      return (await getReviewById(reviewId))?.reviewInfo;
     }
+
 
   } catch (error) {
     throw error;
@@ -578,7 +581,7 @@ async function updateReview(reviewId, fields = {}) {
 // GET COMMENT BY ID IN DB
 async function getCommentById(commentId){
     try{
-        const { rows: comment } = await client.query(`
+        const { rows: [comment] } = await client.query(`
         SELECT *
         FROM comments
         WHERE id=$1;
@@ -689,12 +692,16 @@ async function updateComment(commentId, fields = {}) {
   try {
     // update any fields that need to be updated
     if (setString.length > 0) {
-      await client.query(`
+      const { rows: [ comment ] }  = await client.query(`
         UPDATE comments
         SET ${ setString }
         WHERE id=${ commentId }
         RETURNING *;
       `, Object.values(fields));
+
+      return comment;
+    } else {
+      return (await getCommentById(commentId))?.commentInfo;
     }
 
   } catch (error) {
