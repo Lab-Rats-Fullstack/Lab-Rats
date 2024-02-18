@@ -375,7 +375,7 @@ const {
   
       console.log("Calling updateRecipe on recipes[1], only updating tags");
       const updateRecipeTagsResult = await updateRecipe(recipes[1].id, {
-        tags: ["stuff-with-hot-sauce", "something-from-yo-grandma", "dance-and-eat"]
+        tags: ["pastries", "classic", "salads"]
       });
       console.log("Result:", updateRecipeTagsResult);
 
@@ -407,8 +407,8 @@ const {
       const allTags = await getAllTags();
       console.log("Result:", allTags);
   
-      console.log("Calling getRecipesByTagName with something-from-yo-grandma");
-      const recipesWithGrandma = await getRecipesByTagName("something-from-yo-grandma");
+      console.log("Calling getRecipesByTagName with salads");
+      const recipesWithGrandma = await getRecipesByTagName("salads");
       console.log("Result:", recipesWithGrandma);
   
       console.log("Finished database tests!");

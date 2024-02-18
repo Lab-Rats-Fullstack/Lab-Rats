@@ -237,7 +237,7 @@ async function getAllRecipes() {
 
 //UTIL STRINGIFY ARRAY (FOR DB)
 function stringifyArray(array){
-  if (!array.length){
+  if (!array || !array.length){
     return '';
   } else {
     return array.reduce((acc, item) => {
@@ -253,19 +253,15 @@ async function createRecipe({
   ingredients,
   procedure,
   imgUrl,
-  notes,
+  notes = [],
   tags = []
 }) {
   try {
 
     const ingredientsString = stringifyArray(ingredients);
     const procedureString = stringifyArray(procedure);
-    let notesString;
-    if (!notes.length || notes == null){
-      notesString = '';
-    } else {
-      notesString = stringifyArray(notes);
-    }
+    const notesString = stringifyArray(notes);
+    
     
 
     const { rows: [ recipe ] } = await client.query(`
@@ -298,12 +294,9 @@ async function updateRecipe(recipeId, fields = {}) {
     fields.procedure = stringifyArray(fields.procedure);
   }
 
-  if (fields.notes && fields.notes.length){
+  if (fields.notes){
     fields.notes = stringifyArray(fields.notes);
-  } else if (fields.notes && !fields.notes.length){
-    fields.notes = '';
   }
-
 
   // build the set string
   const setString = Object.keys(fields).map(
@@ -341,7 +334,7 @@ async function updateRecipe(recipeId, fields = {}) {
       AND recipeId=$1;
     `, [recipeId]);
     
-    // and create post_tags as necessary
+    // and create recipe_tags as necessary
     await addTagsToRecipe(recipeId, tagList); 
 
     return await getRecipeById(recipeId);
