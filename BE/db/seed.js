@@ -57,9 +57,9 @@ const {
           id SERIAL PRIMARY KEY,
           userId INTEGER REFERENCES users(id),
           title varchar(255) NOT NULL,
-          ingredients TEXT NOT NULL,
-          procedure TEXT NOT NULL,
-          notes TEXT,
+          ingredients TEXT[] NOT NULL,
+          procedure TEXT[] NOT NULL,
+          notes TEXT[],
           imgUrl varchar(255)
         );
   
@@ -126,7 +126,7 @@ const {
   
   async function createInitialRecipes() {
     try {
-      const [adminTest, userTest] = await getAllUsers();
+      const [adminTest] = await getAllUsers();
   
       console.log("Starting to create recipes...");
       await createRecipe({
