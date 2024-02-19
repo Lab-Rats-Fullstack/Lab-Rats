@@ -14,7 +14,7 @@ function App() {
   const [token, setToken] = useState(null)
 
   return (
-    <>Hello Lab Rats
+    <><h1>Hello Lab Rats</h1>
     <NavBar />
     <Routes>
       <Route path ="/" element={<MainPage token ={token}/>}></Route>
