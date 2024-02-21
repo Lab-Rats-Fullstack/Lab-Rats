@@ -1,7 +1,9 @@
 import { Link } from 'react-router-dom'
+import { useNavigate } from 'react-router-dom'
+import { useState } from 'react'
 
-export default function NavBar () {
-// will need to pass token, admin as props and as args to renderUserNav() when functionality is available
+export default function NavBar ({setToken}) {
+    const navigate = useNavigate();
 
     function renderNav () {
         let admin = false;
@@ -12,12 +14,17 @@ export default function NavBar () {
             return <div>
             <Link to="/account">Account</Link>
             <Link to="/admin">Admin</Link>
+            <button onClick={() => {
+                    setToken(null);
+                    navigate("/");
+                }}>Log Out</button>
             </div>
         } else if (!admin && token) {
             return <div>
                 <Link to ="/account">Account</Link>
                 <button onClick={() => {
-                    localStorage.clear();
+                    setToken(null);
+                    navigate("/");
                 }}>Log Out</button>
             </div>
         } else {
