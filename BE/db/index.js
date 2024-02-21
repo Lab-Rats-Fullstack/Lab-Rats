@@ -67,7 +67,7 @@ async function updateUser(id, fields = {}) {
 async function getAllUsers() {
   try {
     const { rows } = await client.query(`
-      SELECT *
+      SELECT id, email, username, name, imgUrl, admin, reviewCount
       FROM users;
     `);
   
@@ -77,15 +77,10 @@ async function getAllUsers() {
   }
 }
 
-
 // GET USER BY ID IN DB
 async function getUserById(userId) {
   try {
-    const { rows: [ user ] } = await client.query(`
-      SELECT *
-      FROM users
-      WHERE id=${ userId }
-    `);
+    const user = await getUserInfoById(userId);
 
     if (!user) {
       throw {
@@ -106,6 +101,21 @@ async function getUserById(userId) {
 
 // GET USER INFO BY ID IN DB
 async function getUserInfoById(userId) {
+  try {
+    const { rows: [ user ] } = await client.query(`
+      SELECT id, email, username, name, imgUrl, admin, reviewCount
+      FROM users
+      WHERE id=${ userId }
+    `);
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
+// GET USER INFO WITH PASSWORD BY ID IN DB
+async function getUserInfoWithPasswordById(userId) {
   try {
     const { rows: [ user ] } = await client.query(`
       SELECT *
@@ -170,7 +180,7 @@ async function getRecipeInfoByReview(reviewId) {
     WHERE id=$1;
   `, [reviewId]);
 
-    return await getRecipeInfoById(recipe.recipeid)
+    return await getRecipeInfoById(recipe.recipeid);
   } catch (error){
     throw (error);
   }
@@ -261,7 +271,7 @@ async function getUserPageRecipesByUser(userId){
       recipe => getUserPageRecipeById( recipe.id )
     ));
 
-    return reviews;
+    return recipes;
   } catch (error) {
     throw error;
   }
@@ -648,6 +658,12 @@ async function createReview({
       RETURNING *;
     `, [userId, recipeId, content, rating]);
 
+    await client.query(`
+      UPDATE users
+      SET reviewCount = reviewCount + 1
+      WHERE id=${ userId };
+    `)
+
   return await getReviewById(review.id);
 
   } catch (error) {
@@ -871,6 +887,8 @@ module.exports = {
   updateUser,
   getAllUsers,
   getUserById,
+  getUserInfoById,
+  getUserInfoWithPasswordById,
   createRecipe,
   updateRecipe, 
   getAllRecipes, 
@@ -881,5 +899,8 @@ module.exports = {
   getAllReviews, 
   createComment, 
   updateComment, 
-  getAllComments 
+  getAllComments,
+  getUserPageCommentsByUser,
+  getUserPageReviewsByUser,
+  getUserPageRecipesByUser
 }
