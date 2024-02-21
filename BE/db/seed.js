@@ -129,7 +129,8 @@ const {
   
   async function createInitialRecipes() {
     try {
-      const [adminTest] = await getAllUsers();
+      const allUsers = await getAllUsers();
+      const adminTest = allUsers[0];
   
       console.log("Starting to create recipes...");
       await createRecipe({

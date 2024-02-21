@@ -66,12 +66,12 @@ async function updateUser(id, fields = {}) {
 // GETS ALL USERS IN DB
 async function getAllUsers() {
   try {
-    const { userInfo } = await client.query(`
+    const { rows: userInfo } = await client.query(`
       SELECT id, email, username, name, imgUrl, admin, reviewCount
       FROM users;
     `);
   
-    return rows;
+    return userInfo;
   } catch (error) {
     throw error;
   }
@@ -327,6 +327,8 @@ async function getAllRecipesPage(){
   const recipes = await Promise.all(recipeIds.map(
     recipe => getUserPageRecipeById( recipe.id )
   ));
+  } catch (error){
+    throw (error);
   }
 }
 
@@ -544,7 +546,7 @@ async function getUserPageReviewById(reviewId){
   try {
     const reviewInfo = await getReviewInfoById(reviewId);
     const userInfo = await getUserInfoById(reviewInfo.userid);
-    const recipeInfo = await getRecipeInfoById(reviewInfo.recipeId);
+    const recipeInfo = await getRecipeInfoById(reviewInfo.recipeid);
     const reviewObject = {
       ...reviewInfo,
       user: userInfo,
@@ -736,7 +738,7 @@ async function getUserPageCommentById(commentId){
   try {
     const commentInfo = await getCommentInfoById(commentId);
     const userInfo = await getUserInfoById(commentInfo.userid);
-    const reviewInfo = await getReviewInfoById(commentInfo.reviewId);
+    const reviewInfo = await getReviewInfoById(commentInfo.reviewid);
     const recipeInfo = await getRecipeInfoById(reviewInfo.recipeid);
     const commentObject = {
       ...commentInfo,
