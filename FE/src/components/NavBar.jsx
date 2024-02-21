@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-export default function NavBar ({setToken}) {
+export default function NavBar ({token, setToken}) {
     const navigate = useNavigate();
 
     function renderNav () {

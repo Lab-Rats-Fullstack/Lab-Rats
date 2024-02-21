@@ -15,7 +15,7 @@ function App() {
 
   return (
     <><h1>Hello Lab Rats</h1>
-    <NavBar setToken={setToken}/>
+    <NavBar token= {token} setToken={setToken}/>
     <Routes>
       <Route path ="/" element={<MainPage token ={token}/>}></Route>
       <Route path ="/recipes" element={<Recipes token ={token}/>}></Route>
