@@ -1,19 +1,18 @@
 const express = require("express");
 const usersRouter = express.Router();
 const bcrypt = require("bcrypt");
-// requireUser eventually
+const { requireUser } = require("./utils");
 
-// import database functions
+const { createUser, getAllUsers, getUserById } = require("../db");
 
 const jwt = require("jsonwebtoken");
 
-usersRouter.get("/", (req, res) => {
+usersRouter.get("/", async (req, res, next) => {
   try {
-    res.json({
-      message: "testing get all users",
-    });
-  } catch (err) {
-    res.status(500).json(err);
+    const users = await getAllUsers();
+    res.send({ users });
+  } catch ({ name, message }) {
+    next({ name, message });
   }
 });
 
