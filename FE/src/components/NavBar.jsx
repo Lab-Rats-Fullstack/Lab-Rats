@@ -3,9 +3,9 @@ import { Link } from 'react-router-dom'
 export default function NavBar () {
 // will need to pass token, admin as props and as args to renderUserNav() when functionality is available
 
-    function renderUserNav () {
+    function renderNav () {
         let admin = false;
-        let token = false;
+        let token = true;
  
  
         if (admin && token) {
@@ -16,6 +16,9 @@ export default function NavBar () {
         } else if (!admin && token) {
             return <div>
                 <Link to ="/account">Account</Link>
+                <button onClick={() => {
+                    localStorage.clear();
+                }}>Log Out</button>
             </div>
         } else {
             return <div>
@@ -28,7 +31,7 @@ export default function NavBar () {
         <div className="navbar">
            <Link to="/">Home</Link>
            <Link to="/recipes">Recipes</Link>
-           {renderUserNav()}
+           {renderNav()}
        </div>
     );
 }
