@@ -66,7 +66,7 @@ async function updateUser(id, fields = {}) {
 // GETS ALL USERS IN DB
 async function getAllUsers() {
   try {
-    const { rows } = await client.query(`
+    const { userInfo } = await client.query(`
       SELECT id, email, username, name, imgUrl, admin, reviewCount
       FROM users;
     `);
@@ -130,7 +130,7 @@ async function getUserInfoWithPasswordById(userId) {
 }
 
 // GET USER INFO BY RECIPE ID IN DB
-async function getUserInfoByRecipe(recipeId) {
+/*async function getUserInfoByRecipe(recipeId) {
   try {
     const { rows: [ recipe ]  } = await client.query(`
     SELECT userId
@@ -142,7 +142,7 @@ async function getUserInfoByRecipe(recipeId) {
   } catch (error){
     throw (error);
   }
-}
+}*/
 
 /**
  * RECIPES Methods
@@ -172,7 +172,7 @@ async function getRecipeInfoById(recipeId) {
 }
 
 // GET RECIPE INFO BY REVIEW ID IN DB
-async function getRecipeInfoByReview(reviewId) {
+/*async function getRecipeInfoByReview(reviewId) {
   try {
     const { rows: [ recipe ]  } = await client.query(`
     SELECT recipeId
@@ -184,7 +184,7 @@ async function getRecipeInfoByReview(reviewId) {
   } catch (error){
     throw (error);
   }
-}
+}*/
 
 // GET RECIPE BY ID IN DB
 async function getRecipeById(recipeId) {
@@ -244,7 +244,7 @@ async function getRecipesByUser(userId) {
 async function getUserPageRecipeById(recipeId){
   try {
     const recipeInfo = await getRecipeInfoById(recipeId);
-    const userInfo = await getUserInfoByRecipe(recipeId);
+    const userInfo = await getUserInfoById(recipeInfo.userid);
 
     const recipeObject = {
       ...recipeInfo,
@@ -313,6 +313,20 @@ async function getAllRecipes() {
     return recipes;
   } catch (error) {
     throw error;
+  }
+}
+
+// GET ALL RECIPES PAGE
+async function getAllRecipesPage(){
+  try {
+    const { rows: recipeIds } = await client.query(`
+    SELECT id
+    FROM recipes;
+  `);
+
+  const recipes = await Promise.all(recipeIds.map(
+    recipe => getUserPageRecipeById( recipe.id )
+  ));
   }
 }
 
@@ -511,7 +525,7 @@ async function getReviewInfoById(reviewId){
 }
 
 // GET REVIEW INFO BY COMMENT ID IN DB
-async function getReviewInfoByComment(commentId) {
+/*async function getReviewInfoByComment(commentId) {
   try {
     const { rows: [ review ]  } = await client.query(`
     SELECT reviewId
@@ -523,13 +537,14 @@ async function getReviewInfoByComment(commentId) {
   } catch (error){
     throw (error);
   }
-}
+}*/
+
 //GET USER PAGE REVIEW BY ID
 async function getUserPageReviewById(reviewId){
   try {
     const reviewInfo = await getReviewInfoById(reviewId);
     const userInfo = await getUserInfoById(reviewInfo.userid);
-    const recipeInfo = await getRecipeInfoByReview(reviewId);
+    const recipeInfo = await getRecipeInfoById(reviewInfo.recipeId);
     const reviewObject = {
       ...reviewInfo,
       user: userInfo,
@@ -721,8 +736,8 @@ async function getUserPageCommentById(commentId){
   try {
     const commentInfo = await getCommentInfoById(commentId);
     const userInfo = await getUserInfoById(commentInfo.userid);
-    const reviewInfo = await getReviewInfoByComment(commentId);
-    const recipeInfo = await getRecipeInfoByReview(reviewInfo.recipeid);
+    const reviewInfo = await getReviewInfoById(commentInfo.reviewId);
+    const recipeInfo = await getRecipeInfoById(reviewInfo.recipeid);
     const commentObject = {
       ...commentInfo,
       user: userInfo,
