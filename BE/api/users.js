@@ -1,30 +1,58 @@
 const express = require("express");
 const usersRouter = express.Router();
 const bcrypt = require("bcrypt");
-// requireUser eventually
+const { requireUser } = require("./utils");
 
-// import database functions
+const {
+  createUser,
+  getAllUsers,
+  getUserById,
+  getUserByUsername,
+} = require("../db");
 
 const jwt = require("jsonwebtoken");
 
-usersRouter.get("/", (req, res) => {
+usersRouter.get("/", async (req, res, next) => {
   try {
-    res.json({
-      message: "testing get all users",
-    });
-  } catch (err) {
-    res.status(500).json(err);
+    const users = await getAllUsers();
+    console.log(users);
+    res.send({ users });
+  } catch ({ name, message }) {
+    next({ name, message });
   }
 });
 
-usersRouter.post("/register", async (req, res) => {
+usersRouter.post("/register", async (req, res, next) => {
   console.log(req.body);
+  const { username, name, email, password: unhashed } = req.body;
+
   try {
-    res.json({
-      message: "testing register a user",
+    const user = await getUserByUsername(username);
+    if (user) {
+      next({
+        name: "UserExistsError",
+        message: "A user by that username already exists",
+      });
+    }
+
+    const password = await bcrypt.hash(unhashed, 10);
+    const newUser = await createUser({
+      username,
+      name,
+      email,
+      password,
     });
-  } catch (err) {
-    res.status(500).json(err);
+
+    const token = jwt.sign({ id: newUser.id }, process.env.JWT_SECRET, {
+      expiresIn: "1w",
+    });
+
+    res.send({
+      message: "Thank you for signing up!",
+      token,
+    });
+  } catch ({ name, message }) {
+    next({ name, message });
   }
 });
 
