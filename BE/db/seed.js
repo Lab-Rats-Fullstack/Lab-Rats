@@ -14,7 +14,10 @@ const {
     getAllReviews, 
     createComment, 
     updateComment, 
-    getAllComments 
+    getAllComments, 
+    getUserPageRecipesByUser,
+    getUserPageReviewsByUser,
+    getUserPageCommentsByUser
   } = require('./index');
   
   async function dropTables() {
@@ -126,7 +129,8 @@ const {
   
   async function createInitialRecipes() {
     try {
-      const [adminTest] = await getAllUsers();
+      const allUsers = await getAllUsers();
+      const adminTest = allUsers[0];
   
       console.log("Starting to create recipes...");
       await createRecipe({
@@ -297,12 +301,12 @@ const {
 
   async function createInitialReviews(){
     try {
-      const [userTest] = await getAllUsers();
+      const allUsers = await getAllUsers();
       const recipes = await getAllRecipes();
   
       console.log("Starting to create reviews...");
       await createReview({
-        userId: userTest.id,
+        userId: allUsers[1].id,
         recipeId: recipes[0].id,
         content: "this is cool",
         rating: 4
@@ -316,12 +320,12 @@ const {
 
   async function createInitialComments(){
     try {
-      const [adminTest] = await getAllUsers();
+      const allUsers = await getAllUsers();
       const reviews = await getAllReviews();
   
       console.log("Starting to create comments...");
       await createComment({
-        userId: adminTest.id,
+        userId: allUsers[0].id,
         reviewId: reviews[0].id,
         content: "thanks bruh",
       });
@@ -357,8 +361,8 @@ const {
       console.log("Result:", users);
   
       console.log("Calling updateUser on users[0]");
-      const updateUserResult = await updateUser(users[0].id, {
-        name: "Admin Test Updated Name"
+      const updateUserResult = await updateUser(users[1].id, {
+        name: "User Test Updated Name"
       });
       console.log("Result:", updateUserResult);
   
@@ -385,7 +389,7 @@ const {
   
       console.log("Calling updateReview on reviews[0]");
       const updateReviewResult = await updateReview(reviews[0].id, {
-        content: "Updated Content"
+        content: "This is cool 2"
       });
       console.log("Result:", updateReviewResult);
 
@@ -395,7 +399,7 @@ const {
   
       console.log("Calling updateComment on comments[0]");
       const updateCommentResult = await updateComment(comments[0].id, {
-        content: "Updated Content"
+        content: "thanks bruh 2"
       });
       console.log("Result:", updateCommentResult);
   
@@ -410,6 +414,27 @@ const {
       console.log("Calling getRecipesByTagName with salads");
       const recipesWithGrandma = await getRecipesByTagName("salads");
       console.log("Result:", recipesWithGrandma);
+
+      console.log("Getting User Page Recipes with User ID 1");
+      const userRecipes = await getUserPageRecipesByUser(1);
+      console.log("Result:", userRecipes );
+
+      console.log("user id 1");
+      const test = await getUserById(1);
+      console.log(test);
+
+      console.log("user id 2");
+      const test2 = await getUserById(2);
+      console.log(test2);
+
+      console.log("Getting User Page Reviews with User ID 2");
+      const userReviews = await getUserPageReviewsByUser(2);
+      console.log("Result:", userReviews );
+
+      console.log("Getting User Page Comments with User ID 1");
+      const userComments = await getUserPageCommentsByUser(1);
+      console.log("Result:", userComments );
+      
   
       console.log("Finished database tests!");
     } catch (error) {
