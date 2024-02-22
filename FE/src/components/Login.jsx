@@ -3,10 +3,8 @@ import { useNavigate } from 'react-router-dom'
 
 export default function Login ({token, setToken}) {
     const [email, setEmail] = useState('');
-    //const [password, setPassword] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
-    //const [username, setUsername] = useState('');
     const [loginUsername, setLoginUsername] = useState('');
     const [registerUsername, setRegisterUsername] = useState('');
     const [name, setName] = useState('');
@@ -32,13 +30,13 @@ export default function Login ({token, setToken}) {
             const userAuth = await response.json();
             if (userAuth.token) {
                 setToken(userAuth.token);
-                alert(userAuth.message); //do we have a message for this for successful login?
+                alert(userAuth.message);
                 navigate('/account');
             } else {
-                setFailMessage(userAuth.message); //do we have a message for a failed login?
+                setFailMessage(userAuth.message);
             }
         } catch (error) {
-            setError(error.message); //do we have an error message?
+            setError(error.message);
         }
     }
 
@@ -60,13 +58,13 @@ export default function Login ({token, setToken}) {
             const userAuth = await response.json();
             if (userAuth.token){
                 setToken(userAuth.token);
-                alert(userAuth.message); //do we have a message for this for successful login?
+                alert(userAuth.message);
                 navigate('/account');
             } else {
-                setFailMessage(userAuth.message); //do we have a message for a failed login?
+                setFailMessage(userAuth.message);
             }
         } catch (error) {
-            setError(error.message); //do we have an error message?
+            setError(error.message);
         }
     }
 
