@@ -56,14 +56,33 @@ usersRouter.post("/register", async (req, res, next) => {
   }
 });
 
-usersRouter.post("/login", async (req, res) => {
-  console.log(req.body);
-  try {
-    res.json({
-      message: "testing login a user",
+usersRouter.post("/login", async (req, res, next) => {
+  const { username, password } = req.body;
+  if (!username || !password) {
+    next({
+      name: "MissingCredentialsError",
+      message: "Please provide username and password",
     });
+  }
+  try {
+    const user = await getUserByUsername(username);
+    if (user && bcrypt.compare(user.password, password)) {
+      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
+        expiresIn: "1w",
+      });
+      res.send({
+        message: "Successfully logged in!",
+        token,
+      });
+    } else {
+      next({
+        name: "InvalidCredentialsError",
+        message: "Invalid username or password",
+      });
+    }
   } catch (err) {
-    res.status(500).json(err);
+    console.log(err);
+    next(err);
   }
 });
 
