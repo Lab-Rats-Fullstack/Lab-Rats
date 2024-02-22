@@ -1,14 +1,20 @@
-import {useState } from 'react'
+import {useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function Login ({token, setToken}) {
     const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [username, setUsername] = useState('');
+    //const [password, setPassword] = useState('');
+    const [loginPassword, setLoginPassword] = useState('');
+    const [registerPassword, setRegisterPassword] = useState('');
+    //const [username, setUsername] = useState('');
+    const [loginUsername, setLoginUsername] = useState('');
+    const [registerUsername, setRegisterUsername] = useState('');
     const [name, setName] = useState('');
     const [error, setError] = useState(null);
     const [failMessage, setFailMessage] = useState ('');
     const navigate = useNavigate();
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [buttonStatus, setButtonStatus] = useState(true);
 
     async function loginUser(event) {
         event.preventDefault ();
@@ -19,13 +25,12 @@ export default function Login ({token, setToken}) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username,
-                    password,
+                    username: loginUsername,
+                    password: loginPassword,
                 })
             });
             const userAuth = await response.json();
             if (userAuth.token) {
-
                 setToken(userAuth.token);
                 alert(userAuth.message); //do we have a message for this for successful login?
                 navigate('/account');
@@ -46,9 +51,9 @@ export default function Login ({token, setToken}) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    username,
+                    username: registerUsername,
                     email,
-                    password,
+                    password: registerPassword,
                     name,
                 })
             });
@@ -65,6 +70,20 @@ export default function Login ({token, setToken}) {
         }
     }
 
+    useEffect(() => {
+        async function enableButton () {
+            try {
+                if (registerPassword == confirmPassword) {
+                    setButtonStatus(false);
+                } else {
+                    setButtonStatus(true);
+                }
+            } catch(error) {
+                console.log(error);
+            }
+        }enableButton();
+    }, [registerPassword, confirmPassword]);
+
     return (
         <><p>This is the Login and Registration page</p> 
         <div className = 'wrapper'>
@@ -76,9 +95,9 @@ export default function Login ({token, setToken}) {
                     <label>
                         Username:
                         <input 
-                            value = {username}
+                            value = {loginUsername}
                             required = {true}
-                            onChange = {(e) => setUsername(e.target.value)}
+                            onChange = {(e) => setLoginUsername(e.target.value)}
                         />
                     </label>
                     <br/>
@@ -86,9 +105,9 @@ export default function Login ({token, setToken}) {
                         Password:
                         <input 
                             type = "password"
-                            value = {password}
+                            value = {loginPassword}
                             required = {true}
-                            onChange = {(e) => setPassword(e.target.value)}
+                            onChange = {(e) => setLoginPassword(e.target.value)}
                         />
                     </label>
                     <br/>            
@@ -103,9 +122,9 @@ export default function Login ({token, setToken}) {
                     <label>
                         Username:
                         <input
-                            value = {username}
+                            value = {registerUsername}
                             required = {true}
-                            onChange = {(e)=> setUsername(e.target.value)}
+                            onChange = {(e)=> setRegisterUsername(e.target.value)}
                         />
                     </label>
                     <br/>
@@ -127,18 +146,28 @@ export default function Login ({token, setToken}) {
                         />
                     </label>
                     <br/>
-                    {/* want to make a password confirmation section prior to setting the password */}
                     <label>
                         Password:
                         <input
                             type = "password"
-                            value = {password}
+                            value = {registerPassword}
                             required = {true}
-                            onChange = {(e)=> setPassword(e.target.value)}
+                            onChange = {(e)=> setRegisterPassword(e.target.value)}
                         />
                     </label>
                     <br/>
-                    <button type='submit'>Submit</button>
+                    <label>
+                         Confirm Password:
+                        <input
+                            type = "password"
+                            value = {confirmPassword}
+                            required = {true}
+                            onChange = {(e)=> setConfirmPassword(e.target.value)}
+                        />
+                    </label>
+                    {buttonStatus == true && <p>Passwords must match</p>}
+                    <br/>
+                    <button type='submit' disabled = {buttonStatus} >Submit</button>
                 </form>
             </div>
         </div>
