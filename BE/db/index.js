@@ -99,6 +99,21 @@ async function getUserById(userId) {
   }
 }
 
+// GET USER BY USERNAME IN DB
+async function getUserByUsername(username) {
+  try {
+    const { rows: [ user ] } = await client.query(`
+      SELECT *
+      FROM users
+      WHERE username=$1
+    `, [ username ]);
+
+    return user;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // GET USER INFO BY ID IN DB
 async function getUserInfoById(userId) {
   try {
@@ -129,20 +144,6 @@ async function getUserInfoWithPasswordById(userId) {
   }
 }
 
-// GET USER INFO BY RECIPE ID IN DB
-/*async function getUserInfoByRecipe(recipeId) {
-  try {
-    const { rows: [ recipe ]  } = await client.query(`
-    SELECT userId
-    FROM recipes
-    WHERE id=$1;
-  `, [recipeId]);
-
-    return await getUserInfoById(recipe.userid);
-  } catch (error){
-    throw (error);
-  }
-}*/
 
 /**
  * RECIPES Methods
@@ -171,20 +172,6 @@ async function getRecipeInfoById(recipeId) {
   }
 }
 
-// GET RECIPE INFO BY REVIEW ID IN DB
-/*async function getRecipeInfoByReview(reviewId) {
-  try {
-    const { rows: [ recipe ]  } = await client.query(`
-    SELECT recipeId
-    FROM reviews
-    WHERE id=$1;
-  `, [reviewId]);
-
-    return await getRecipeInfoById(recipe.recipeid);
-  } catch (error){
-    throw (error);
-  }
-}*/
 
 // GET RECIPE BY ID IN DB
 async function getRecipeById(recipeId) {
@@ -526,20 +513,6 @@ async function getReviewInfoById(reviewId){
   }
 }
 
-// GET REVIEW INFO BY COMMENT ID IN DB
-/*async function getReviewInfoByComment(commentId) {
-  try {
-    const { rows: [ review ]  } = await client.query(`
-    SELECT reviewId
-    FROM comments
-    WHERE id=$1;
-  `, [commentId]);
-
-    return getReviewInfoById(review.reviewid)
-  } catch (error){
-    throw (error);
-  }
-}*/
 
 //GET USER PAGE REVIEW BY ID
 async function getUserPageReviewById(reviewId){
@@ -906,6 +879,7 @@ module.exports = {
   getUserById,
   getUserInfoById,
   getUserInfoWithPasswordById,
+  getUserByUsername,
   createRecipe,
   updateRecipe, 
   getAllRecipes, 
