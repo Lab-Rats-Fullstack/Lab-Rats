@@ -231,10 +231,19 @@ async function getRecipesByUser(userId) {
 async function getUserPageRecipeById(recipeId){
   try {
     const recipeInfo = await getRecipeInfoById(recipeId);
+
+    const { rows: tags } = await client.query(`
+    SELECT tags.*
+    FROM tags
+    JOIN recipe_tags ON tags.id=recipe_tags.tagId
+    WHERE recipe_tags.recipeId=$1;
+  `, [recipeId]);
+
     const userInfo = await getUserInfoById(recipeInfo.userid);
 
     const recipeObject = {
       ...recipeInfo,
+      tags: tags,
       user: userInfo
     }
   
@@ -278,12 +287,34 @@ async function getRecipesByTagName(tagName) {
     `, [tagName]);
     
     return await Promise.all(recipeIds.map(
-      recipe => getRecipeById(recipe.id)
+      recipe => getUserPageRecipeById(recipe.id)
     ));
   } catch (error) {
     throw error;
   }
 } 
+
+// GET USER RECIPES BY TAG NAME IN DB
+async function getUserRecipesByTagName(userId, tagName) {
+  try {
+    const { rows: recipeIds } = await client.query(`
+      SELECT recipes.id
+      FROM recipes
+      JOIN users ON users.id=recipes.userId
+      JOIN recipe_tags ON recipes.id=recipe_tags.recipeId
+      JOIN tags ON tags.id=recipe_tags.tagId
+      WHERE tags.name=$1 AND users.id=$2;
+    `, [tagName, userId]);
+    
+    return await Promise.all(recipeIds.map(
+      recipe => getUserPageRecipeById(recipe.id)
+    ));
+  } catch (error) {
+    throw error;
+  }
+} 
+
+
 
 // GET ALL RECIPES IN DB
 async function getAllRecipes() {
@@ -314,6 +345,8 @@ async function getAllRecipesPage(){
   const recipes = await Promise.all(recipeIds.map(
     recipe => getUserPageRecipeById( recipe.id )
   ));
+
+  return recipes;
   } catch (error){
     throw (error);
   }
@@ -914,5 +947,6 @@ module.exports = {
   getUserPageReviewsByUser,
   getUserPageRecipesByUser,
   getAllRecipesPage,
-  getReviewedRecipesPage
+  getReviewedRecipesPage,
+  getUserRecipesByTagName
 }

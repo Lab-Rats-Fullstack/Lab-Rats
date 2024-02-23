@@ -18,7 +18,9 @@ const {
     getUserPageRecipesByUser,
     getUserPageReviewsByUser,
     getUserPageCommentsByUser,
-    getReviewedRecipesPage
+    getReviewedRecipesPage,
+    getAllRecipesPage,
+    getUserRecipesByTagName
   } = require('./index');
   
   async function dropTables() {
@@ -436,9 +438,17 @@ const {
       const userComments = await getUserPageCommentsByUser(1);
       console.log("Result:", userComments );
 
+      console.log("Get all recipes page");
+      const allRecipesPage = await getAllRecipesPage();
+      console.log("Result:", allRecipesPage);
+
       console.log("Get reviewed recipes page");
       const reviewedRecipesPage = await getReviewedRecipesPage();
       console.log("Result:", reviewedRecipesPage);
+
+      console.log("Get User Recipes By Tag Name");
+      const userRecipesByTagName = await getUserRecipesByTagName(1, "salads");
+      console.log("Result:", userRecipesByTagName);
       
   
       console.log("Finished database tests!");
