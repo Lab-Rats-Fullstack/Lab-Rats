@@ -68,15 +68,42 @@ async function destroyUserById(userId) {
 
     const destroyedUser = await getUserById(userId);
 
+    const {rows: commentIds} = await client.query(`
+        SELECT id
+        FROM comments
+        WHERE userId=$1;
+    `, [userId]);
+
+    if (commentIds.length > 0) {
+      await Promise.all(commentIds.map((comment) => {
+        return destroyCommentById(comment.id);
+      }));
+    }
+    
+    const {rows: reviewIds} = await client.query(`
+        SELECT id
+        FROM reviews
+        WHERE userId=$1;
+    `, [userId]);
+
+    if (reviewIds.length > 0){
+      await Promise.all(reviewIds.map((review) => {
+        return destroyReviewById(review.id);
+      }));
+    }
+
     const {rows: recipeIds} = await client.query(`
         SELECT id
         FROM recipes
         WHERE userId=$1;
     `, [userId]);
 
-    await Promise.all(recipeIds.forEach((recipe) => {
-      destroyRecipeById(recipe.id);
-    }));
+
+    if (recipeIds.length > 0){
+      await Promise.all(recipeIds.map((recipe) => {
+          return destroyRecipeById(recipe.id);
+      }));
+     }
 
     await client.query(`
         DELETE FROM users
@@ -492,9 +519,11 @@ async function destroyRecipeById(recipeId) {
         WHERE recipeId=$1;
     `, [recipeId]);
 
-    await Promise.all(reviewIds.forEach((review) => {
-      destroyReviewById(review.id);
-    }));
+    if (reviewIds.length > 0){
+      await Promise.all(reviewIds.map((review) => {
+        return destroyReviewById(review.id);
+      }));
+    }
 
     await client.query(`
         DELETE FROM recipes
@@ -820,9 +849,11 @@ async function destroyReviewById(reviewId) {
         WHERE reviewId=$1;
     `, [reviewId]);
 
-    await Promise.all(commentIds.forEach((comment) => {
-      destroyCommentById(comment.id);
-    }));
+    if (commentIds.length > 0){
+      await Promise.all(commentIds.map((comment) => {
+        return destroyCommentById(comment.id);
+      }));
+    }
 
     await client.query(`
         DELETE FROM reviews
