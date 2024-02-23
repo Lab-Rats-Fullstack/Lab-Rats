@@ -20,7 +20,12 @@ const {
     getUserPageCommentsByUser,
     getReviewedRecipesPage,
     getAllRecipesPage,
-    getUserRecipesByTagName
+    getUserRecipesByTagName,
+    destroyUserById,
+    destroyTagById,
+    destroyRecipeById,
+    destroyReviewById,
+    destroyCommentById
   } = require('./index');
   
   async function dropTables() {
