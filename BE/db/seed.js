@@ -17,7 +17,8 @@ const {
     getAllComments, 
     getUserPageRecipesByUser,
     getUserPageReviewsByUser,
-    getUserPageCommentsByUser
+    getUserPageCommentsByUser,
+    getReviewedRecipesPage
   } = require('./index');
   
   async function dropTables() {
@@ -434,6 +435,10 @@ const {
       console.log("Getting User Page Comments with User ID 1");
       const userComments = await getUserPageCommentsByUser(1);
       console.log("Result:", userComments );
+
+      console.log("Get reviewed recipes page");
+      const reviewedRecipesPage = await getReviewedRecipesPage();
+      console.log("Result:", reviewedRecipesPage);
       
   
       console.log("Finished database tests!");

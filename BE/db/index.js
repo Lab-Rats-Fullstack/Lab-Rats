@@ -319,6 +319,25 @@ async function getAllRecipesPage(){
   }
 }
 
+async function getReviewedRecipesPage(){
+  try{
+    const {rows: reviews} = await client.query(`
+    SELECT DISTINCT recipeId
+    FROM reviews;
+    `);
+
+    const reviewedRecipes = await Promise.all(reviews.map((review) => {
+      return getUserPageRecipeById(review.recipeid);
+    }));
+
+    return reviewedRecipes;
+  } catch (error){
+    throw (error)
+  }
+
+
+}
+
 
 // CREATE RECIPE IN DB
 async function createRecipe({
@@ -893,5 +912,7 @@ module.exports = {
   getAllComments,
   getUserPageCommentsByUser,
   getUserPageReviewsByUser,
-  getUserPageRecipesByUser
+  getUserPageRecipesByUser,
+  getAllRecipesPage,
+  getReviewedRecipesPage
 }
