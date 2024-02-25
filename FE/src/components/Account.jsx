@@ -2,7 +2,18 @@ import {useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
 export default function Account ({token}) {
+    const [userData, setUserData] = useState({})
+    const [error, setError] = useState(null);
+    const [fail, setFail] = useState(false);
+    const [success, setSuccess] = useState(false);
+    const navigate = useNavigate();
+    const [update, setUpdate] =useState(0);
+    const [userRecipes, setUserRecipes] =useState(true);
+    const [userReviews, setUserReviews] =useState(false);
+    const [userComments, setUserComments] =useState(false);
+    const [recipeList, setRecipeList] = useState([]);
 
+    token = 2;
     const dummyUser = {
         email: "adminTest@gmail.com",
         password: "adminTestPass",
@@ -98,7 +109,6 @@ export default function Account ({token}) {
             rating: 2
         }
     ]
-
     const dummyComment = [
         {
             userId: 16,
@@ -106,29 +116,91 @@ export default function Account ({token}) {
             content: "thanks bruh",
         }
     ]
+        
+    useEffect(()=>{
+        async function userCheck () {
+            try {
+                // const response = await fetch(`${API}users/me`, {
+                //     method: "GET",
+                //     headers: {
+                //         "Content-Type":"application/json",
+                //         "Authorization": `Bearer ${token}`,
+                //     },
+                // });
+                // const result = await response.json();
+                if (token !== null) {
+                    setUserData(dummyUser);
+                    setFail(false);
+                    setSuccess(true);
+                    setUserRecipes(true);
+                } else {
+                    setFail(true);
+                    setSuccess(false);
+                }
+
+            } catch (error) {
+                setError(error.message);
+                console.log( error );
+            }
+        }userCheck();
+    }, [update])
+
+    async function signIn(){
+        navigate('/login');
+    }
+
+    async function userVersion(){
+        setUpdate((version) => version +1);
+    }
     
+    useEffect(() => {
+        setRecipeList(dummyRecipes);
+    }, []);
+
     return (
         <><p>This is the Account page</p>
         <div className = 'wrapper'>
-            <div className = 'userInfo'>
-                <img src={user.imgUrl} alt={`User account image for ${user.username}`} height="15%" width="22.5%"/>
-                <h2>{user.username}</h2>
-                <p>{user.name}</p>
-                <p>{user.email}</p>
-                <button>Update Profile</button>
-            </div>
-            <div className = 'userItems'>
-                <div className='userItemsNav'>
-                    <p>My Recipes</p>
-                    <p>My Reviews</p>
-                    <p>My Comments</p>
+            {error && <p>{error}</p>}
+            {fail && <div className='fail'><h2>Please Sign In</h2><br/> <button type='login' onClick={signIn}>Log In</button></div>}
+            {success &&
+            <div>
+                <div className = 'userInfo'>
+                    <img src={userData.imgUrl} alt={`User account image for ${userData.username}`} height="15%" width="22.5%"/>
+                    <h2>{userData.username}</h2>
+                    <p>{userData.name}</p>
+                    <p>{userData.email}</p>
+                    <button onClick={userVersion}>Update Profile</button>
                 </div>
-                <div className='itemContent'>
-                    {/* {userRecipes && }
-                    {userReviews && }
-                    {userComments && } */}
+                <div className = 'userItems'>
+                    <div className='userItemsNav'>
+                        <p>My Recipes</p>
+                        <p>My Reviews</p>
+                        <p>My Comments</p>
+                    </div>
+                    <div className='itemContent'>
+                        
+                        <div className="recipesContainer">
+                            <div className = 'userRecipes'>
+                                {recipeList.map((recipe)=>{
+                                    <div className="recipeCard" key={recipe.id}>
+                                        <h2>{recipe.title}</h2>
+                                        <h4>{recipe.userName}</h4>
+                                        <img src={recipe.imgUrl} alt={`A picture of ${recipe.title}`} height="15%" width="22.5%"/>
+                                        <p><em>{recipe.tags}</em></p>
+                                        <p>Est. Time: {recipe.estimatedTime}</p>
+                                        <button onClick={() => {
+                                            navigate(`/recipes/${recipe.id}`)
+                                        }}>See Recipe</button>
+                                    </div>
+                                })}
+                            </div>
+                        </div>
+                        {/* {userReviews && }
+                        {userComments && } */}
+                    </div>
                 </div>
-            </div>
+            </div>}
+            
         </div>
         </>
     )
