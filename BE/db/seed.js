@@ -25,7 +25,8 @@ const {
     destroyTagById,
     destroyRecipeById,
     destroyReviewById,
-    destroyCommentById
+    destroyCommentById,
+    getUserPageById
   } = require('./index');
   
   async function dropTables() {
@@ -470,6 +471,10 @@ const {
       /*console.log("Destroy User By Id");
       const destroyedUser = await destroyUserById(1);
       console.log("Result:", destroyedUser);*/
+
+      console.log("Get Full User Page Data for user 2");
+      const userPage = await getUserPageById(2);
+      console.log("Result:", userPage);
       
       console.log("Finished database tests!");
     } catch (error) {

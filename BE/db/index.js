@@ -1201,5 +1201,6 @@ module.exports = {
   destroyTagById,
   destroyRecipeById,
   destroyReviewById,
-  destroyCommentById
+  destroyCommentById,
+  getUserPageById
 }
