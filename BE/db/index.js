@@ -609,6 +609,23 @@ async function getAllTags() {
   }
 }
 
+// GETS ALL TAGS BY USER
+async function getTagsByUser(userId){
+  try{
+    const {rows: tags} = await client.query(`
+    SELECT tags.id, tags.name
+    FROM tags
+    JOIN recipe_tags ON recipe_tags.tagId=tags.id
+    JOIN recipes ON recipes.id=recipe_tags.recipeId
+    WHERE recipes.userId=$1;
+    `, [userId]);
+
+    return tags;
+  } catch (error){
+    throw (error);
+  }
+}
+
 // CREATE TAGS IN DB
 async function createTags(tagList) {
   if (tagList.length === 0) {
@@ -1202,5 +1219,6 @@ module.exports = {
   destroyRecipeById,
   destroyReviewById,
   destroyCommentById,
-  getUserPageById
+  getUserPageById,
+  getTagsByUser
 }
