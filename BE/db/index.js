@@ -196,7 +196,18 @@ async function getUserInfoWithPasswordById(userId) {
     throw error;
   }
 }
+ 
+async function getUserPageById(userId){
+  try{
+    const userInfo = await getUserInfoById(userId);
+    const recipes = await getUserPageRecipesByUser(userId);
+    const reviews = await getUserPageReviewsByUser(userId);
+    const comments = await getUserPageCommentsByUser(userId);
 
+
+
+  }
+}
 
 /**
  * RECIPES Methods
@@ -305,6 +316,33 @@ async function getUserPageRecipeById(recipeId){
   }
 
 }
+
+  //GET USER PAGE RECIPE BY ID
+  async function getUserPageRecipeById(recipeId){
+    try {
+      const recipeInfo = await getRecipeInfoById(recipeId);
+  
+      const { rows: tags } = await client.query(`
+      SELECT tags.*
+      FROM tags
+      JOIN recipe_tags ON tags.id=recipe_tags.tagId
+      WHERE recipe_tags.recipeId=$1;
+    `, [recipeId]);
+  
+      const userInfo = await getUserInfoById(recipeInfo.userid);
+  
+      const recipeObject = {
+        ...recipeInfo,
+        tags: tags,
+        user: userInfo
+      }
+    
+      return recipeObject;
+    } catch (error) {
+      throw (error);
+    }
+  
+  }
 
 //GET USER PAGE RECIPES BY USER
 async function getUserPageRecipesByUser(userId){
