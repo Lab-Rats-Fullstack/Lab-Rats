@@ -12,8 +12,10 @@ export default function Account ({token}) {
     const [userReviews, setUserReviews] =useState(false);
     const [userComments, setUserComments] =useState(false);
     const [recipeList, setRecipeList] = useState([]);
+    const [reviewList, setReviewList] = useState([]);
+    const [commentList, setCommentList] = useState([]);
 
-    token = 2;
+    token = 2;//temp placeholder
     const dummyUser = {
         email: "adminTest@gmail.com",
         password: "adminTestPass",
@@ -25,7 +27,7 @@ export default function Account ({token}) {
     const dummyRecipes = [
         {
             id: 3,
-            userId: 3,
+            userId: 1,
             userName: "adminTest",
             title: "Butter Chicken",
             estimatedTime: "1 hour",
@@ -65,7 +67,7 @@ export default function Account ({token}) {
         },
         {
             id: 4,
-            userId: 3,
+            userId: 1,
             userName: "adminTest",
             title: "Blue Cheese Dressing",
             estimatedTime: "45 min",
@@ -97,23 +99,62 @@ export default function Account ({token}) {
 
     const dummyReviews = [
         {
-            userId: 2,
-            recipeId: 2,
-            content: "this is cool",
-            rating: 4
-        },
-        {
-            userId: 5,
-            recipeId: 6,
-            content: "Wouldn't make again",
-            rating: 2
+            id: 1,
+            userid: 1,
+            recipeid: 1,
+            content: 'This is cool',
+            rating: 4,
+            user: {
+                id: 1,
+                email: 'adminTest@gmail.com',
+                username: 'adminTest',
+                name: 'Admin Test',
+                imgurl: 'https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png',
+                admin: true,
+                reviewcount: 0
+            },
+            recipe: {
+                id: 1,
+                userid: 2,
+                title: 'New Title',
+                ingredients: [Array],
+                procedure: [Array],
+                notes: [Array],
+                imgurl: 'https://www.foodiesfeed.com/wp-content/uploads/2023/03/close-up-of-butter-chicken-indian-dish.jpg'
+            }
         }
     ]
-    const dummyComment = [
+    const dummyComments = [
         {
-            userId: 16,
-            reviewId: 10,
-            content: "thanks bruh",
+            id: 1,
+            userid: 1,
+            reviewid: 5,
+            content: 'thanks bruh',
+            user: {
+              id: 1,
+              email: 'adminTest@gmail.com',
+              username: 'adminTest',
+              name: 'Admin Test',
+              imgurl: 'https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png',
+              admin: true,
+              reviewcount: 0
+            },
+            review: {
+              id: 5,
+              userid: 2,
+              recipeid: 7,
+              content: 'This is cool 2',
+              rating: 4
+            },
+            recipe: {
+              id: 7,
+              userid: 6,
+              title: 'Tasty Chicken',
+              ingredients: [Array],
+              procedure: [Array],
+              notes: [Array],
+              imgurl: 'https://www.foodiesfeed.com/wp-content/uploads/2023/03/close-up-of-butter-chicken-indian-dish.jpg'
+            }
         }
     ]
         
@@ -127,12 +168,11 @@ export default function Account ({token}) {
                 //         "Authorization": `Bearer ${token}`,
                 //     },
                 // });
-                // const result = await response.json();
+                // const result = await response.json()             
                 if (token !== null) {
                     setUserData(dummyUser);
                     setFail(false);
                     setSuccess(true);
-                    setUserRecipes(true);
                 } else {
                     setFail(true);
                     setSuccess(false);
@@ -149,12 +189,40 @@ export default function Account ({token}) {
         navigate('/login');
     }
 
-    async function userVersion(){
-        setUpdate((version) => version +1);
+    async function userUpdate() {
+        try {
+            // const response = await fetch(`${API}users/me`, {
+            //     method: "PATCH",
+            //     headers: {
+            //         "Content-Type":"application/json",
+            //         "Authorization": `Bearer ${token}`,
+            //     },
+                    // body: JSON.stringify({
+                    //     username,
+                    //     email,
+                    //     password: registerPassword,
+                    //     name,
+                    //     imgUrl,
+                    //     admin
+                    // })
+            // });
+            // const result = await response.json()             
+            setUserData(dummyUser);
+            setUpdate((version) => version +1);
+        } catch (error) {
+            setError(error.message);
+            console.log( error );
+        }
     }
-    
+
     useEffect(() => {
         setRecipeList(dummyRecipes);
+    }, []);
+    useEffect(() => {
+        setReviewList(dummyReviews);
+    }, []);
+    useEffect(() => {
+        setCommentList(dummyComments);
     }, []);
 
     return (
@@ -169,34 +237,84 @@ export default function Account ({token}) {
                     <h2>{userData.username}</h2>
                     <p>{userData.name}</p>
                     <p>{userData.email}</p>
-                    <button onClick={userVersion}>Update Profile</button>
+                    <button onClick={userUpdate}>Update Profile</button>
                 </div>
                 <div className = 'userItems'>
                     <div className='userItemsNav'>
-                        <p>My Recipes</p>
-                        <p>My Reviews</p>
-                        <p>My Comments</p>
+                        <button onClick={() => {
+                            setUserRecipes(true);
+                            setUserReviews(false);
+                            setUserComments(false);
+                        }}>My Recipes</button>
+                        <button onClick={() => {
+                            setUserRecipes(false);
+                            setUserReviews(true);
+                            setUserComments(false);
+                        }}>My Reviews</button>
+                        <button onClick={() => {
+                            setUserRecipes(false);
+                            setUserReviews(false);
+                            setUserComments(true);
+                        }}>My Comments</button>
                     </div>
                     <div className='itemContent'>
-                        
+                        {userRecipes && 
                         <div className="recipesContainer">
                             <div className = 'userRecipes'>
+                                <h2>My Recipes</h2>
                                 {recipeList.map((recipe)=>{
+                                    return (
                                     <div className="recipeCard" key={recipe.id}>
-                                        <h2>{recipe.title}</h2>
-                                        <h4>{recipe.userName}</h4>
+                                        <h3>{recipe.title}</h3>
                                         <img src={recipe.imgUrl} alt={`A picture of ${recipe.title}`} height="15%" width="22.5%"/>
                                         <p><em>{recipe.tags}</em></p>
                                         <p>Est. Time: {recipe.estimatedTime}</p>
                                         <button onClick={() => {
                                             navigate(`/recipes/${recipe.id}`)
                                         }}>See Recipe</button>
-                                    </div>
+                                        <button onClick={() => {
+                                            navigate(`/recipes/${recipe.id}/edit`)
+                                        }}>Edit Recipe</button>
+                                    </div>)
                                 })}
                             </div>
                         </div>
-                        {/* {userReviews && }
-                        {userComments && } */}
+                        }
+                        {userReviews && 
+                        <div className="reviewContainer">
+                            <div className = 'userReviews'>
+                                <h2>My Reviews</h2>
+                                {reviewList.map((review)=>{
+                                    return (
+                                    <div className="reviewCard" key={review.id}>
+                                        <h3>Review: {review.content}</h3>
+                                        <p>for recipe {review.recipe.title}</p>
+                                        <p>Rating: {review.rating}</p>
+                                        <button onClick={() => {
+                                            navigate(`/recipes/${review.recipe.id}`)
+                                        }}>See Recipe</button>                
+                                    </div>)
+                                })}
+                            </div>
+                        </div>
+                        }
+                        {userComments && 
+                        <div className="commentContainer">
+                            <div className = 'usercomments'>
+                                <h2>My Comments</h2>
+                                {commentList.map((comment)=>{
+                                    return (
+                                    <div className="commentCard" key={comment.id}>
+                                        <h3>Comment: {comment.content}</h3>
+                                        <p>On review {comment.review.content} for recipe {comment.recipe.title}</p>
+                                        <button onClick={() => {
+                                            navigate(`/recipes/${comment.recipe.id}`)
+                                        }}>See Recipe</button>                  
+                                    </div>)
+                                })}
+                            </div>
+                        </div>
+                        }
                     </div>
                 </div>
             </div>}
