@@ -63,6 +63,59 @@ async function updateUser(id, fields = {}) {
   }
 }
 
+async function destroyUserById(userId) {
+  try {
+
+    const destroyedUser = await getUserById(userId);
+
+    const {rows: commentIds} = await client.query(`
+        SELECT id
+        FROM comments
+        WHERE userId=$1;
+    `, [userId]);
+
+    if (commentIds.length > 0) {
+      await Promise.all(commentIds.map((comment) => {
+        return destroyCommentById(comment.id);
+      }));
+    }
+    
+    const {rows: reviewIds} = await client.query(`
+        SELECT id
+        FROM reviews
+        WHERE userId=$1;
+    `, [userId]);
+
+    if (reviewIds.length > 0){
+      await Promise.all(reviewIds.map((review) => {
+        return destroyReviewById(review.id);
+      }));
+    }
+
+    const {rows: recipeIds} = await client.query(`
+        SELECT id
+        FROM recipes
+        WHERE userId=$1;
+    `, [userId]);
+
+
+    if (recipeIds.length > 0){
+      await Promise.all(recipeIds.map((recipe) => {
+          return destroyRecipeById(recipe.id);
+      }));
+     }
+
+    await client.query(`
+        DELETE FROM users
+        WHERE id = $1
+    `, [userId]);
+
+    return destroyedUser;
+  } catch (error) {
+    throw error;
+  }
+}
+
 // GETS ALL USERS IN DB
 async function getAllUsers() {
   try {
@@ -207,7 +260,6 @@ async function getRecipeById(recipeId) {
 }
 
 
-
 // GET RECIPES BY USER IN DB
 async function getRecipesByUser(userId) {
     try {
@@ -231,10 +283,19 @@ async function getRecipesByUser(userId) {
 async function getUserPageRecipeById(recipeId){
   try {
     const recipeInfo = await getRecipeInfoById(recipeId);
+
+    const { rows: tags } = await client.query(`
+    SELECT tags.*
+    FROM tags
+    JOIN recipe_tags ON tags.id=recipe_tags.tagId
+    WHERE recipe_tags.recipeId=$1;
+  `, [recipeId]);
+
     const userInfo = await getUserInfoById(recipeInfo.userid);
 
     const recipeObject = {
       ...recipeInfo,
+      tags: tags,
       user: userInfo
     }
   
@@ -278,12 +339,34 @@ async function getRecipesByTagName(tagName) {
     `, [tagName]);
     
     return await Promise.all(recipeIds.map(
-      recipe => getRecipeById(recipe.id)
+      recipe => getUserPageRecipeById(recipe.id)
     ));
   } catch (error) {
     throw error;
   }
 } 
+
+// GET USER RECIPES BY TAG NAME IN DB
+async function getUserRecipesByTagName(userId, tagName) {
+  try {
+    const { rows: recipeIds } = await client.query(`
+      SELECT recipes.id
+      FROM recipes
+      JOIN users ON users.id=recipes.userId
+      JOIN recipe_tags ON recipes.id=recipe_tags.recipeId
+      JOIN tags ON tags.id=recipe_tags.tagId
+      WHERE tags.name=$1 AND users.id=$2;
+    `, [tagName, userId]);
+    
+    return await Promise.all(recipeIds.map(
+      recipe => getUserPageRecipeById(recipe.id)
+    ));
+  } catch (error) {
+    throw error;
+  }
+} 
+
+
 
 // GET ALL RECIPES IN DB
 async function getAllRecipes() {
@@ -314,9 +397,30 @@ async function getAllRecipesPage(){
   const recipes = await Promise.all(recipeIds.map(
     recipe => getUserPageRecipeById( recipe.id )
   ));
+
+  return recipes;
   } catch (error){
     throw (error);
   }
+}
+
+async function getReviewedRecipesPage(){
+  try{
+    const {rows: reviews} = await client.query(`
+    SELECT DISTINCT recipeId
+    FROM reviews;
+    `);
+
+    const reviewedRecipes = await Promise.all(reviews.map((review) => {
+      return getUserPageRecipeById(review.recipeid);
+    }));
+
+    return reviewedRecipes;
+  } catch (error){
+    throw (error)
+  }
+
+
 }
 
 
@@ -399,6 +503,39 @@ async function updateRecipe(recipeId, fields = {}) {
   }
 }
 
+async function destroyRecipeById(recipeId) {
+  try {
+
+    const destroyedRecipe = await getRecipeById(recipeId);
+
+    await client.query(`
+        DELETE FROM recipe_tags
+        WHERE recipeId=$1;
+    `, [recipeId]);
+
+    const {rows: reviewIds} = await client.query(`
+        SELECT id
+        FROM reviews
+        WHERE recipeId=$1;
+    `, [recipeId]);
+
+    if (reviewIds.length > 0){
+      await Promise.all(reviewIds.map((review) => {
+        return destroyReviewById(review.id);
+      }));
+    }
+
+    await client.query(`
+        DELETE FROM recipes
+        WHERE id = $1
+    `, [recipeId]);
+
+    return destroyedRecipe;
+  } catch (error) {
+    throw error;
+  }
+}
+
 /**
  * TAGS Methods
  */
@@ -466,6 +603,21 @@ async function addTagsToRecipe(recipeId, tagList) {
     await Promise.all(createRecipeTagPromises);
 
     return await getRecipeById(recipeId);
+  } catch (error) {
+    throw error;
+  }
+}
+
+async function destroyTagById(tagId) {
+  try {
+
+    const destroyedTag = await client.query(`
+      DELETE FROM tags
+      WHERE id=$1
+      RETURN *
+    `, [tagId]);
+
+    return destroyedTag;
   } catch (error) {
     throw error;
   }
@@ -686,6 +838,33 @@ async function updateReview(reviewId, fields = {}) {
   }
 }
 
+async function destroyReviewById(reviewId) {
+  try {
+
+    const destroyedReview = await getReviewById(reviewId);
+
+    const {rows: commentIds} = await client.query(`
+        SELECT id
+        FROM comments
+        WHERE reviewId=$1;
+    `, [reviewId]);
+
+    if (commentIds.length > 0){
+      await Promise.all(commentIds.map((comment) => {
+        return destroyCommentById(comment.id);
+      }));
+    }
+
+    await client.query(`
+        DELETE FROM reviews
+        WHERE id = $1
+    `, [reviewId]);
+
+    return destroyedReview;
+  } catch (error) {
+    throw error;
+  }
+}
 
 /**
  * COMMENTS Methods
@@ -871,6 +1050,22 @@ async function updateComment(commentId, fields = {}) {
   }
 }
 
+async function destroyCommentById(commentId) {
+  try {
+    const destroyedComment = await getCommentById(commentId);
+
+    await client.query(`
+        DELETE FROM comments
+        WHERE id = $1
+    `, [commentId]);
+
+    return destroyedComment;
+  } catch (error) {
+    throw error;
+  }
+}
+
+
 module.exports = {  
   client,
   createUser,
@@ -893,5 +1088,13 @@ module.exports = {
   getAllComments,
   getUserPageCommentsByUser,
   getUserPageReviewsByUser,
-  getUserPageRecipesByUser
+  getUserPageRecipesByUser,
+  getAllRecipesPage,
+  getReviewedRecipesPage,
+  getUserRecipesByTagName,
+  destroyUserById,
+  destroyTagById,
+  destroyRecipeById,
+  destroyReviewById,
+  destroyCommentById
 }

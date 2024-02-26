@@ -17,7 +17,15 @@ const {
     getAllComments, 
     getUserPageRecipesByUser,
     getUserPageReviewsByUser,
-    getUserPageCommentsByUser
+    getUserPageCommentsByUser,
+    getReviewedRecipesPage,
+    getAllRecipesPage,
+    getUserRecipesByTagName,
+    destroyUserById,
+    destroyTagById,
+    destroyRecipeById,
+    destroyReviewById,
+    destroyCommentById
   } = require('./index');
   
   async function dropTables() {
@@ -434,8 +442,35 @@ const {
       console.log("Getting User Page Comments with User ID 1");
       const userComments = await getUserPageCommentsByUser(1);
       console.log("Result:", userComments );
+
+      console.log("Get all recipes page");
+      const allRecipesPage = await getAllRecipesPage();
+      console.log("Result:", allRecipesPage);
+
+      console.log("Get reviewed recipes page");
+      const reviewedRecipesPage = await getReviewedRecipesPage();
+      console.log("Result:", reviewedRecipesPage);
+
+      console.log("Get User Recipes By Tag Name");
+      const userRecipesByTagName = await getUserRecipesByTagName(1, "salads");
+      console.log("Result:", userRecipesByTagName);
+
+      /*console.log("Destroy Comment By Id");
+      const destroyedComment = await destroyCommentById(1);
+      console.log("Result:", destroyedComment);*/
+
+      /*console.log("Destroy Review By Id");
+      const destroyedReview = await destroyReviewById(1);
+      console.log("Result:", destroyedReview);*/
+
+      /*console.log("Destroy Recipe By Id");
+      const destroyedRecipe = await destroyRecipeById(2);
+      console.log("Result:", destroyedRecipe);*/
+
+      /*console.log("Destroy User By Id");
+      const destroyedUser = await destroyUserById(1);
+      console.log("Result:", destroyedUser);*/
       
-  
       console.log("Finished database tests!");
     } catch (error) {
       console.log("Error during testDB");
