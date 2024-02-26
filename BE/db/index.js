@@ -204,8 +204,17 @@ async function getUserPageById(userId){
     const reviews = await getUserPageReviewsByUser(userId);
     const comments = await getUserPageCommentsByUser(userId);
 
+    const userObject = {
+      ...userInfo,
+      recipes: recipes,
+      reviews: reviews,
+      comments: comments
+    }
 
+    return userObject;
 
+  } catch (error) {
+    throw (error);
   }
 }
 
