@@ -14,6 +14,15 @@ export default function Account ({token}) {
     const [recipeList, setRecipeList] = useState([]);
     const [reviewList, setReviewList] = useState([]);
     const [commentList, setCommentList] = useState([]);
+    const [email, setEmail] = useState('');
+    const [username, setUsername] = useState('');
+    const [name, setName] = useState('');
+    const [userImg, setUserImg] = useState('');
+    const [password, setPassword] = useState('');
+    const [confirmPassword, setConfirmPassword] = useState('');
+    const [buttonStatus, setButtonStatus] = useState(true);
+    const [userForm, setUserForm] = useState(false);
+    const [userBio, setUserBio] = useState(true);
 
     token = 2;//temp placeholder
     const dummyUser = {
@@ -95,7 +104,7 @@ export default function Account ({token}) {
             ],
             tags: ["condiment"],
           }
-        ]
+    ]
 
     const dummyReviews = [
         {
@@ -171,8 +180,13 @@ export default function Account ({token}) {
                 // const result = await response.json()             
                 if (token !== null) {
                     setUserData(dummyUser);
+                    setRecipeList(dummyRecipes);
+                    setReviewList(dummyReviews);
+                    setCommentList(dummyComments);
                     setFail(false);
                     setSuccess(true);
+                    // setUserBio(true);
+                    // setUserForm(false);
                 } else {
                     setFail(true);
                     setSuccess(false);
@@ -197,18 +211,20 @@ export default function Account ({token}) {
             //         "Content-Type":"application/json",
             //         "Authorization": `Bearer ${token}`,
             //     },
-                    // body: JSON.stringify({
-                    //     username,
-                    //     email,
-                    //     password: registerPassword,
-                    //     name,
-                    //     imgUrl,
-                    //     admin
-                    // })
+            //         body: JSON.stringify({
+            //             username,
+            //             email,
+            //             password: registerPassword,
+            //             name,
+            //             imgUrl: userImg,
+            //             admin
+            //         })
             // });
             // const result = await response.json()             
             setUserData(dummyUser);
             setUpdate((version) => version +1);
+            setUserForm(false);
+            setUserBio(true);
         } catch (error) {
             setError(error.message);
             console.log( error );
@@ -216,14 +232,18 @@ export default function Account ({token}) {
     }
 
     useEffect(() => {
-        setRecipeList(dummyRecipes);
-    }, []);
-    useEffect(() => {
-        setReviewList(dummyReviews);
-    }, []);
-    useEffect(() => {
-        setCommentList(dummyComments);
-    }, []);
+        async function enableButton () {
+            try {
+                if (password == confirmPassword) {
+                    setButtonStatus(false);
+                } else {
+                    setButtonStatus(true);
+                }
+            } catch(error) {
+                console.log(error);
+            }
+        }enableButton();
+    }, [password, confirmPassword]);
 
     return (
         <><p>This is the Account page</p>
@@ -232,13 +252,80 @@ export default function Account ({token}) {
             {fail && <div className='fail'><h2>Please Sign In</h2><br/> <button type='login' onClick={signIn}>Log In</button></div>}
             {success &&
             <div>
-                <div className = 'userInfo'>
-                    <img src={userData.imgUrl} alt={`User account image for ${userData.username}`} height="15%" width="22.5%"/>
-                    <h2>{userData.username}</h2>
-                    <p>{userData.name}</p>
-                    <p>{userData.email}</p>
-                    <button onClick={userUpdate}>Update Profile</button>
+                {userBio && 
+                    <div className = 'userInfo'>
+                        <img src={userData.imgUrl} alt={`User account image for ${userData.username}`} height="15%" width="22.5%"/>
+                        <h2>{userData.username}</h2>
+                        <p>{userData.name}</p>
+                        <p>{userData.email}</p>
+                        <button onClick={() => {setUserBio(true); setUserForm(true);}}>Update Profile</button>
+                    </div>
+                }
+                
+                {userForm &&
+                    <div className = 'userUpdateForm'>
+                    <form onSubmit = {userUpdate}>
+                        <label>
+                            Profile Image:
+                            <input
+                                defaultValue = {userData.imgUrl}
+                                required = {true}
+                                onChange = {(e)=> setUserImg(e.target.value)}
+                            />
+                        </label>
+                        <br/>
+                        <label>
+                            Username:
+                            <input
+                                defaultValue = {userData.username}
+                                required = {true}
+                                onChange = {(e)=> setUsername(e.target.value)}
+                            />
+                        </label>
+                        <br/>
+                        <label>
+                            Email:
+                            <input
+                                defaultValue = {userData.email}
+                                required = {true}
+                                onChange = {(e)=> setEmail(e.target.value)}
+                            />
+                        </label>
+                        <br/>
+                        <label>
+                            Name:
+                            <input
+                                defaultValue = {userData.name}
+                                required = {true}
+                                onChange = {(e)=> setName(e.target.value)}
+                            />
+                        </label>
+                        <br/>
+                        <label>
+                            Password:
+                            <input
+                                type = "password"
+                                defaultValue = {password}
+                                required = {true}
+                                onChange = {(e)=> setPassword(e.target.value)}
+                            />
+                        </label>
+                        <br/>
+                        <label>
+                            Confirm Password:
+                            <input
+                                type = "password"
+                                value = {confirmPassword}
+                                required = {true}
+                                onChange = {(e)=> setConfirmPassword(e.target.value)}
+                            />
+                        </label>
+                        {buttonStatus == true && <p>Passwords must match</p>}
+                        <br/>
+                        <button type='submit' disabled = {buttonStatus} >Submit</button>
+                    </form>
                 </div>
+                }
                 <div className = 'userItems'>
                     <div className='userItemsNav'>
                         <button onClick={() => {
