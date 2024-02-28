@@ -5,9 +5,10 @@ const { requireUser } = require("./utils");
 
 const {
   createUser,
+  updateUser,
   getAllUsers,
-  getUserById,
   getUserByUsername,
+  getUserPageById,
 } = require("../db");
 
 const jwt = require("jsonwebtoken");
@@ -15,7 +16,7 @@ const jwt = require("jsonwebtoken");
 usersRouter.get("/", async (req, res, next) => {
   try {
     const users = await getAllUsers();
-    console.log(users);
+
     res.send({ users });
   } catch ({ name, message }) {
     next({ name, message });
@@ -23,7 +24,6 @@ usersRouter.get("/", async (req, res, next) => {
 });
 
 usersRouter.post("/register", async (req, res, next) => {
-  console.log(req.body);
   const { username, name, email, password: unhashed } = req.body;
 
   try {
@@ -81,71 +81,42 @@ usersRouter.post("/login", async (req, res, next) => {
       });
     }
   } catch (err) {
-    console.log(err);
     next(err);
   }
 });
 
-usersRouter.get("/me", async (req, res) => {
+usersRouter.get("/me", requireUser, async (req, res) => {
+  const { user } = req;
+  const { id: userId } = user;
   try {
-    res.json({
-      message: "testing get my information",
-    });
+    const me = await getUserPageById(userId);
+    res.send(me);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
-usersRouter.patch("/me", async (req, res) => {
+usersRouter.patch("/me", requireUser, async (req, res, next) => {
   try {
-    res.json({
-      message: "testing patch my information",
-    });
+    const { id } = req.user;
+    const { body: fields } = req;
+    if (fields.password) {
+      fields.password = await bcrypt.hash(fields.password, 10);
+    }
+    const updatedUser = await updateUser(id, fields);
+    res.send(updatedUser);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
 usersRouter.get("/:userId/", async (req, res) => {
   const { userId } = req.params;
   try {
-    res.json({
-      message: `testing get a user with the id: ${userId}`,
-    });
+    const user = await getUserPageById(userId);
+    res.send(user);
   } catch (err) {
-    res.status(500).json(err);
-  }
-});
-usersRouter.get("/:userId/recipes", async (req, res) => {
-  const { userId } = req.params;
-  try {
-    res.json({
-      message: `testing get all recipes for a user with the id: ${userId}`,
-    });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-usersRouter.get("/:userId/reviews", async (req, res) => {
-  const { userId } = req.params;
-  try {
-    res.json({
-      message: `testing get all reviews for a user with the id: ${userId}`,
-    });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-usersRouter.get("/:userId/comments", async (req, res) => {
-  const { userId } = req.params;
-  try {
-    res.json({
-      message: `testing get all comments for a user with the id: ${userId}`,
-    });
-  } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
