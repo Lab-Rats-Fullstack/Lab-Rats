@@ -25,7 +25,9 @@ const {
     destroyTagById,
     destroyRecipeById,
     destroyReviewById,
-    destroyCommentById
+    destroyCommentById,
+    getUserPageById,
+    getTagsByUser
   } = require('./index');
   
   async function dropTables() {
@@ -126,7 +128,7 @@ const {
         password: 'userTestPass',
         username: 'userTest', 
         name: 'User Test',
-        imgUrl: 'hhttps://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg'
+        imgUrl: 'https://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg'
       });
       console.log("Finished creating users!");
     } catch (error) {
@@ -470,6 +472,14 @@ const {
       /*console.log("Destroy User By Id");
       const destroyedUser = await destroyUserById(1);
       console.log("Result:", destroyedUser);*/
+
+      console.log("Get Full User Page Data for user 2");
+      const userPage = await getUserPageById(2);
+      console.log("Result:", userPage);
+
+      console.log("Get tags by user 1");
+      const tagsByUser = await getTagsByUser(1);
+      console.log("Result:", tagsByUser);
       
       console.log("Finished database tests!");
     } catch (error) {
