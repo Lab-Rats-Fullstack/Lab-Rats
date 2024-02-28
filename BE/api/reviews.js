@@ -1,44 +1,69 @@
 const express = require("express");
 const reviewRouter = express.Router();
+const { requireUser, checkAdmin } = require("./utils");
 
-// require user function
+const {
+  createReview,
+  updateReview,
+  getReviewById,
+  destroyReviewById,
+} = require("../db");
 
-// db functions
-
-reviewRouter.post("/:recipeId", (req, res) => {
-  const { recipeId } = req.params;
-  // requireUser eventually
+reviewRouter.post("/:recipeId", requireUser, async (req, res, next) => {
+  const {
+    params: { recipeId },
+    user: { id: userId },
+    body: { content, rating },
+  } = req;
+  const review = { userId, content, rating, recipeId };
   try {
-    console.log(req.body);
-    res.json({
-      message: `testing post a review for recipe with the id: ${recipeId}`,
-    });
+    const newReview = await createReview(review);
+    res.send(newReview);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
-reviewRouter.patch("/:reviewId", (req, res) => {
-  const { reviewId } = req.params;
-  // requireUser or requireAdmin eventually
-  try {
-    res.json({
-      message: `testing patch a review with the id: ${reviewId}`,
+reviewRouter.patch("/:reviewId", requireUser, async (req, res, next) => {
+  const {
+    params: { reviewId },
+    body: fields,
+    user: { id },
+  } = req;
+  const admin = checkAdmin(user);
+  const { userid } = await getReviewById(reviewId);
+  if (id != userid && !admin) {
+    next({
+      name: "WrongUserError",
+      message: "You cannot edit a review that is not yours.",
     });
+  }
+  try {
+    const updatedReview = await updateReview(reviewId, fields);
+    res.send(updatedReview);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
-reviewRouter.delete("/:reviewId", (req, res) => {
-  const { reviewId } = req.params;
-  // requireUser or requireAdmin eventually
-  try {
-    res.json({
-      message: `testing delete a review with the id: ${reviewId}`,
+reviewRouter.delete("/:reviewId", requireUser, async (req, res) => {
+  const {
+    params: { reviewId },
+    user: { id },
+  } = req;
+  const admin = checkAdmin(user);
+  const { userid } = await getReviewById(reviewId);
+  if (id != userid && !admin) {
+    next({
+      name: "WrongUserError",
+      message: "You cannot delete a review that is not yours.",
     });
+  }
+  try {
+    const deletedReview = await destroyReviewById(reviewId);
+    res.send(deletedReview);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 

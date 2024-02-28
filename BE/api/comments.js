@@ -1,43 +1,68 @@
 const express = require("express");
 const commentRouter = express.Router();
+const { requireUser, checkAdmin } = require("./utils");
 
-// require user function
+const {
+  createComment,
+  updateComment,
+  getCommentById,
+  destroyCommentById,
+} = require("../db");
 
-// db functions
-
-commentRouter.post("/:reviewId", (req, res) => {
-  const { recipeId } = req.params;
-  // requireUser eventually
+commentRouter.post("/:reviewId", requireUser, async (req, res, next) => {
+  const {
+    params: { reviewId },
+    user: { id: userId },
+    body: { content },
+  } = req;
+  const comment = { reviewId, userId, content };
   try {
-    console.log(req.body);
-    res.json({
-      message: `testing post a comment for recipe with the id: ${recipeId}`,
-    });
+    const newComment = await createComment(comment);
+    res.send(newComment);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
-commentRouter.patch("/:commentId", (req, res) => {
-  const { commentId } = req.params;
-  // requireUser or requireAdmin eventually
-  try {
-    res.json({
-      message: `testing patch a comment with the id: ${commentId}`,
+commentRouter.patch("/:commentId", requireUser, async (req, res, next) => {
+  const {
+    params: { commentId },
+    body: fields,
+    user: { id },
+  } = req;
+  const admin = checkAdmin(user);
+  const { userid } = await getCommentById(commentId);
+  if (id != userid && !admin) {
+    next({
+      name: "WrongUserError",
+      message: "You cannot edit a review that is not yours.",
     });
+  }
+  try {
+    const updatedComment = await updateComment(commentId, fields);
+    res.send(updatedComment);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
-commentRouter.delete("/:commentId", (req, res) => {
-  const { commentId } = req.params;
-  // requireUser or requireAdmin eventually
-  try {
-    res.json({
-      message: `testing delete a comment with the id: ${commentId}`,
+commentRouter.delete("/:commentId", requireUser, async (req, res, next) => {
+  const {
+    params: { commentId },
+    user: { id },
+  } = req;
+  const admin = checkAdmin(user);
+  const { userid } = await getCommentById(commentId);
+  if (id != userid && !admin) {
+    next({
+      name: "WrongUserError",
+      message: "You cannot delete a comment that is not yours.",
     });
+  }
+  try {
+    const deletedComment = await destroyCommentById(commentId);
+    res.send(deletedComment);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
