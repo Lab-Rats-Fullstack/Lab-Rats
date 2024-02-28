@@ -128,7 +128,7 @@ const {
         password: 'userTestPass',
         username: 'userTest', 
         name: 'User Test',
-        imgUrl: 'hhttps://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg'
+        imgUrl: 'https://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg'
       });
       console.log("Finished creating users!");
     } catch (error) {
