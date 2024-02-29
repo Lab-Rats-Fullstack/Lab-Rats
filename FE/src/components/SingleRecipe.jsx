@@ -1,74 +1,61 @@
-import { useState } from 'react'
-import { useEffect } from 'react'
+import { useState, useEffect } from 'react'
+import {useParams, useNavigate} from 'react-router-dom'
+import Recipes from './Recipes';
 
 export default function SingleRecipe ({token}) {
+    const {recipeId} = useParams();
+    const [errMess, setErrMess] = useState(false);
+    const navigate = useNavigate();
+    const [refreshCounter, setRefreshCounter] = useState(0);
     const [recipe, setRecipe] = useState({});
-    const [tags, setTags] = useState([]);
-    const [ingredients, setIngredients] = useState([]);
-    const [procedure, setProcedure] = useState([]);
-
-    const dummyRecipe =
-        {
-            id: 3,
-            userId: 3,
-            userName: "kiss_the_chef",
-            title: "Butter Chicken",
-            estimatedTime: "1 hour",
-            ingredients: [
-              "1.5 lbs Chicken Thighs",
-              "1 cup Full-Fat Yogurt",
-              "1 tbsp Grated or Crushed Garlic",
-              "1 tbsp Grated Ginger",
-              "1 tsp Turmeric Powder",
-              "1 tsp Ground Cumin",
-              "1 tsp Ground Coriander",
-              "1 tsp Garam Masala",
-              "Salt to Taste",
-              "1 tsp Oil or Ghee",
-              "2 tbsp Butter",
-              "1 Large Onion, Finely Diced",
-              "1 cup Tomato Puree",
-              "1 cup Heavy Cream",
-              "Fresh Cilantro, for Garnish",
-            ],
-            procedure: [
-              "Mix yogurt, ginger, garlic, and spices (reserve half of garam masala) to a large bowl and mix well. Add in the chicken and marinate for at least 30min up to a day.",
-              "In a large pan or dutch oven, add your oil over medium heat. Cook the chicken until well browned. It does not need to be cooked through at this stage.",
-              "Set the chicken aside and add the butter to the pan. Once melted and bubbling, add the chopped onion to the pan.",
-              "Once the onions are fully softened, add in the tomato puree and cook on high until the oil separated and the tomato starts to brown.",
-              "Add the chicken back to the pan and stir to combine the mixture.",
-              "Pour in the heavy cream and cook on medium low heat for 10-15 minutes or until the chicken is tender.",
-              "Add in your remaining garam masala and any additional salt to taste. Adjust the consistency of the gravy with water only if absolutely necessary.",
-              "Serve with naan and rice. Garnish with your chopped cilantro.",
-            ],
-            imgUrl:
-              "https://www.foodiesfeed.com/wp-content/uploads/2023/03/close-up-of-butter-chicken-indian-dish.jpg",
-            notes: [
-              "I like to make the naan too as its a very easy and approachable flat bread to make at home.",
-            ],
-            tags: ["gluten free", "indian", "entree"],
-        };
 
     useEffect(() => {
-        setRecipe(dummyRecipe);
-        setTags(dummyRecipe.tags);
-        setIngredients(dummyRecipe.ingredients);
-        setProcedure(dummyRecipe.procedure);
-    },[]);
+        async function handleGetRecipeById(){
+            async function handleGetRecipeFetch(){
+                try{
+                    const response = await fetch(`http://localhost:3000/api/recipes/${recipeId}`, 
+                    { 
+                        method: "GET",
+                        headers: { 
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    const json = await response.json();
+                    console.log(json);
+                    return json;
+                } catch (error) {
+                    setErrMess(true);
+                }
+            }
+    
+            const potentialRecipe = await handleGetRecipeFetch();
+            if (potentialRecipe.id) {
+                setRecipe(potentialRecipe);
+                setErrMess(false);
+            } else {
+                setErrMess(true);
+            }
+        }
+        handleGetRecipeById();
+
+    }, [refreshCounter])
 
     return (
         <>
+        {(errMess || !recipe.id) ?
+        <p>There has been an error</p>
+        :
         <div className="singleRecipeCard">
             <h1>{recipe.title}</h1>
-            <h5>@{recipe.userName}</h5>
-            <div>{tags.map((tag) => {
+            <h5>@{recipe.username}</h5>
+            <div>{recipe.tags.map((tag) => {
                 return (
-                <p key={tag}><em>{tag}</em></p>
+                <p key={tag.id}><em>{tag.name}</em></p>
             )})}</div>
-            <img src={recipe.imgUrl} heigth="20%" width="25%"/>
+            <img src={recipe.imgurl} heigth="20%" width="25%"/>
             <h3>Ingredients:</h3>
                 <ul>
-                    {ingredients.map((ingredient) => {
+                    {recipe.ingredients.map((ingredient) => {
                         return (
                             <li key={ingredient}>{ingredient}</li>
                         )
@@ -76,12 +63,46 @@ export default function SingleRecipe ({token}) {
                 </ul>
             <h2>Instructions:</h2>
             <ol>
-                {procedure.map((item) => {
+                {recipe.procedure.map((item) => {
                     return (
                     <li key={item}>{item}</li>
                     )})}
             </ol>
-        </div>
+            <h3>Reviews:</h3>
+            {!recipe.reviews.length ?
+                <p>No reviews to show.</p>
+            :
+                <>
+                    {recipe.reviews.map((review) => {
+                        return (
+                            <div key={review.id}>
+                                <h4>{review.title}</h4>
+                                <p>Rating: {review.rating}</p>
+                                <p>By {review.user.username}</p>
+                                <p>{review.content}</p>
+                                <h5>Comments:</h5>
+                                    {!review.comments.length ?
+                                        <p>No comments to show.</p>
+                                    :
+                                    <>
+                                        {review.comments.map((comment) => {
+                                            return (
+                                                <div key={comment.id}>
+                                                    <p>{comment.content}</p>
+                                                    <p>By {comment.user.username}</p>
+                                                </div>
+                                            )
+                                        })}
+                                    </>
+                                    }                                 
+                                    
+                            </div>
+                        )
+                    })}
+                </>
+            }
+         </div>
+        }
         </>
     );
 }
