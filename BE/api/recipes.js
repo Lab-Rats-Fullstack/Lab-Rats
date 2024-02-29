@@ -71,7 +71,7 @@ recipesRouter.delete("/:recipeId", requireAdmin, async (req, res, next) => {
   // requireAdmin eventually
   try {
     const destroyedRecipe = await destroyRecipeById(recipeId);
-    res.send(destroyedRecipe);
+    res.send({name: "DeleteConfirmation", message: `${destroyedRecipe.title} has been deleted.`});
   } catch (err) {
     next(err);
   }

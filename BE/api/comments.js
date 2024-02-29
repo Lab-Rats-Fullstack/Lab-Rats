@@ -29,7 +29,7 @@ commentRouter.patch("/:commentId", requireUser, async (req, res, next) => {
     body: fields,
     user: { id },
   } = req;
-  const admin = checkAdmin(user);
+  const admin = checkAdmin(req.user);
   const { userid } = await getCommentById(commentId);
   if (id != userid && !admin) {
     next({
@@ -50,7 +50,7 @@ commentRouter.delete("/:commentId", requireUser, async (req, res, next) => {
     params: { commentId },
     user: { id },
   } = req;
-  const admin = checkAdmin(user);
+  const admin = checkAdmin(req.user);
   const { userid } = await getCommentById(commentId);
   if (id != userid && !admin) {
     next({
@@ -60,7 +60,10 @@ commentRouter.delete("/:commentId", requireUser, async (req, res, next) => {
   }
   try {
     const deletedComment = await destroyCommentById(commentId);
-    res.send(deletedComment);
+    res.send({
+      name: "DeleteConfirmation",
+      message: `The comment from ${deletedComment.user.username} has been deleted.`,
+    });
   } catch (err) {
     next(err);
   }

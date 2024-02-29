@@ -30,7 +30,8 @@ reviewRouter.patch("/:reviewId", requireUser, async (req, res, next) => {
     body: fields,
     user: { id },
   } = req;
-  const admin = checkAdmin(user);
+
+  const admin = checkAdmin(req.user);
   const { userid } = await getReviewById(reviewId);
   if (id != userid && !admin) {
     next({
@@ -51,7 +52,7 @@ reviewRouter.delete("/:reviewId", requireUser, async (req, res) => {
     params: { reviewId },
     user: { id },
   } = req;
-  const admin = checkAdmin(user);
+  const admin = checkAdmin(req.user);
   const { userid } = await getReviewById(reviewId);
   if (id != userid && !admin) {
     next({
@@ -61,7 +62,10 @@ reviewRouter.delete("/:reviewId", requireUser, async (req, res) => {
   }
   try {
     const deletedReview = await destroyReviewById(reviewId);
-    res.send(deletedReview);
+    res.send({
+      name: "DeleteConfirmation",
+      message: `The review from ${deletedReview.user.username} has been deleted.`,
+    });
   } catch (err) {
     next(err);
   }
