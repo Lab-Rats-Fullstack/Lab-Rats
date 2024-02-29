@@ -1,28 +1,24 @@
 const express = require("express");
 const tagsRouter = express.Router();
 
-// require user function
+const { getAllTags, getRecipesByTagName } = require("../db");
 
-// db functions
-
-tagsRouter.get("/", (req, res) => {
+tagsRouter.get("/", async (req, res, next) => {
   try {
-    res.json({
-      message: "testing tag get",
-    });
+    const allTags = await getAllTags();
+    res.send(allTags);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
-tagsRouter.get("/:tagName/recipes", (req, res) => {
+tagsRouter.get("/:tagName/recipes", async (req, res, next) => {
   const { tagName } = req.params;
   try {
-    res.json({
-      message: `testing get all recipes for tag with the tagname: ${tagName}`,
-    });
+    const recipes = await getRecipesByTagName(tagName);
+    res.send(recipes);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
