@@ -1,6 +1,8 @@
 import {useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+const API = 'http://localhost:3000/api/';
+
 export default function Login ({token, setToken}) {
     const [email, setEmail] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
@@ -17,7 +19,7 @@ export default function Login ({token, setToken}) {
     async function loginUser(event) {
         event.preventDefault ();
         try {
-            const response = await fetch (ENDPOINT, {
+            const response = await fetch (`${API}users/login`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -43,7 +45,7 @@ export default function Login ({token, setToken}) {
     async function registerUser(event) {
         event.preventDefault ();
         try {
-            const response = await fetch ( ENDPOINT, {
+            const response = await fetch ( `${API}users/register`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
