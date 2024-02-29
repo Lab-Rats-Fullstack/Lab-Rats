@@ -261,7 +261,7 @@ async function getRecipeById(recipeId) {
       const reviews = await getReviewsByRecipe(recipeId);
   
       const { rows: [user] } = await client.query(`
-        SELECT id, email, username, name, imgUrl, admin
+        SELECT id, email, username, name, imgUrl, admin, reviewCount
         FROM users
         WHERE id=$1;
       `, [recipe.userid])
@@ -803,7 +803,7 @@ async function getReviewById(reviewId){
         const comments = await getCommentsByReview(reviewId);
 
         const { rows: [user] } = await client.query(`
-        SELECT id, email, username, name, imgUrl, admin
+        SELECT id, email, username, name, imgUrl, admin, reviewCount
         FROM users
         WHERE id=$1;
       `, [review.userid]);
@@ -946,6 +946,12 @@ async function destroyReviewById(reviewId) {
     }
 
     await client.query(`
+      UPDATE users
+      SET reviewCount = reviewCount - 1
+      WHERE id=$1;
+    `, [destroyedReview.userid]);
+
+    await client.query(`
         DELETE FROM reviews
         WHERE id = $1
     `, [reviewId]);
@@ -1054,7 +1060,7 @@ async function getCommentById(commentId){
       const comment = await getCommentInfoById(commentId);
 
       const { rows: [user] } = await client.query(`
-      SELECT id, email, username, name, imgUrl, admin
+      SELECT id, email, username, name, imgUrl, admin, reviewCount
       FROM users
       WHERE id=$1;
     `, [comment.userid]);
