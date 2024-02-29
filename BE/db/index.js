@@ -742,7 +742,7 @@ async function getReviewInfoById(reviewId){
 async function getUserPageReviewById(reviewId){
   try {
     const {rows: [reviewInfo]} = await client.query(`
-      SELECT id, recipeId, content, rating
+      SELECT id, recipeId, title, content, rating
       FROM reviews
       WHERE id=$1;
     `, [reviewId]);
@@ -880,15 +880,16 @@ async function getAllReviews() {
 async function createReview({
   userId,
   recipeId,
+  title,
   content,
   rating
 }) {
   try {
     const { rows: [ review ] } = await client.query(`
-      INSERT INTO reviews(userId, recipeId, content, rating) 
-      VALUES($1, $2, $3, $4)
+      INSERT INTO reviews(userId, recipeId, title, content, rating) 
+      VALUES($1, $2, $3, $4, $5)
       RETURNING *;
-    `, [userId, recipeId, content, rating]);
+    `, [userId, recipeId, title, content, rating]);
 
     await client.query(`
       UPDATE users
