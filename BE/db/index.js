@@ -295,9 +295,6 @@ async function getRecipeById(recipeId) {
     );
 
     const reviews = await getReviewsByRecipe(recipeId);
-
-
-      const reviews = await getReviewsByRecipe(recipeId);
   
       const { rows: [user] } = await client.query(`
         SELECT id, email, username, name, imgUrl, admin, reviewCount
