@@ -836,11 +836,8 @@ async function getReviewInfoById(reviewId) {
 //GET USER PAGE REVIEW BY ID
 async function getUserPageReviewById(reviewId) {
   try {
-    const {
-      rows: [reviewInfo],
-    } = await client.query(
-      `
-      SELECT id, recipeId, content, rating
+    const {rows: [reviewInfo]} = await client.query(`
+      SELECT id, recipeId, title, content, rating
       FROM reviews
       WHERE id=$1;
     `,
@@ -987,18 +984,20 @@ async function getAllReviews() {
 }
 
 // CREATE REVIEW IN DB
-async function createReview({ userId, recipeId, content, rating }) {
+
+async function createReview({
+  userId,
+  recipeId,
+  title,
+  content,
+  rating
+}) {
   try {
-    const {
-      rows: [review],
-    } = await client.query(
-      `
-      INSERT INTO reviews(userId, recipeId, content, rating) 
-      VALUES($1, $2, $3, $4)
+    const { rows: [ review ] } = await client.query(`
+      INSERT INTO reviews(userId, recipeId, title, content, rating) 
+      VALUES($1, $2, $3, $4, $5)
       RETURNING *;
-    `,
-      [userId, recipeId, content, rating]
-    );
+    `, [userId, recipeId, title, content, rating]);
 
     await client.query(`
       UPDATE users
