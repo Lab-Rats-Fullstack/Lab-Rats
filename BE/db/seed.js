@@ -91,6 +91,7 @@ const {
             id SERIAL PRIMARY KEY,
             userId INTEGER REFERENCES users(id),
             recipeId INTEGER REFERENCES recipes(id),
+            title varchar(255) NOT NULL,
             content TEXT NOT NULL,
             rating int NOT NULL,
             CHECK (rating <= 5)
@@ -318,6 +319,7 @@ const {
       await createReview({
         userId: allUsers[1].id,
         recipeId: recipes[0].id,
+        title: "wow",
         content: "this is cool",
         rating: 4
       });
