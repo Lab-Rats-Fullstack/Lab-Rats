@@ -1,8 +1,165 @@
-import { Link } from 'react-router-dom'
+import { useState } from 'react'
+
 
 export default function NewRecipe ({token}) {
+   const [title, setTitle] = useState("");
+   const [estTime, setEstTime] = useState("");
+   const [image, setImage] = useState("");
+   const [tags, setTags] = useState([]);
+   
+   const [ingredientList, setIngredientList] = useState([{ingredient: ''}]);
+   const [instructionList, setInstructionList] = useState([{instruction: ''}]);
+   const [notesList, setNotesList] = useState([{note: ''}]);
 
-    return (
-        <><p>This is the New Recipe page</p></>
-    )
+   function handleIngredientAdd() {
+    setIngredientList([...ingredientList, {ingredient: ''}]);
+   };
+
+   function handleInstructionAdd() {
+    setInstructionList([...instructionList, {instruction: ''}]);
+   };
+
+   function handleNoteAdd() {
+    setNotesList([...notesList, {note: ''}]);
+   };
+
+   function handleIngredientDelete(index) {
+    const list = [...ingredientList];
+    list.splice(index, 1);
+    setIngredientList(list);
+   };
+
+   function handleInstructionDelete(index) {
+    const list = [...instructionList];
+    list.splice(index, 1);
+    setInstructionList(list);
+   };
+
+   function handleNoteDelete(index) {
+    const list = [...notesList];
+    list.splice(index, 1);
+    setNotesList(list);
+   };
+
+   function handleIngredientChange(e, index) {
+    e.preventDefault();
+    const {name, value} = e.target;
+    const list = [...ingredientList];
+    list[index][name] = value;
+    setIngredientList(list);
+   };
+
+   function handleInstructionChange(e, index) {
+    e.preventDefault();
+    const {name, value} = e.target;
+    const list = [...instructionList];
+    list[index][name] = value;
+    setInstructionList(list);
+   };
+
+   function handleNoteChange(e, index) {
+    e.preventDefault();
+    const {name, value} = e.target;
+    const list = [...notesList];
+    list[index][name] = value;
+    setNotesList(list);
+   };
+
+   function rearrange (input, field) {
+    let output = [];
+    for (let i=0; i < input.length; i++) {
+        output.push(input[i][field]);
+    }
+    return output;
+   }
+
+   function handleSubmit(e) {
+        e.preventDefault();
+
+        let ingredArray = rearrange(ingredientList, 'ingredient');
+        let instructArray = rearrange(instructionList, 'instruction');
+        let noteArray = rearrange(notesList, 'note');
+
+
+        let data = {
+            title: title,
+            estTime: estTime,
+            ingredients: ingredArray,
+            procedure: instructArray,
+            image: image,
+            notes: noteArray,
+            tags: tags
+        };
+
+        console.log(data)
+    }
+
+   return (
+       <div>
+           <form onSubmit={handleSubmit}>
+               <label>Title: </label>
+               <input type="text" id="title" name="title" value={title} onChange={(e) => {
+                setTitle(e.target.value);
+               }}/>
+
+               <label>Estimated Time: </label>
+               <input list="times" id="estTime" name="estTime" value={estTime} onChange={(e) => {
+                setEstTime(e.target.value);
+               }}/>
+                   <datalist id="times">
+                       <option value="15 min"/>
+                       <option value="30 min"/>
+                       <option value="45 min"/>
+                       <option value="60 min"/>
+                       <option value="75 min"/>
+                       <option value="90 min"/>
+                   </datalist>
+
+               <label>Ingredients: </label>
+               {ingredientList.map((singleIngred, index) => {
+                return (
+                <div key={index}>
+                    <input type="text" name="ingredient"  value={singleIngred.ingredient} onChange={(e) => handleIngredientChange(e, index)}/>
+                    {ingredientList.length > 1 && <button type="button" onClick={() => handleIngredientDelete(index)}>-</button>}
+                    {ingredientList.length - 1 === index && ingredientList.length < 20 && <button type="button" onClick={handleIngredientAdd}>+</button>}
+                </div>
+                
+               )})}
+
+               <label>Instructions: </label>
+               {instructionList.map((singleInstruct, index) => {
+                return (
+                    <div key={index}>
+                        <input type="text" name="instruction" value={singleInstruct.instruction} onChange={(e) => handleInstructionChange(e, index)}/>
+                        {instructionList.length > 1 && <button type="button" onClick={() => handleInstructionDelete(index)}>-</button>}
+                    {instructionList.length - 1 === index && instructionList.length < 20 && <button type="button" onClick={handleInstructionAdd}>+</button>}
+                    </div>
+                )
+               })}
+    
+               <label>Image: </label>
+               <input type="text" id="image" name="image" value={image} onChange={(e) => {
+                setImage(e.target.value);
+               }}/>
+
+               <label>Notes: </label>
+               {notesList.map((singleNote, index) => {
+                return (
+                    <div key={index}>
+                        <input type="text" name="note" value={singleNote.note} onChange={(e) => handleNoteChange(e, index)}/>
+                        {notesList.length > 1 && <button type="button" onClick={() => handleNoteDelete(index)}>-</button>}
+                        {notesList.length - 1 === index && notesList.length < 20 && <button type="button" onClick={handleNoteAdd}>+</button>}
+                    </div>
+                )
+               })}
+               
+               <label>Tags: </label>
+               <input type="text" id="tags" name="tags" value={tags} onChange={(e) => {
+                setTags(e.target.value);
+               }}/>
+
+               <input type="button" id="submit" value="button" onClick={handleSubmit}/>
+           </form>
+       </div>
+   )
 }
