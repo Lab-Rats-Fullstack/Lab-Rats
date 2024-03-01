@@ -1,36 +1,35 @@
 import {useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
+const API = 'http://localhost:3000/api/';
+
 export default function Account ({token}) {
-    const [userData, setUserData] = useState({})
+    const [userData, setUserData] = useState({});    
+    const {recipes: recipeList =[], reviews: reviewList=[], comments: commentList=[]} = userData;
+
     const [error, setError] = useState(null);
     const [fail, setFail] = useState(false);
-    const [success, setSuccess] = useState(false);
     const navigate = useNavigate();
     const [update, setUpdate] =useState(0);
     const [userRecipes, setUserRecipes] =useState(true);
     const [userReviews, setUserReviews] =useState(false);
     const [userComments, setUserComments] =useState(false);
-    const [recipeList, setRecipeList] = useState([]);
-    const [reviewList, setReviewList] = useState([]);
-    const [commentList, setCommentList] = useState([]);
-    const [email, setEmail] = useState('');
-    const [username, setUsername] = useState('');
-    const [name, setName] = useState('');
-    const [userImg, setUserImg] = useState('');
+    
+    const [updatedUser, setUpdatedUser] =useState({});
+
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+
     const [buttonStatus, setButtonStatus] = useState(true);
     const [userForm, setUserForm] = useState(false);
     const [userBio, setUserBio] = useState(true);
 
-    token = 2;//temp placeholder
     const dummyUser = {
         email: "adminTest@gmail.com",
         password: "adminTestPass",
         username: "adminTest", 
         name: "Admin Test",
-        imgUrl: 'https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png',
+        imgurl: 'https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png',
         admin: true
     }
     const dummyRecipes = [
@@ -67,7 +66,7 @@ export default function Account ({token}) {
               "Add in your remaining garam masala and any additional salt to taste. Adjust the consistency of the gravy with water only if absolutely necessary.",
               "Serve with naan and rice. Garnish with your chopped cilantro.",
             ],
-            imgUrl:
+            imgurl:
               "https://www.foodiesfeed.com/wp-content/uploads/2023/03/close-up-of-butter-chicken-indian-dish.jpg",
             notes: [
               "I like to make the naan too as its a very easy and approachable flat bread to make at home.",
@@ -97,7 +96,7 @@ export default function Account ({token}) {
               "Season with the Salt and Black pepper to taste.",
               "For best results, chill before serving.",
             ],
-            imgUrl:
+            imgurl:
               "https://img.freepik.com/free-photo/top-view-yogurt-meal-brown-wooden-desk-food-yogurt-meat_140725-28373.jpg?w=740&t=st=1707958620~exp=1707959220~hmac=ccb6ad132464b618af23d47c6bbd510185020066158580387806fbb896d3c72c",
             notes: [
               "Pick a really good blue cheese for this and you'd be amazed how excellent this can be.",
@@ -166,30 +165,30 @@ export default function Account ({token}) {
             }
         }
     ]
-        
+    
+    const dummyData = {
+        ...dummyUser,
+        recipes: dummyRecipes,
+        reviews: dummyReviews,
+        comments: dummyComments
+    }
+
     useEffect(()=>{
         async function userCheck () {
             try {
-                // const response = await fetch(`${API}users/me`, {
-                //     method: "GET",
-                //     headers: {
-                //         "Content-Type":"application/json",
-                //         "Authorization": `Bearer ${token}`,
-                //     },
-                // });
-                // const result = await response.json()             
+                const response = await fetch(`${API}users/me`, {
+                    method: "GET",
+                    headers: {
+                        "Content-Type":"application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                });
+                const result = await response.json()             
                 if (token !== null) {
-                    setUserData(dummyUser);
-                    setRecipeList(dummyRecipes);
-                    setReviewList(dummyReviews);
-                    setCommentList(dummyComments);
+                    setUserData(dummyData);
                     setFail(false);
-                    setSuccess(true);
-                    // setUserBio(true);
-                    // setUserForm(false);
                 } else {
                     setFail(true);
-                    setSuccess(false);
                 }
 
             } catch (error) {
@@ -203,24 +202,21 @@ export default function Account ({token}) {
         navigate('/login');
     }
 
-    async function userUpdate() {
+    async function userUpdate(event) {
+        event.preventDefault();
         try {
-            // const response = await fetch(`${API}users/me`, {
-            //     method: "PATCH",
-            //     headers: {
-            //         "Content-Type":"application/json",
-            //         "Authorization": `Bearer ${token}`,
-            //     },
-            //         body: JSON.stringify({
-            //             username,
-            //             email,
-            //             password: registerPassword,
-            //             name,
-            //             imgUrl: userImg,
-            //             admin
-            //         })
-            // });
-            // const result = await response.json()             
+            const response = await fetch(`${API}users/me`, {
+                method: "PATCH",
+                headers: {
+                    "Content-Type":"application/json",
+                    "Authorization": `Bearer ${token}`,
+                },
+                    body: JSON.stringify({
+                        ...updatedUser,
+                        password
+                    })
+            });
+            const result = await response.json()             
             setUserData(dummyUser);
             setUpdate((version) => version +1);
             setUserForm(false);
@@ -249,16 +245,15 @@ export default function Account ({token}) {
         <><p>This is the Account page</p>
         <div className = 'wrapper'>
             {error && <p>{error}</p>}
-            {fail && <div className='fail'><h2>Please Sign In</h2><br/> <button type='login' onClick={signIn}>Log In</button></div>}
-            {success &&
+            {fail ? <div className='fail'><h2>Please Sign In</h2><br/> <button type='login' onClick={signIn}>Log In</button></div> :
             <div>
                 {userBio && 
                     <div className = 'userInfo'>
-                        <img src={userData.imgUrl} alt={`User account image for ${userData.username}`} height="15%" width="22.5%"/>
+                        <img src={userData.imgurl} alt={`User account image for ${userData.username}`} height="15%" width="22.5%"/>
                         <h2>{userData.username}</h2>
                         <p>{userData.name}</p>
                         <p>{userData.email}</p>
-                        <button onClick={() => {setUserBio(true); setUserForm(true);}}>Update Profile</button>
+                        <button onClick={() => {setUserBio(false); setUserForm(true);}}>Update Profile</button>
                     </div>
                 }
                 
@@ -268,9 +263,13 @@ export default function Account ({token}) {
                         <label>
                             Profile Image:
                             <input
-                                defaultValue = {userData.imgUrl}
-                                required = {true}
-                                onChange = {(e)=> setUserImg(e.target.value)}
+                                defaultValue = {userData.imgurl}
+                                onChange = {(e)=> setUpdatedUser((prev)=>{
+                                    return {
+                                    ...prev,
+                                        imgurl: e.target.value
+                                    }
+                                })}
                             />
                         </label>
                         <br/>
@@ -278,8 +277,12 @@ export default function Account ({token}) {
                             Username:
                             <input
                                 defaultValue = {userData.username}
-                                required = {true}
-                                onChange = {(e)=> setUsername(e.target.value)}
+                                onChange = {(e)=> setUpdatedUser((prev)=>{
+                                    return {
+                                    ...prev,
+                                        username: e.target.value
+                                    }
+                                })}
                             />
                         </label>
                         <br/>
@@ -287,8 +290,12 @@ export default function Account ({token}) {
                             Email:
                             <input
                                 defaultValue = {userData.email}
-                                required = {true}
-                                onChange = {(e)=> setEmail(e.target.value)}
+                                onChange = {(e)=> setUpdatedUser((prev)=>{
+                                    return {
+                                    ...prev,
+                                        email: e.target.value
+                                    }
+                                })}
                             />
                         </label>
                         <br/>
@@ -296,8 +303,11 @@ export default function Account ({token}) {
                             Name:
                             <input
                                 defaultValue = {userData.name}
-                                required = {true}
-                                onChange = {(e)=> setName(e.target.value)}
+                                onChange = {(e)=> setUpdatedUser((prev)=>{
+                                    return {
+                                    ...prev,
+                                        name: e.target.value
+                                }})}
                             />
                         </label>
                         <br/>
@@ -306,7 +316,7 @@ export default function Account ({token}) {
                             <input
                                 type = "password"
                                 defaultValue = {password}
-                                required = {true}
+
                                 onChange = {(e)=> setPassword(e.target.value)}
                             />
                         </label>
@@ -316,7 +326,7 @@ export default function Account ({token}) {
                             <input
                                 type = "password"
                                 value = {confirmPassword}
-                                required = {true}
+
                                 onChange = {(e)=> setConfirmPassword(e.target.value)}
                             />
                         </label>
@@ -353,7 +363,7 @@ export default function Account ({token}) {
                                     return (
                                     <div className="recipeCard" key={recipe.id}>
                                         <h3>{recipe.title}</h3>
-                                        <img src={recipe.imgUrl} alt={`A picture of ${recipe.title}`} height="15%" width="22.5%"/>
+                                        <img src={recipe.imgurl} alt={`A picture of ${recipe.title}`} height="15%" width="22.5%"/>
                                         <p><em>{recipe.tags}</em></p>
                                         <p>Est. Time: {recipe.estimatedTime}</p>
                                         <button onClick={() => {
