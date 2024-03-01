@@ -45,10 +45,18 @@ recipesRouter.get("/reviewedRecipes", requireAdmin, async (req, res, next) => {
 
 recipesRouter.get("/:recipeId", async (req, res, next) => {
   const { recipeId } = req.params;
+  let userId = null;
+  if (req.user){
+    userId = req.user.id;
+  }
 
   try {
     const recipe = await getRecipeById(recipeId);
-    res.send(recipe);
+    const response = {
+      userId,
+      recipe
+    }
+    res.send(response);
   } catch (err) {
     next(err);
   }
