@@ -263,7 +263,12 @@ async function handleEditReview(event, reviewId){
             {token ?
                 <>
                     {!leavingAReview ?
-                    <button onClick= {()=>setLeavingAReview(true)}>Leave a review</button>
+                    <button onClick= {()=>{
+                        setLeavingAReview(true);
+                        setReviewTitle('');
+                        setReviewRating(1);
+                        setReviewContent('');
+                    }}>Leave a review</button>
                     :
                     <button onClick= {()=>setLeavingAReview(false)}>Close review form </button>
                     } 
@@ -313,7 +318,10 @@ async function handleEditReview(event, reviewId){
                                 {token ?
                                  <>
                                       {!(leavingAComment === review.id) ?
-                                         <button onClick= {()=>setLeavingAComment(review.id)}>Leave a comment</button>
+                                         <button onClick= {()=>{
+                                            setLeavingAComment(review.id);
+                                            setCommentContent('');
+                                        }}>Leave a comment</button>
                                          :
                                          <button onClick= {()=>setLeavingAComment(null)}>Close comment form </button>
                                         } 
