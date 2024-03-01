@@ -25,6 +25,10 @@ export default function SingleRecipe ({token}) {
     const [editReviewContent, setEditReviewContent] = useState('');
     const [editReviewErrMess, setEditReviewErrMess] = useState(null);
 
+    const [editingAComment, setEditingAComment] = useState(null);
+    const [editCommentContent, setEditCommentContent] = useState('');
+    const [editCommentErrMess, setEditCommentErrMess] = useState(null);
+
 
  
 
@@ -232,6 +236,53 @@ async function handleEditReview(event, reviewId){
     }
 }
 
+function editingACommentForm(commentId){
+    if (editingAComment === commentId){
+        return (
+            <>
+            <form onSubmit={(event) => handleEditComment(event, commentId)}>
+                <label>
+                    Content: <input type='text' value={editCommentContent} onChange={(e) => setEditCommentContent(e.target.value)}></input>
+                </label>
+                <button>Submit</button>
+            </form>
+            </>
+        )
+    }
+}
+
+async function handleEditComment(event, commentId){
+    event.preventDefault();
+    async function editCommentFetch(commentId){
+        try {
+            const response = await fetch(`http://localhost:3000/api/comments/${commentId}`,
+            { 
+                method: "PATCH",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization" :`BEARER ${token}`
+                },
+                body: JSON.stringify({
+                    content: editCommentContent
+                })
+            });
+            const json = await response.json();
+            return json;
+        } catch (error) {
+            throw (error);
+        }
+    }
+
+    const potentialEditComment = await editCommentFetch(commentId);
+    if (potentialEditComment.id){
+        setEditCommentErrMess(null);
+        setEditingAComment(null);
+        setRefreshCounter((prev) => prev + 1);
+    } else {
+        setEditCommentErrMess(commentId);
+    }
+}
+
     return (
         <>
         {(errMess || !recipe.id) ?
@@ -276,7 +327,7 @@ async function handleEditReview(event, reviewId){
                 </>
                 
             :
-                <button>Sign in to leave a review</button>
+                <button onClick={()=>navigate('/login')}>Sign in to leave a review</button>
                     }
             {reviewErrMess && <p>There has been an error submitting the review.</p>}
             <h2>Reviews:</h2>
@@ -329,7 +380,7 @@ async function handleEditReview(event, reviewId){
                                  </>
                 
                                 :
-                                <button>Sign in to leave a comment</button>
+                                <button onClick={()=>navigate('/login')}>Sign in to leave a comment</button>
                                 }
                                 {(commentErrMess === review.id) && <p>There has been an error submitting the comment.</p>}
                                 <h5>Comments:</h5>
@@ -342,6 +393,28 @@ async function handleEditReview(event, reviewId){
                                                 <div key={comment.id}>
                                                     <p>{comment.content}</p>
                                                     <p>By {comment.user.username}</p>
+                                                    {token &&
+                                                    <>
+                                                        {(comment.userid === userId) &&
+                                                        <>
+                                                            {(editingAComment === comment.id) ?
+                                                            <>
+                                                                <button onClick={()=>setEditingAComment(null)}>Close edit comment form</button>
+                                                                {editingACommentForm(comment.id)}
+                                                            </>
+                                                            :
+                                                            <>
+                                                                <button onClick={()=>{
+                                                                    setEditingAComment(comment.id);
+                                                                    setEditCommentContent(comment.content);
+                                                                 }}>Edit your comment</button>
+                                                            </>
+                                                            }
+                                                        </>
+                                                        }
+                                                    </>
+                                                     }
+                                                    {(editCommentErrMess === comment.id) && <p>There has been an error submitting the edited comment.</p>}
                                                 </div>
                                             )
                                         })}
