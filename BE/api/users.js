@@ -79,9 +79,11 @@ usersRouter.post("/login", async (req, res, next) => {
           expiresIn: "1w",
         }
       );
+      const {admin} = user
       res.send({
         message: "Successfully logged in!",
         token,
+        admin
       });
     } else {
       next({
