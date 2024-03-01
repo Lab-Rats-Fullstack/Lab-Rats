@@ -949,7 +949,7 @@ async function getReviewsByRecipe(recipeId) {
     const { rows: reviewIds } = await client.query(`
         SELECT id 
         FROM reviews
-        WHERE userId=${recipeId};
+        WHERE recipeId=${recipeId};
       `);
 
     const reviews = await Promise.all(

@@ -11,7 +11,7 @@ import Account from './components/Account'
 import Admin from './components/Admin'
 
 function App() {
-  const [token, setToken] = useState(1);
+  const [token, setToken] = useState(null);
 
   return (
     <><h1>Hello Lab Rats</h1>

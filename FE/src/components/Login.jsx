@@ -31,6 +31,7 @@ export default function Login ({token, setToken}) {
             });
             const userAuth = await response.json();
             if (userAuth.token) {
+                console.log(userAuth.token);
                 setToken(userAuth.token);
                 alert(userAuth.message);
                 navigate('/account');

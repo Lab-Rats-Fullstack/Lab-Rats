@@ -13,9 +13,10 @@ reviewRouter.post("/:recipeId", requireUser, async (req, res, next) => {
   const {
     params: { recipeId },
     user: { id: userId },
-    body: { content, rating },
+    body: { title, content, rating },
   } = req;
-  const review = { userId, content, rating, recipeId };
+
+  const review = { userId, title, content, rating, recipeId };
   try {
     const newReview = await createReview(review);
     res.send(newReview);

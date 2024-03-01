@@ -7,6 +7,7 @@ export default function SingleRecipe ({token}) {
     const navigate = useNavigate();
     const [refreshCounter, setRefreshCounter] = useState(0);
     const [recipe, setRecipe] = useState({});
+    const [userId, setUserId] = useState(null);
     const [leavingAReview, setLeavingAReview] = useState(false);
     const [leavingAComment, setLeavingAComment] = useState(null);
     const [reviewTitle, setReviewTitle] = useState('');
@@ -36,8 +37,9 @@ export default function SingleRecipe ({token}) {
             }
     
             const potentialRecipe = await handleGetRecipeFetch();
-            if (potentialRecipe.id) {
-                setRecipe(potentialRecipe);
+            if (potentialRecipe.recipe) {
+                setRecipe(potentialRecipe.recipe);
+                setUserId(potentialRecipe.userId);
                 setErrMess(false);
             } else {
                 setErrMess(true);
@@ -83,13 +85,13 @@ export default function SingleRecipe ({token}) {
                         method: "POST",
                         headers: { 
                             "Content-Type": "application/json",
-                            "Authorization" :`BEARER ${token}`
+                            "Authorization" :`Bearer ${token}`
                         },
-                        body: {
+                        body: JSON.stringify({
                             title: reviewTitle,
                             rating: reviewRating,
                             content: reviewContent
-                        }
+                        })
                     });
                     const json = await response.json();
                     return json;
@@ -112,7 +114,7 @@ export default function SingleRecipe ({token}) {
         if (leavingAComment === reviewId){
             return (
                 <>
-                <form onSubmit={handleCreateComment}>
+                <form onSubmit={(event)=>handleCreateComment(event, reviewId)}>
                     <label>
                         Content: <input type='text' value={commentContent} onChange={(e) => setCommentContent(e.target.value)}></input>
                     </label>
@@ -134,9 +136,9 @@ export default function SingleRecipe ({token}) {
                         "Content-Type": "application/json",
                         "Authorization" :`BEARER ${token}`
                     },
-                    body: {
+                    body: JSON.stringify({
                         content: commentContent
-                    }
+                    })
                 });
                 const json = await response.json();
                 return json;
@@ -204,7 +206,7 @@ export default function SingleRecipe ({token}) {
                     {recipe.reviews.map((review) => {
                         return (
                             <div key={review.id}>
-                                <h4>{review.title}</h4>
+                                <h3>{review.title}</h3>
                                 <p>By {review.user.username}</p>
                                 <p>Rating: {review.rating}</p>
                                 <p>{review.content}</p>
@@ -222,7 +224,7 @@ export default function SingleRecipe ({token}) {
                                 <button>Sign in to leave a comment</button>
                                 }
                                 {(commentErrMess === review.id) && <p>There has been an error submitting the comment.</p>}
-                                <h3>Comments:</h3>
+                                <h5>Comments:</h5>
                                     {!review.comments.length ?
                                         <p>No comments to show.</p>
                                     :
