@@ -122,8 +122,9 @@ export default function Recipes ({token}) {
 
     useEffect(()=>{
       const filter = recipeList.filter((recipe)=>{
-        const {title, ingredients} = recipe
-        return title.toLowerCase().includes(searchTerm)
+        const { title } = recipe
+        const search = searchTerm.toLowerCase()
+        return title.toLowerCase().includes(search)
       })
       setFilteredRecipes(filter)
     }, [searchTerm]);
