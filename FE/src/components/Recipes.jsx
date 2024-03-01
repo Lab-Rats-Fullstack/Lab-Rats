@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom"
 
 export default function Recipes ({token}) {
     const [recipeList, setRecipeList] = useState([]);
-    
+
     const [filteredRecipes, setFilteredRecipes] = useState(recipeList);
     const [searchTerm, setSearchTerm] = useState('');
 
@@ -134,7 +134,8 @@ export default function Recipes ({token}) {
           Search Recipes: 
           <input type="text" value={searchTerm} onChange={changeSearch}/>
         </label>
-           {filteredRecipes.map((recipe) => {
+           {filteredRecipes.length ?
+           filteredRecipes.map((recipe) => {
                return (
                    <div className="recipeCard" key={recipe.id}>
                        <h2>{recipe.title}</h2>
@@ -147,7 +148,11 @@ export default function Recipes ({token}) {
                        }}>See Recipe</button>
                    </div>
                );
-           })}
+           }):
+           <h2>
+            No Recipes to Display.
+           </h2>
+           }
        </div>
     )
 }
