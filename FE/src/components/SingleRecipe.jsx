@@ -29,6 +29,9 @@ export default function SingleRecipe ({token}) {
     const [editCommentContent, setEditCommentContent] = useState('');
     const [editCommentErrMess, setEditCommentErrMess] = useState(null);
 
+    const [reviewAreYouSure, setReviewAreYouSure] = useState(null);
+    const [deleteReviewErrMess, setDeleteReviewErrMess] = useState(null);
+
 
  
 
@@ -283,6 +286,35 @@ async function handleEditComment(event, commentId){
     }
 }
 
+async function handleDeleteReview(reviewId){
+    async function deleteReviewFetch(reviewId){
+        try {
+            const response = await fetch(`http://localhost:3000/api/reviews/${reviewId}`,
+            { 
+                method: "DELETE",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization" :`BEARER ${token}`
+                },
+            });
+            const json = await response.json();
+            return json;
+        } catch (error) {
+            throw (error);
+        }
+    }
+
+    const potentialDeletedReview= await deleteReviewFetch(reviewId);
+    if(potentialDeletedReview){
+        setReviewAreYouSure(null);
+        setDeleteReviewErrMess(null);
+        setRefreshCounter((prev) => prev + 1);
+    } else {
+        setDeleteReviewErrMess(reviewId);
+    }
+}
+
+
     return (
         <>
         {(errMess || !recipe.id) ?
@@ -339,7 +371,7 @@ async function handleEditComment(event, commentId){
                         return (
                             <div key={review.id}>
                                 <h3>{review.title}</h3>
-                                <p>By {review.user.username}</p>
+                                <h5>By @{review.user.username}</h5>
                                 <p>Rating: {review.rating}</p>
                                 <p>{review.content}</p>
                                 {token &&
@@ -360,6 +392,14 @@ async function handleEditComment(event, commentId){
                                                 setEditReviewContent(review.content);
                                             }}>Edit your review</button>
                                         </>
+                                        }
+                                        <button onClick={()=>setReviewAreYouSure(review.id)}>Delete Review</button>
+                                        {(reviewAreYouSure === review.id) &&
+                                            <>
+                                                <p>Are you sure you want to delete this?</p>
+                                                <button onClick={()=>handleDeleteReview(review.id)}>Yes</button>
+                                                <button onClick={()=>setReviewAreYouSure(null)}>No</button>
+                                            </>
                                         }
                                     </>
                                     }
@@ -392,7 +432,7 @@ async function handleEditComment(event, commentId){
                                             return (
                                                 <div key={comment.id}>
                                                     <p>{comment.content}</p>
-                                                    <p>By {comment.user.username}</p>
+                                                    <h5>By @{comment.user.username}</h5>
                                                     {token &&
                                                     <>
                                                         {(comment.userid === userId) &&
