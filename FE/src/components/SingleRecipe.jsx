@@ -31,6 +31,9 @@ export default function SingleRecipe ({token}) {
 
     const [reviewAreYouSure, setReviewAreYouSure] = useState(null);
     const [deleteReviewErrMess, setDeleteReviewErrMess] = useState(null);
+    
+    const [commentAreYouSure, setCommentAreYouSure] = useState(null);
+    const [deleteCommentErrMess, setDeleteCommentErrMess] = useState(null);
 
 
  
@@ -314,6 +317,33 @@ async function handleDeleteReview(reviewId){
     }
 }
 
+async function handleDeleteComment(commentId){
+    async function deleteCommentFetch(commentId){
+        try {
+            const response = await fetch(`http://localhost:3000/api/comments/${commentId}`,
+            { 
+                method: "DELETE",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization" :`BEARER ${token}`
+                },
+            });
+            const json = await response.json();
+            return json;
+        } catch (error) {
+            throw (error);
+        }
+    }
+
+    const potentialDeletedComment= await deleteCommentFetch(commentId);
+    if(potentialDeletedComment){
+        setCommentAreYouSure(null);
+        setDeleteCommentErrMess(null);
+        setRefreshCounter((prev) => prev + 1);
+    } else {
+        setDeleteCommentErrMess(commentId);
+    }
+}
 
     return (
         <>
@@ -360,7 +390,7 @@ async function handleDeleteReview(reviewId){
                 
             :
                 <button onClick={()=>navigate('/login')}>Sign in to leave a review</button>
-                    }
+             }
             {reviewErrMess && <p>There has been an error submitting the review.</p>}
             <h2>Reviews:</h2>
             {!recipe.reviews.length ?
@@ -393,19 +423,23 @@ async function handleDeleteReview(reviewId){
                                             }}>Edit your review</button>
                                         </>
                                         }
-                                        <button onClick={()=>setReviewAreYouSure(review.id)}>Delete Review</button>
-                                        {(reviewAreYouSure === review.id) &&
+                                        {(editReviewErrMess === review.id) && <p>There has been an error submitting the edited review.</p>}
+                                        {!(reviewAreYouSure=== review.id) ?
+                                                <button onClick={()=>setReviewAreYouSure(review.id)}>Delete Review</button>
+                                        :
                                             <>
                                                 <p>Are you sure you want to delete this?</p>
                                                 <button onClick={()=>handleDeleteReview(review.id)}>Yes</button>
                                                 <button onClick={()=>setReviewAreYouSure(null)}>No</button>
                                             </>
                                         }
+                                    
+                                        {(deleteReviewErrMess === review.id) && <p>There has been an error deleting your review.</p>}
                                     </>
                                     }
                                  </>
                                 }
-                                {(editReviewErrMess === review.id) && <p>There has been an error submitting the edited review.</p>}
+                                
                                 {token ?
                                  <>
                                       {!(leavingAComment === review.id) ?
@@ -450,11 +484,21 @@ async function handleDeleteReview(reviewId){
                                                                  }}>Edit your comment</button>
                                                             </>
                                                             }
+                                                            {(editCommentErrMess === comment.id) && <p>There has been an error submitting the edited comment.</p>}
+                                                            {!(commentAreYouSure === comment.id) ?
+                                                                <button onClick={()=>setCommentAreYouSure(comment.id)}>Delete Comment</button>
+                                                            :
+                                                            <>
+                                                                <p>Are you sure you want to delete this?</p>
+                                                                <button onClick={()=>handleDeleteComment(comment.id)}>Yes</button>
+                                                                 <button onClick={()=>setCommentAreYouSure(null)}>No</button>
+                                                            </>
+                                                            }
+                                                             {(deleteCommentErrMess === comment.id) && <p>There has been an error deleting your comment.</p>}
                                                         </>
                                                         }
                                                     </>
                                                      }
-                                                    {(editCommentErrMess === comment.id) && <p>There has been an error submitting the edited comment.</p>}
                                                 </div>
                                             )
                                         })}
