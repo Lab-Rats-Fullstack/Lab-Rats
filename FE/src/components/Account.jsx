@@ -249,6 +249,7 @@ export default function Account ({token}) {
             <div>
                 {userBio && 
                     <div className = 'userInfo'>
+                        {/* userInfo component- conditionally render certain info via token admin */}
                         <img src={userData.imgurl} alt={`User account image for ${userData.username}`} height="15%" width="22.5%"/>
                         <h2>{userData.username}</h2>
                         <p>{userData.name}</p>
@@ -259,6 +260,7 @@ export default function Account ({token}) {
                 
                 {userForm &&
                     <div className = 'userUpdateForm'>
+                        {/* form could be a component? */}
                     <form onSubmit = {userUpdate}>
                         <label>
                             Profile Image:
@@ -336,8 +338,12 @@ export default function Account ({token}) {
                     </form>
                 </div>
                 }
+                
                 <div className = 'userItems'>
                     <div className='userItemsNav'>
+                        {/* This might be swapped to a router. acounts/recipes, accounts/reviews, accounts/comments */}
+                         {/* this userNav div could be it's own component */}
+                         {/* this is one of the generic button options */}
                         <button onClick={() => {
                             setUserRecipes(true);
                             setUserReviews(false);
@@ -362,9 +368,12 @@ export default function Account ({token}) {
                                 {recipeList.map((recipe)=>{
                                     return (
                                     <div className="recipeCard" key={recipe.id}>
+                                        {/* this recipeCard could be it's own component */}
                                         <h3>{recipe.title}</h3>
                                         <img src={recipe.imgurl} alt={`A picture of ${recipe.title}`} height="15%" width="22.5%"/>
                                         <p><em>{recipe.tags}</em></p>
+                                        {/* this is inccorrect with tags on backend*/}
+                                        {/* the tags array render could be it's own component */}
                                         <p>Est. Time: {recipe.estimatedTime}</p>
                                         <button onClick={() => {
                                             navigate(`/recipes/${recipe.id}`)
@@ -372,6 +381,7 @@ export default function Account ({token}) {
                                         <button onClick={() => {
                                             navigate(`/recipes/${recipe.id}/edit`)
                                         }}>Edit Recipe</button>
+                                        {/* Generic button component that navigates */}
                                     </div>)
                                 })}
                             </div>
@@ -384,12 +394,14 @@ export default function Account ({token}) {
                                 {reviewList.map((review)=>{
                                     return (
                                     <div className="reviewCard" key={review.id}>
+                                        {/* this reviewCard could be it's own component */}
                                         <h3>Review: {review.content}</h3>
                                         <p>for recipe {review.recipe.title}</p>
                                         <p>Rating: {review.rating}</p>
                                         <button onClick={() => {
                                             navigate(`/recipes/${review.recipe.id}`)
-                                        }}>See Recipe</button>                
+                                        }}>See Recipe</button> 
+                                        {/* this is one of the generic button options */}               
                                     </div>)
                                 })}
                             </div>
@@ -402,11 +414,13 @@ export default function Account ({token}) {
                                 {commentList.map((comment)=>{
                                     return (
                                     <div className="commentCard" key={comment.id}>
+                                        {/* this commentCard could be it's own component */}
                                         <h3>Comment: {comment.content}</h3>
                                         <p>On review {comment.review.content} for recipe {comment.recipe.title}</p>
                                         <button onClick={() => {
                                             navigate(`/recipes/${comment.recipe.id}`)
-                                        }}>See Recipe</button>                  
+                                        }}>See Recipe</button>   
+                                        {/* this is one of the generic button options */}               
                                     </div>)
                                 })}
                             </div>
