@@ -8,13 +8,13 @@ export default function SingleRecipe ({token}) {
     const [refreshCounter, setRefreshCounter] = useState(0);
     const [recipe, setRecipe] = useState({});
     const [leavingAReview, setLeavingAReview] = useState(false);
-    const [leavingAComment, setLeavingAComment] = useState(false);
+    const [leavingAComment, setLeavingAComment] = useState(null);
     const [reviewTitle, setReviewTitle] = useState('');
     const [reviewRating, setReviewRating] = useState('');
     const [reviewContent, setReviewContent] = useState('');
     const [commentContent, setCommentContent] = useState('');
 
-    const [commentErrMess, setCommentErrMess] = useState(false);
+    const [commentErrMess, setCommentErrMess] = useState(null);
     const [reviewErrMess, setReviewErrMess] = useState(false);
 
     useEffect(() => {
@@ -108,8 +108,8 @@ export default function SingleRecipe ({token}) {
             
     }
 
-    function leavingACommentForm(){
-        if (leavingAComment){
+    function leavingACommentForm(reviewId){
+        if (leavingAComment === reviewId){
             return (
                 <>
                 <form onSubmit={handleCreateComment}>
@@ -147,10 +147,10 @@ export default function SingleRecipe ({token}) {
 
         const potentialComment = await createCommentFetch(reviewId);
         if (potentialComment.id){
-            setCommentErrMess(false);
+            setCommentErrMess(null);
             setRefreshCounter((prev) => prev + 1);
         } else {
-            setCommentErrMess(true);
+            setCommentErrMess(reviewId);
         }
 }
 
@@ -195,6 +195,7 @@ export default function SingleRecipe ({token}) {
             :
                 <button>Sign in to leave a review</button>
                     }
+            {reviewErrMess && <p>There has been an error submitting the review.</p>}
             <h2>Reviews:</h2>
             {!recipe.reviews.length ?
                 <p>No reviews to show.</p>
@@ -209,17 +210,18 @@ export default function SingleRecipe ({token}) {
                                 <p>{review.content}</p>
                                 {token ?
                                  <>
-                                      {!leavingAComment ?
-                                         <button onClick= {()=>setLeavingAComment(true)}>Leave a comment</button>
+                                      {!(leavingAComment === review.id) ?
+                                         <button onClick= {()=>setLeavingAComment(review.id)}>Leave a comment</button>
                                          :
-                                         <button onClick= {()=>setLeavingAComment(false)}>Close comment form </button>
+                                         <button onClick= {()=>setLeavingAComment(null)}>Close comment form </button>
                                         } 
-                                        {leavingACommentForm()}
+                                        {leavingACommentForm(review.id)}
                                  </>
                 
                                 :
                                 <button>Sign in to leave a comment</button>
                                 }
+                                {(commentErrMess === review.id) && <p>There has been an error submitting the comment.</p>}
                                 <h3>Comments:</h3>
                                     {!review.comments.length ?
                                         <p>No comments to show.</p>
