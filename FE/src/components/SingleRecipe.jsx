@@ -1,22 +1,32 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useInsertionEffect } from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
 
 export default function SingleRecipe ({token}) {
+    const navigate = useNavigate();
     const {recipeId} = useParams();
     const [errMess, setErrMess] = useState(false);
-    const navigate = useNavigate();
     const [refreshCounter, setRefreshCounter] = useState(0);
     const [recipe, setRecipe] = useState({});
     const [userId, setUserId] = useState(null);
+
     const [leavingAReview, setLeavingAReview] = useState(false);
-    const [leavingAComment, setLeavingAComment] = useState(null);
     const [reviewTitle, setReviewTitle] = useState('');
     const [reviewRating, setReviewRating] = useState('');
     const [reviewContent, setReviewContent] = useState('');
-    const [commentContent, setCommentContent] = useState('');
-
-    const [commentErrMess, setCommentErrMess] = useState(null);
     const [reviewErrMess, setReviewErrMess] = useState(false);
+
+    const [leavingAComment, setLeavingAComment] = useState(null);
+    const [commentContent, setCommentContent] = useState('');
+    const [commentErrMess, setCommentErrMess] = useState(null);
+
+    const [editingAReview, setEditingAReview] = useState(null);
+    const [editReviewTitle, setEditReviewTitle] = useState('');
+    const [editReviewRating, setEditReviewRating] = useState('');
+    const [editReviewContent, setEditReviewContent] = useState('');
+    const [editReviewErrMess, setEditReviewErrMess] = useState(null);
+
+
+ 
 
     useEffect(() => {
         async function handleGetRecipeById(){
@@ -26,7 +36,8 @@ export default function SingleRecipe ({token}) {
                     { 
                         method: "GET",
                         headers: { 
-                            "Content-Type": "application/json"
+                            "Content-Type": "application/json",
+                            "Authorization": `Bearer ${token}`
                         }
                     })
                     const json = await response.json();
@@ -104,6 +115,7 @@ export default function SingleRecipe ({token}) {
             if (potentialReview.id){
                 setReviewErrMess(false);
                 setRefreshCounter((prev) => prev + 1);
+                setLeavingAReview(false);
             } else {
                 setReviewErrMess(true);
             }  
@@ -151,9 +163,73 @@ export default function SingleRecipe ({token}) {
         if (potentialComment.id){
             setCommentErrMess(null);
             setRefreshCounter((prev) => prev + 1);
+            setLeavingAComment(null);
         } else {
             setCommentErrMess(reviewId);
         }
+}
+
+
+
+function editingAReviewForm(reviewId){
+    if (editingAReview === reviewId){
+        return (
+            <>
+            <form onSubmit={(event) => handleEditReview(event, reviewId)}>
+                <label>
+                    Title: <input type='text' value={editReviewTitle} onChange={(e) => setEditReviewTitle(e.target.value)}></input>
+                </label>
+                <label>
+                    Rating: <select id="stars" value={editReviewRating} onChange={(e) => setEditReviewRating(e.target.value)} name="stars">
+                            <option value={1}>1</option>
+                            <option value={2}>2</option>
+                            <option value={3}>3</option>
+                            <option value={4}>4</option>
+                            <option value={5}>5</option>
+                            </select>
+                </label>
+                <label>
+                    Content: <input type='text' value={editReviewContent} onChange={(e) => setEditReviewContent(e.target.value)}></input>
+                </label>
+                <button>Submit</button>
+            </form>
+            </>
+        )
+    }
+}
+
+async function handleEditReview(event, reviewId){
+    event.preventDefault();
+    async function editReviewFetch(reviewId){
+        try {
+            const response = await fetch(`http://localhost:3000/api/reviews/${reviewId}`,
+            { 
+                method: "PATCH",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization" :`BEARER ${token}`
+                },
+                body: JSON.stringify({
+                    title: editReviewTitle,
+                    rating: editReviewRating,
+                    content: editReviewContent
+                })
+            });
+            const json = await response.json();
+            return json;
+        } catch (error) {
+            throw (error);
+        }
+    }
+
+    const potentialEditReview = await editReviewFetch(reviewId);
+    if (potentialEditReview.id){
+        setEditReviewErrMess(null);
+        setEditingAReview(null);
+        setRefreshCounter((prev) => prev + 1);
+    } else {
+        setEditReviewErrMess(reviewId);
+    }
 }
 
     return (
@@ -210,6 +286,30 @@ export default function SingleRecipe ({token}) {
                                 <p>By {review.user.username}</p>
                                 <p>Rating: {review.rating}</p>
                                 <p>{review.content}</p>
+                                {token &&
+                                 <>
+                                    {(review.userid === userId) &&
+                                    <>
+                                        {(editingAReview === review.id) ?
+                                        <>
+                                            <button onClick={()=>setEditingAReview(null)}>Close edit review form</button>
+                                            {editingAReviewForm(review.id)}
+                                        </>
+                                        :
+                                        <>
+                                            <button onClick={()=>{
+                                                setEditingAReview(review.id);
+                                                setEditReviewTitle(review.title);
+                                                setEditReviewRating(review.rating);
+                                                setEditReviewContent(review.content);
+                                            }}>Edit your review</button>
+                                        </>
+                                        }
+                                    </>
+                                    }
+                                 </>
+                                }
+                                {(editReviewErrMess === review.id) && <p>There has been an error submitting the edited review.</p>}
                                 {token ?
                                  <>
                                       {!(leavingAComment === review.id) ?
