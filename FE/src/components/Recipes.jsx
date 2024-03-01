@@ -4,6 +4,10 @@ import { useNavigate } from "react-router-dom"
 
 export default function Recipes ({token}) {
     const [recipeList, setRecipeList] = useState([]);
+    
+    const [filteredRecipes, setFilteredRecipes] = useState(recipeList);
+    const [searchTerm, setSearchTerm] = useState('');
+
     const navigate = useNavigate();
 
     const dummyRecipes = [
@@ -108,13 +112,29 @@ export default function Recipes ({token}) {
         tags: ["vegetarian"]
       }]
     
+    function changeSearch(e){
+      setSearchTerm(e.target.value)
+    }
+
     useEffect(() => {
         setRecipeList(dummyRecipes);
     }, []);
 
+    useEffect(()=>{
+      const filter = recipeList.filter((recipe)=>{
+        const {title, ingredients} = recipe
+        return title.toLowerCase().includes(searchTerm)
+      })
+      setFilteredRecipes(filter)
+    }, [searchTerm]);
+
     return (
         <div className="recipesContainer">
-           {recipeList.map((recipe) => {
+        <label htmlFor="search-bar">
+          Search Recipes: 
+          <input type="text" value={searchTerm} onChange={changeSearch}/>
+        </label>
+           {filteredRecipes.map((recipe) => {
                return (
                    <div className="recipeCard" key={recipe.id}>
                        <h2>{recipe.title}</h2>
