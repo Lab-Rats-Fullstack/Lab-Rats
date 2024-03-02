@@ -343,9 +343,9 @@ export default function Account ({token}) {
                 
                 <div className = 'userItems'>
                     <div className='userItemsNav'>
-                        {/* This might be swapped to a router. acounts/recipes, accounts/reviews, accounts/comments */}
-                         {/* this userNav div could be it's own component */}
-                         {/* this is one of the generic button options */}
+                        {/* This might be swapped to a router. acounts/recipes, accounts/reviews, accounts/comments
+                         this userNav div could be it's own component
+                         this is one of the generic button options */}
                         <button onClick={() => {
                             setUserRecipes(true);
                             setUserReviews(false);
@@ -374,7 +374,7 @@ export default function Account ({token}) {
                                         <h3>{recipe.title}</h3>
                                         <img src={recipe.imgurl} alt={`A picture of ${recipe.title}`} height="15%" width="22.5%"/>
                                         <p><em>{recipe.tags}</em></p>
-                                        {/* this is inccorrect with tags on backend*/}
+                                        {/* this is inccorrect with tags on backend */}
                                         {/* the tags array render could be it's own component */}
                                         <p>Est. Time: {recipe.estimatedTime}</p>
                                         <button onClick={() => {
@@ -403,7 +403,7 @@ export default function Account ({token}) {
                                         <button onClick={() => {
                                             navigate(`/recipes/${review.recipe.id}`)
                                         }}>See Recipe</button> 
-                                        {/* this is one of the generic button options */}               
+                                        {/* this is one of the generic button options                */}
                                     </div>)
                                 })}
                             </div>
@@ -422,7 +422,7 @@ export default function Account ({token}) {
                                         <button onClick={() => {
                                             navigate(`/recipes/${comment.recipe.id}`)
                                         }}>See Recipe</button>   
-                                        {/* this is one of the generic button options */}               
+                                        {/* this is one of the generic button options                */}
                                     </div>)
                                 })}
                             </div>
