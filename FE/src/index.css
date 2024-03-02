@@ -13,14 +13,13 @@ body {
   overflow-x: hidden;
   padding: 0;
   margin: 0;
+  background-color: var(--clr-accent-four);
 }
 #root {
   font-family: "Fira Sans Condensed", sans-serif;
   font-weight: 400;
   color: var(--clr-accent-two);
   background-color: var(--clr-accent-four);
-  display: flex;
-  justify-content: center;
   min-height: 100%;
   width: 100%;
 }
@@ -29,6 +28,10 @@ h1,
 h2,
 h3 {
   font-family: "Homemade Apple", cursive;
+}
+
+img {
+  max-width: 100%;
 }
 
 button {
@@ -62,7 +65,6 @@ a:focus {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  position: fixed;
   background-color: var(--clr-secondary);
 }
 
@@ -85,8 +87,42 @@ a:focus {
 .navbar div button {
   position: absolute;
   width: 100%;
-  top: 70%;
+  top: 75%;
   border: none;
   background-color: transparent;
   display: none;
+}
+
+/* .singleRecipeCard {
+  border: 1px solid red;
+  max-width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr; 
+} */
+
+.wrapper div {
+  display: grid;
+  gap: 1rem;
+  padding: 2rem;
+}
+
+.userInfo {
+  display: grid;
+  align-self: start;
+  position: sticky;
+  top: 25%;
+}
+
+.userUpdateForm {
+  grid-column-start: 1;
+}
+.userItems {
+  grid-column-start: 2;
+  grid-row-start: 1;
+  border: 1px solid var(--clr-accent-two);
+}
+
+.userItemsNav {
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 0;
 }
