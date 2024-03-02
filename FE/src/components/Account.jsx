@@ -183,7 +183,8 @@ export default function Account ({token}) {
                         "Authorization": `Bearer ${token}`,
                     },
                 });
-                const result = await response.json()             
+                const result = await response.json();
+                console.log(result);
                 if (token !== null) {
                     setUserData(dummyData);
                     setFail(false);
@@ -216,7 +217,8 @@ export default function Account ({token}) {
                         password
                     })
             });
-            const result = await response.json()             
+            const result = await response.json()
+            console.log(result);             
             setUserData(dummyUser);
             setUpdate((version) => version +1);
             setUserForm(false);
