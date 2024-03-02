@@ -126,3 +126,43 @@ a:focus {
   grid-template-columns: 1fr 1fr 1fr;
   gap: 0;
 }
+
+.recipesContainer {
+  display: grid;
+  place-items: center;
+}
+
+.recipeCard {
+  border: 1px solid var(--clr-accent-two);
+  border-radius: 10px;
+  padding: 1rem;
+  margin: 1rem;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  place-items: center;
+  max-width: 80%;
+}
+
+.recipeCard h2 {
+  grid-column-start: 2;
+  grid-column-end: 4;
+}
+
+.recipeCard img {
+  grid-column-start: 1;
+  grid-row-start: 1;
+  grid-row-end: 3;
+}
+
+.recipeCard p:first-of-type {
+  grid-column-start: 2;
+  grid-column-end: 4;
+}
+
+.recipeCard p:last-of-type {
+  grid-column-start: 1;
+}
+
+.recipeCard button {
+  grid-column-end: 4;
+}
