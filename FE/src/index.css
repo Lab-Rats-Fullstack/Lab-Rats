@@ -36,7 +36,8 @@ img {
   max-width: 100%;
 }
 
-button {
+button,
+input[type="button"] {
   font-family: "Fira Sans Condensed", sans-serif;
   font-weight: 400;
   color: var(--clr-primary);
@@ -47,7 +48,9 @@ button {
 }
 
 button:hover,
-button:focus {
+button:focus,
+input[type="button"]:hover,
+input[type="button"]:focus {
   background-color: var(--clr-accent-three);
 }
 
@@ -95,13 +98,6 @@ a:focus {
   display: none;
 }
 
-/* .singleRecipeCard {
-  border: 1px solid red;
-  max-width: 100%;
-  display: grid;
-  grid-template-columns: 1fr 1fr 1fr; 
-} */
-
 .wrapper div {
   display: grid;
   gap: 1rem;
@@ -142,7 +138,7 @@ a:focus {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   place-items: center;
-  max-width: 80%;
+  width: 80%;
 }
 
 .recipeCard h2 {
@@ -211,5 +207,87 @@ a:focus {
 
 .singleRecipeCard h2,
 .singleRecipeCard ol {
+  grid-column: 1/-1;
+}
+
+.newRecipeForm {
+  border: 1px solid var(--clr-accent-two);
+  border-radius: 10px;
+  display: grid;
+  padding: 1rem;
+  margin: 1rem;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.newRecipeForm input {
+  width: 100%;
+  grid-column: 2/-1;
+}
+
+.newRecipeForm label {
+  grid-column-start: 1;
+}
+
+.newRecipeForm div {
+  grid-column: 1/-1;
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+}
+
+.newRecipeForm div input {
+  min-width: 50%;
+}
+
+.wrapper {
+  width: 80%;
+  display: grid;
+  place-items: center;
+}
+
+.login,
+.register {
+  border: 1px solid var(--clr-accent-two);
+  border-radius: 10px;
+  width: 100%;
+  display: grid;
+  padding: 1rem;
+  margin: 1rem;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  place-items: center;
+}
+
+.login h2,
+.register h2,
+.login p,
+.register p {
+  grid-column: 1/-1;
+}
+
+.login form,
+.register form {
+  grid-column: 1/-1;
+  display: grid;
+  gap: 1rem;
+}
+
+.login form input,
+.register form input {
+  margin-left: 1rem;
+}
+
+.adminNav {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 1rem;
+}
+
+.allTags {
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+}
+
+.allTags button {
   grid-column: 1/-1;
 }
