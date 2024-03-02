@@ -1,0 +1,92 @@
+@import url("https://fonts.googleapis.com/css2?family=Fira+Sans+Condensed:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Homemade+Apple&display=swap");
+
+:root {
+  --clr-primary: #f8a82b;
+  --clr-secondary: #964b42;
+  --clr-accent-one: #ee7536;
+  --clr-accent-two: #5b5731;
+  --clr-accent-three: #928d51;
+  --clr-accent-four: #ebe9e8;
+}
+body {
+  width: 100vw;
+  overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+}
+#root {
+  font-family: "Fira Sans Condensed", sans-serif;
+  font-weight: 400;
+  color: var(--clr-accent-two);
+  background-color: var(--clr-accent-four);
+  display: flex;
+  justify-content: center;
+  min-height: 100%;
+  width: 100%;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Homemade Apple", cursive;
+}
+
+button {
+  font-family: "Fira Sans Condensed", sans-serif;
+  font-weight: 400;
+  color: var(--clr-primary);
+  border-color: var(--clr-accent-two);
+  background-color: var(--clr-accent-four);
+  border-radius: 0.5em;
+  cursor: pointer;
+}
+
+button:hover,
+button:focus {
+  background-color: var(--clr-accent-three);
+}
+
+a {
+  text-decoration: none;
+  color: var(--clr-primary);
+}
+
+a:hover,
+a:focus {
+  color: var(--clr-accent-one);
+}
+
+.navbar {
+  left: 0;
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: fixed;
+  background-color: var(--clr-secondary);
+}
+
+.navbar a,
+.navbar div {
+  padding-block: 1.5rem;
+  margin-inline: 1rem;
+}
+
+.navbar div {
+  position: relative;
+  background-color: var(--clr-secondary);
+  height: 100%;
+}
+
+.navbar div:hover button {
+  display: block;
+}
+
+.navbar div button {
+  position: absolute;
+  width: 100%;
+  top: 70%;
+  border: none;
+  background-color: transparent;
+  display: none;
+}
