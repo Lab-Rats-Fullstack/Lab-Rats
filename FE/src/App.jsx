@@ -8,6 +8,10 @@ import NewRecipe from './components/NewRecipe'
 import EditRecipe from './components/EditRecipe'
 import Login from './components/Login'
 import Account from './components/Account'
+import UserRecipes from './components/UserRecipes'
+import UserReviews from './components/UserReviews'
+import UserComments from './components/UserComments'
+import UserProfile from './components/UserProfile'
 import Admin from './components/Admin'
 
 function App() {
@@ -23,7 +27,16 @@ function App() {
       <Route path ="/recipes/:recipeId/edit" element={<EditRecipe token ={token}/>}></Route>
       <Route path ="/recipes/new" element={<NewRecipe token ={token}/>}></Route>
       <Route path ="/login" element={<Login token ={token} setToken ={setToken}/>}></Route>
-      <Route path ="/account" element={<Account token ={token}/>}></Route>
+      <Route path ="/account" element={<Account token ={token}/>}>
+        <Route path="recipes" element={<UserRecipes/>}/>
+        <Route path="reviews" element={<UserReviews/>}/>
+        <Route path="comments" element={<UserComments/>}/>
+      </Route>
+      <Route path ="/users/:userId" element={<UserProfile token ={token}/>}>
+        <Route path="recipes" element={<UserRecipes/>}/>
+        <Route path="reviews" element={<UserReviews/>}/>
+        <Route path="comments" element={<UserComments/>}/>
+      </Route>
       <Route path ="/admin" element={<Admin token ={token}/>}></Route>
     </Routes>
     </>

@@ -1,10 +1,17 @@
-import {useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import {useEffect, useState} from 'react'
+import { Routes, Route, useNavigate, useParams} from 'react-router-dom'
+import { Link } from 'react-router-dom'
+import UserInfo from './UserInfo'
+import UserRecipes from './UserRecipes'
+import UserReviews from './UserReviews'
+import UserComments from './UserComments'
+import NavButton from './NavButton'
 
 const API = 'http://localhost:3000/api/';
 
 export default function Account ({token}) {
-    const [userData, setUserData] = useState({});    
+    const [userData, setUserData] = useState({}); 
+    const [adminPriv, setAdminPriv] = useState(false);   
     const {recipes: recipeList =[], reviews: reviewList=[], comments: commentList=[]} = userData;
 
     const [error, setError] = useState(null);
@@ -35,10 +42,10 @@ export default function Account ({token}) {
     const dummyRecipes = [
         {
             id: 3,
-            userId: 1,
-            userName: "adminTest",
+            userid: 1,
+            username: "adminTest",
             title: "Butter Chicken",
-            estimatedTime: "1 hour",
+            estimatedtime: "1 hour",
             ingredients: [
               "1.5 lbs Chicken Thighs",
               "1 cup Full-Fat Yogurt",
@@ -71,14 +78,27 @@ export default function Account ({token}) {
             notes: [
               "I like to make the naan too as its a very easy and approachable flat bread to make at home.",
             ],
-            tags: ["gluten free"],
+            tags: [
+                {
+                    "id": 1,
+                    "name": "pastries"
+                },
+                {
+                    "id": 2,
+                    "name": "classic"
+                },
+                {
+                    "id": 3,
+                    "name": "salads"
+                }
+            ],
         },
         {
             id: 4,
-            userId: 1,
-            userName: "adminTest",
+            userid: 1,
+            username: "adminTest",
             title: "Blue Cheese Dressing",
-            estimatedTime: "45 min",
+            estimatedtime: "45 min",
             ingredients: [
               "1 cup Mayonnaise",
               "1/2 cup Sour Cream",
@@ -101,7 +121,20 @@ export default function Account ({token}) {
             notes: [
               "Pick a really good blue cheese for this and you'd be amazed how excellent this can be.",
             ],
-            tags: ["condiment"],
+            tags: [
+                {
+                    "id": 1,
+                    "name": "pastries"
+                },
+                {
+                    "id": 2,
+                    "name": "classic"
+                },
+                {
+                    "id": 3,
+                    "name": "salads"
+                }
+            ],
           }
     ]
 
@@ -173,21 +206,24 @@ export default function Account ({token}) {
         comments: dummyComments
     }
 
+    token = 2;
     useEffect(()=>{
         async function userCheck () {
             try {
-                const response = await fetch(`${API}users/me`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type":"application/json",
-                        "Authorization": `Bearer ${token}`,
-                    },
-                });
-                const result = await response.json();
-                console.log(result);
+                // const response = await fetch(`${API}users/me`, {
+                //     method: "GET",
+                //     headers: {
+                //         "Content-Type":"application/json",
+                //         "Authorization": `Bearer ${token}`,
+                //     },
+                // });
+                // const result = await response.json();
+                // console.log(result);
                 if (token !== null) {
                     setUserData(dummyData);
                     setFail(false);
+                } if (dummyData.admin !== false){
+                    setAdminPriv(true);
                 } else {
                     setFail(true);
                 }
@@ -206,20 +242,20 @@ export default function Account ({token}) {
     async function userUpdate(event) {
         event.preventDefault();
         try {
-            const response = await fetch(`${API}users/me`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type":"application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-                    body: JSON.stringify({
-                        ...updatedUser,
-                        password
-                    })
-            });
-            const result = await response.json()
-            console.log(result);             
-            setUserData(dummyUser);
+            // const response = await fetch(`${API}users/me`, {
+            //     method: "PATCH",
+            //     headers: {
+            //         "Content-Type":"application/json",
+            //         "Authorization": `Bearer ${token}`,
+            //     },
+            //         body: JSON.stringify({
+            //             ...updatedUser,
+            //             password
+            //         })
+            // });
+            // const result = await response.json()
+            // console.log(result);             
+            setUserData(dummyData);
             setUpdate((version) => version +1);
             setUserForm(false);
             setUserBio(true);
@@ -243,6 +279,9 @@ export default function Account ({token}) {
         }enableButton();
     }, [password, confirmPassword]);
 
+    // console.log(dummyData);
+    // console.log(userData);
+
     return (
         <><p>This is the Account page</p>
         <div className = 'wrapper'>
@@ -250,12 +289,12 @@ export default function Account ({token}) {
             {fail ? <div className='fail'><h2>Please Sign In</h2><br/> <button type='login' onClick={signIn}>Log In</button></div> :
             <div>
                 {userBio && 
-                    <div className = 'userInfo'>
-                        {/* userInfo component- conditionally render certain info via token admin */}
-                        <img src={userData.imgurl} alt={`User account image for ${userData.username}`} height="15%" width="22.5%"/>
-                        <h2>{userData.username}</h2>
-                        <p>{userData.name}</p>
-                        <p>{userData.email}</p>
+                    <div>
+                        <UserInfo
+                            key ={userData.id}
+                            token={token}
+                            userData={userData}
+                            adminPriv={adminPriv}/>
                         <button onClick={() => {setUserBio(false); setUserForm(true);}}>Update Profile</button>
                     </div>
                 }
@@ -346,6 +385,7 @@ export default function Account ({token}) {
                         {/* This might be swapped to a router. acounts/recipes, accounts/reviews, accounts/comments
                          this userNav div could be it's own component
                          this is one of the generic button options */}
+                        {/* Need to get clarification on this from Larry */}
                         <button onClick={() => {
                             setUserRecipes(true);
                             setUserReviews(false);
@@ -361,72 +401,17 @@ export default function Account ({token}) {
                             setUserReviews(false);
                             setUserComments(true);
                         }}>My Comments</button>
+                        {/* <NavButton location ={`/account/recipes`} buttonText={"My Recipes"}/> */}
                     </div>
                     <div className='itemContent'>
                         {userRecipes && 
-                        <div className="recipesContainer">
-                            <div className = 'userRecipes'>
-                                <h2>My Recipes</h2>
-                                {recipeList.map((recipe)=>{
-                                    return (
-                                    <div className="recipeCard" key={recipe.id}>
-                                        {/* this recipeCard could be it's own component */}
-                                        <h3>{recipe.title}</h3>
-                                        <img src={recipe.imgurl} alt={`A picture of ${recipe.title}`} height="15%" width="22.5%"/>
-                                        <p><em>{recipe.tags}</em></p>
-                                        {/* this is inccorrect with tags on backend */}
-                                        {/* the tags array render could be it's own component */}
-                                        <p>Est. Time: {recipe.estimatedTime}</p>
-                                        <button onClick={() => {
-                                            navigate(`/recipes/${recipe.id}`)
-                                        }}>See Recipe</button>
-                                        <button onClick={() => {
-                                            navigate(`/recipes/${recipe.id}/edit`)
-                                        }}>Edit Recipe</button>
-                                        {/* Generic button component that navigates */}
-                                    </div>)
-                                })}
-                            </div>
-                        </div>
+                        <UserRecipes token={token} userData={userData} adminPriv={adminPriv}/>
                         }
                         {userReviews && 
-                        <div className="reviewContainer">
-                            <div className = 'userReviews'>
-                                <h2>My Reviews</h2>
-                                {reviewList.map((review)=>{
-                                    return (
-                                    <div className="reviewCard" key={review.id}>
-                                        {/* this reviewCard could be it's own component */}
-                                        <h3>Review: {review.content}</h3>
-                                        <p>for recipe {review.recipe.title}</p>
-                                        <p>Rating: {review.rating}</p>
-                                        <button onClick={() => {
-                                            navigate(`/recipes/${review.recipe.id}`)
-                                        }}>See Recipe</button> 
-                                        {/* this is one of the generic button options                */}
-                                    </div>)
-                                })}
-                            </div>
-                        </div>
+                        <UserReviews token={token} userData={userData} adminPriv={adminPriv}/>
                         }
                         {userComments && 
-                        <div className="commentContainer">
-                            <div className = 'usercomments'>
-                                <h2>My Comments</h2>
-                                {commentList.map((comment)=>{
-                                    return (
-                                    <div className="commentCard" key={comment.id}>
-                                        {/* this commentCard could be it's own component */}
-                                        <h3>Comment: {comment.content}</h3>
-                                        <p>On review {comment.review.content} for recipe {comment.recipe.title}</p>
-                                        <button onClick={() => {
-                                            navigate(`/recipes/${comment.recipe.id}`)
-                                        }}>See Recipe</button>   
-                                        {/* this is one of the generic button options                */}
-                                    </div>)
-                                })}
-                            </div>
-                        </div>
+                        <UserComments token={token} userData={userData} adminPriv={adminPriv}/>
                         }
                     </div>
                 </div>
