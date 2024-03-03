@@ -9,6 +9,7 @@ const {
   getAllUsers,
   getUserByUsername,
   getUserPageById,
+  getPublicUserPageById
 } = require("../db");
 
 const jwt = require("jsonwebtoken");
@@ -122,8 +123,16 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
 usersRouter.get("/:userId/", async (req, res, next) => {
   const { userId } = req.params;
   try {
-    const user = await getUserPageById(userId);
+    let user;
+
+    if (req.user && req.user.admin) {
+      user = await getUserPageById(userId);
+    } else {
+      user = await getPublicUserPageById(userId);
+    }
+
     res.send(user);
+    
   } catch (err) {
     next(err);
   }
