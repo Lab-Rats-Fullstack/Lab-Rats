@@ -2,6 +2,7 @@ import { useState, useEffect, useInsertionEffect } from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
 
 export default function SingleRecipe ({token, admin}) {
+    const API_URL = `http://localhost:3000/api/`;
     const navigate = useNavigate();
     const {recipeId} = useParams();
     const [errMess, setErrMess] = useState(false);
@@ -45,7 +46,7 @@ export default function SingleRecipe ({token, admin}) {
         async function handleGetRecipeById(){
             async function handleGetRecipeFetch(){
                 try{
-                    const response = await fetch(`http://localhost:3000/api/recipes/${recipeId}`, 
+                    const response = await fetch(`${API_URL}recipes/${recipeId}`, 
                     { 
                         method: "GET",
                         headers: { 
@@ -104,7 +105,7 @@ export default function SingleRecipe ({token, admin}) {
             event.preventDefault();
             async function createReviewFetch(){
                 try {
-                    const response = await fetch(`http://localhost:3000/api/reviews/${recipe.id}`,
+                    const response = await fetch(`${API_URL}reviews/${recipe.id}`,
                     { 
                         method: "POST",
                         headers: { 
@@ -155,7 +156,7 @@ export default function SingleRecipe ({token, admin}) {
         event.preventDefault();
         async function createCommentFetch(reviewId){
             try {
-                const response = await fetch(`http://localhost:3000/api/comments/${reviewId}`,
+                const response = await fetch(`${API_URL}comments/${reviewId}`,
                 { 
                     method: "POST",
                     headers: { 
@@ -217,7 +218,7 @@ async function handleEditReview(event, reviewId){
     event.preventDefault();
     async function editReviewFetch(reviewId){
         try {
-            const response = await fetch(`http://localhost:3000/api/reviews/${reviewId}`,
+            const response = await fetch(`${API_URL}reviews/${reviewId}`,
             { 
                 method: "PATCH",
                 headers: { 
@@ -267,7 +268,7 @@ async function handleEditComment(event, commentId){
     event.preventDefault();
     async function editCommentFetch(commentId){
         try {
-            const response = await fetch(`http://localhost:3000/api/comments/${commentId}`,
+            const response = await fetch(`${API_URL}comments/${commentId}`,
             { 
                 method: "PATCH",
                 headers: { 
@@ -299,7 +300,7 @@ async function handleEditComment(event, commentId){
 async function handleDeleteReview(reviewId){
     async function deleteReviewFetch(reviewId){
         try {
-            const response = await fetch(`http://localhost:3000/api/reviews/${reviewId}`,
+            const response = await fetch(`${API_URL}reviews/${reviewId}`,
             { 
                 method: "DELETE",
                 headers: { 
@@ -328,7 +329,7 @@ async function handleDeleteReview(reviewId){
 async function handleDeleteComment(commentId){
     async function deleteCommentFetch(commentId){
         try {
-            const response = await fetch(`http://localhost:3000/api/comments/${commentId}`,
+            const response = await fetch(`${API_URL}comments/${commentId}`,
             { 
                 method: "DELETE",
                 headers: { 
@@ -357,7 +358,7 @@ async function handleDeleteComment(commentId){
 async function handleDeleteRecipe(recipeId){
     async function deleteRecipeFetch(recipeId){
         try {
-            const response = await fetch(`http://localhost:3000/api/recipes/${recipeId}`,
+            const response = await fetch(`${API_URL}recipes/${recipeId}`,
             { 
                 method: "DELETE",
                 headers: { 
@@ -413,7 +414,7 @@ async function handleDeleteRecipe(recipeId){
                 return (
                 <p key={tag.id}><em>{tag.name}</em></p>
             )})}</div>
-            <img src={recipe.imgurl} width="500px"/>
+            <img src={recipe.imgurl}/>
             <h2>Ingredients:</h2>
                 <ul>
                     {recipe.ingredients.map((ingredient) => {
