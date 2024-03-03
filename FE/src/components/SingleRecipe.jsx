@@ -1,7 +1,7 @@
 import { useState, useEffect, useInsertionEffect } from 'react'
 import {useParams, useNavigate} from 'react-router-dom'
 
-export default function SingleRecipe ({token}) {
+export default function SingleRecipe ({token, admin}) {
     const navigate = useNavigate();
     const {recipeId} = useParams();
     const [errMess, setErrMess] = useState(false);
@@ -34,6 +34,9 @@ export default function SingleRecipe ({token}) {
     
     const [commentAreYouSure, setCommentAreYouSure] = useState(null);
     const [deleteCommentErrMess, setDeleteCommentErrMess] = useState(null);
+
+    const [recipeAreYouSure, setRecipeAreYouSure] = useState(false);
+    const [deleteRecipeErrMess, setDeleteRecipeErrMess] = useState(false);
 
 
  
@@ -117,6 +120,7 @@ export default function SingleRecipe ({token}) {
                     const json = await response.json();
                     return json;
                 } catch (error) {
+                    setReviewErrMess(true);
                     throw (error);
                 }
             }
@@ -165,6 +169,7 @@ export default function SingleRecipe ({token}) {
                 const json = await response.json();
                 return json;
             } catch (error) {
+                setCommentErrMess(reviewId);
                 throw (error);
             }
         }
@@ -228,6 +233,7 @@ async function handleEditReview(event, reviewId){
             const json = await response.json();
             return json;
         } catch (error) {
+            setEditReviewErrMess(reviewId);
             throw (error);
         }
     }
@@ -275,6 +281,7 @@ async function handleEditComment(event, commentId){
             const json = await response.json();
             return json;
         } catch (error) {
+            setEditCommentErrMess(commentId);
             throw (error);
         }
     }
@@ -303,6 +310,7 @@ async function handleDeleteReview(reviewId){
             const json = await response.json();
             return json;
         } catch (error) {
+            setDeleteReviewErrMess(reviewId);
             throw (error);
         }
     }
@@ -331,6 +339,7 @@ async function handleDeleteComment(commentId){
             const json = await response.json();
             return json;
         } catch (error) {
+            setDeleteCommentErrMess(commentId);
             throw (error);
         }
     }
@@ -345,6 +354,36 @@ async function handleDeleteComment(commentId){
     }
 }
 
+async function handleDeleteRecipe(recipeId){
+    async function deleteRecipeFetch(recipeId){
+        try {
+            const response = await fetch(`http://localhost:3000/api/recipes/${recipeId}`,
+            { 
+                method: "DELETE",
+                headers: { 
+                    "Content-Type": "application/json",
+                    "Authorization" :`BEARER ${token}`
+                },
+            });
+            const json = await response.json();
+            return json;
+        } catch (error) {
+            setDeleteRecipeErrMess(true);
+            throw (error);
+        }
+    }
+
+    const potentialDeletedRecipe= await deleteRecipeFetch(recipeId);
+    if(potentialDeletedRecipe){
+        setRecipeAreYouSure(false);
+        setDeleteRecipeErrMess(false);
+        setRefreshCounter((prev) => prev + 1);
+    } else {
+        setDeleteRecipeErrMess(true);
+    }
+}
+
+
     return (
         <>
         {(errMess || !recipe.id) ?
@@ -353,6 +392,23 @@ async function handleDeleteComment(commentId){
         <div className="singleRecipeCard">
             <h1>{recipe.title}</h1>
             <h5>@{recipe.user.username}</h5>
+            {admin &&
+            <>
+                <button onClick={()=>navigate(`/recipes/${recipe.id}/edit`)}>Edit Recipe</button>
+                {recipeAreYouSure ?
+                    <>
+                        <p>Are you are you want to delete this?</p>
+                        <button onClick={()=>handleDeleteRecipe(recipe.id)}>Yes</button>
+                        <button onClick={()=>setRecipeAreYouSure(false)}>No</button>
+                    </>
+                :
+                    <>
+                        <button onClick={()=>setRecipeAreYouSure(true)}>Delete Recipe</button>
+                    </>
+                }
+                {deleteRecipeErrMess && <p>There has been an error deleting the recipe.</p>}
+            </>
+            }
             <div>{recipe.tags.map((tag) => {
                 return (
                 <p key={tag.id}><em>{tag.name}</em></p>
@@ -406,7 +462,7 @@ async function handleDeleteComment(commentId){
                                 <p>{review.content}</p>
                                 {token &&
                                  <>
-                                    {(review.userid === userId) &&
+                                    {((review.userid === userId) || admin) &&
                                     <>
                                         {(editingAReview === review.id) ?
                                         <>
@@ -420,7 +476,7 @@ async function handleDeleteComment(commentId){
                                                 setEditReviewTitle(review.title);
                                                 setEditReviewRating(review.rating);
                                                 setEditReviewContent(review.content);
-                                            }}>Edit your review</button>
+                                            }}>Edit Review</button>
                                         </>
                                         }
                                         {(editReviewErrMess === review.id) && <p>There has been an error submitting the edited review.</p>}
@@ -434,7 +490,7 @@ async function handleDeleteComment(commentId){
                                             </>
                                         }
                                     
-                                        {(deleteReviewErrMess === review.id) && <p>There has been an error deleting your review.</p>}
+                                        {(deleteReviewErrMess === review.id) && <p>There has been an error deleting the review.</p>}
                                     </>
                                     }
                                  </>
@@ -469,7 +525,7 @@ async function handleDeleteComment(commentId){
                                                     <h5>By @{comment.user.username}</h5>
                                                     {token &&
                                                     <>
-                                                        {(comment.userid === userId) &&
+                                                        {((comment.userid === userId) || admin) &&
                                                         <>
                                                             {(editingAComment === comment.id) ?
                                                             <>
@@ -481,7 +537,7 @@ async function handleDeleteComment(commentId){
                                                                 <button onClick={()=>{
                                                                     setEditingAComment(comment.id);
                                                                     setEditCommentContent(comment.content);
-                                                                 }}>Edit your comment</button>
+                                                                 }}>Edit Comment</button>
                                                             </>
                                                             }
                                                             {(editCommentErrMess === comment.id) && <p>There has been an error submitting the edited comment.</p>}
@@ -494,7 +550,7 @@ async function handleDeleteComment(commentId){
                                                                  <button onClick={()=>setCommentAreYouSure(null)}>No</button>
                                                             </>
                                                             }
-                                                             {(deleteCommentErrMess === comment.id) && <p>There has been an error deleting your comment.</p>}
+                                                             {(deleteCommentErrMess === comment.id) && <p>There has been an error deleting the comment.</p>}
                                                         </>
                                                         }
                                                     </>
