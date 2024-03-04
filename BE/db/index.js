@@ -334,7 +334,7 @@ async function getRecipeById(recipeId) {
     const reviews = await getReviewsByRecipe(recipeId);
   
       const { rows: [user] } = await client.query(`
-        SELECT id, email, username, name, imgUrl, admin, reviewCount
+        SELECT id, username, imgUrl, admin, reviewCount
         FROM users
         WHERE id=$1;
       `,
@@ -436,7 +436,7 @@ async function getOtherPageRecipeById(recipeId) {
       rows: [userInfo],
     } = await client.query(
       `
-        SELECT id, email, username, name, imgUrl
+        SELECT id, username, imgUrl
         FROM users
         WHERE id = $1;
       `,
@@ -893,7 +893,7 @@ async function getUserPageReviewById(reviewId) {
       rows: [recipeUserInfo],
     } = await client.query(
       `
-      SELECT id, email, username, name, imgUrl
+      SELECT id, username, imgUrl
       FROM users
       WHERE id=$1;
     `,
@@ -942,7 +942,7 @@ async function getReviewById(reviewId) {
 
 
         const { rows: [user] } = await client.query(`
-        SELECT id, email, username, name, imgUrl, admin, reviewCount
+        SELECT id, username, imgUrl, admin, reviewCount
         FROM users
         WHERE id=$1;
       `,
@@ -1166,7 +1166,7 @@ async function getUserPageCommentById(commentId) {
       rows: [reviewUserInfo],
     } = await client.query(
       `
-      SELECT id, email, username, name, imgUrl
+      SELECT id, username, imgUrl
       FROM users
       WHERE id=$1;
     `,
@@ -1188,7 +1188,7 @@ async function getUserPageCommentById(commentId) {
       rows: [recipeUserInfo],
     } = await client.query(
       `
-    SELECT id, email, username, name, imgUrl
+    SELECT id, username, imgUrl
     FROM users
     WHERE id=$1;
   `,
@@ -1239,7 +1239,7 @@ async function getCommentById(commentId) {
 
 
       const { rows: [user] } = await client.query(`
-      SELECT id, email, username, name, imgUrl, admin, reviewCount
+      SELECT id, username, imgUrl, admin, reviewCount
       FROM users
       WHERE id=$1;
     `,
@@ -1285,7 +1285,7 @@ async function getCommentsByUser(userId) {
     const { rows: commentIds } = await client.query(
       `
         SELECT id
-        FROM comments
+        FROM comment
         WHERE userId=$1;
     `,
       [userId]

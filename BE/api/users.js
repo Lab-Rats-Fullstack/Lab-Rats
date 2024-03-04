@@ -110,6 +110,9 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
   try {
     const { id } = req.user;
     const { body: fields } = req;
+    if (fields.admin) {
+      delete fields.admin;
+    }
     if (fields.password) {
       fields.password = await bcrypt.hash(fields.password, 10);
     }
