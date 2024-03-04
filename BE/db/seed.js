@@ -1,3 +1,5 @@
+const bcrypt = require("bcrypt");
+
 const {  
     client,
     createUser,
@@ -115,10 +117,12 @@ const {
   async function createInitialUsers() {
     try {
       console.log("Starting to create users...");
+      const adminTestPass = await bcrypt.hash("adminTestPass", 10);
+      const userTestPass = await bcrypt.hash("userTestPass", 10);
   
       await createUser({ 
         email: 'adminTest@gmail.com',
-        password: 'adminTestPass',
+        password: adminTestPass,
         username: 'adminTest', 
         name: 'Admin Test',
         imgUrl: 'https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png',
@@ -126,7 +130,7 @@ const {
       });
       await createUser({ 
         email: 'userTest@gmail.com',
-        password: 'userTestPass',
+        password: userTestPass,
         username: 'userTest', 
         name: 'User Test',
         imgUrl: 'https://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg'

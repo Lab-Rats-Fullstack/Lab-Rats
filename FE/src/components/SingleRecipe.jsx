@@ -381,7 +381,7 @@ async function handleDeleteRecipe(recipeId){
     if(potentialDeletedRecipe){
         setRecipeAreYouSure(false);
         setDeleteRecipeErrMess(false);
-        setRefreshCounter((prev) => prev + 1);
+        navigate(`/`);
     } else {
         setDeleteRecipeErrMess(true);
     }
