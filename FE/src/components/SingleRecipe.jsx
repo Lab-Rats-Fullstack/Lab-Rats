@@ -46,13 +46,16 @@ export default function SingleRecipe ({token, admin}) {
         async function handleGetRecipeById(){
             async function handleGetRecipeFetch(){
                 try{
+                    const headers = {
+                        "Content-Type": "application/json"
+                    }
+                    if (token) {
+                        headers["Authorization"] = `Bearer ${token}`
+                    }
                     const response = await fetch(`${API_URL}recipes/${recipeId}`, 
                     { 
                         method: "GET",
-                        headers: { 
-                            "Content-Type": "application/json",
-                            "Authorization": `Bearer ${token}`
-                        }
+                        headers: headers
                     })
                     const json = await response.json();
                     return json;
