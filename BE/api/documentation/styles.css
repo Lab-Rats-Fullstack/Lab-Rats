@@ -1,0 +1,41 @@
+body {
+    display: grid;
+    grid-template-columns: 25% 75%;
+    gap: 1em;
+}
+
+header {
+    display: grid;
+    place-items: start;
+    word-break: break-word;
+}
+
+nav {
+    position: sticky;
+    top: 50%;
+    transform: translate(0, -50%);
+    background-color: #282C34;
+    max-height: 100vh;
+    overflow-y: scroll;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+}
+
+nav a:hover {
+    color: blue;
+}
+
+nav ul, nav ul li ul {
+    list-style: none;
+}
+
+nav ul li {
+    padding-left: 0;
+}
+
+main {
+    margin-right: 2rem;
+}

@@ -3,9 +3,822 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-one-dark@1.0.0/prism-onedark.min.css">
+    <link rel="stylesheet" href="styles.css">
     <title>API Documentation</title>
   </head>
   <body>
-    <h1>Hello Lab Rats</h1>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="#users">USERS</a>
+            <ul>
+              <li>
+               <a href="#users-get">GET /</a> 
+              </li>
+              <li>
+                <a href="#users-register">POST /register</a>
+              </li>
+              <li>
+                <a href="#users-login">POST /login</a>
+              </li>
+              <li>
+                <a href="#users-me-get">GET /me</a>
+              </li>
+              <li>
+                <a href="#users-me-patch">PATCH /me</a>
+              </li>
+              <li>
+                <a href="#users-userId-get">GET /:userId
+              </li></a>
+            </ul> 
+          </li>
+          <li>
+            <a href="#recipes">RECIPES</a>
+            <ul>
+              <li><a href="#recipes-get">GET /</a></li>
+              <li><a href="#recipes-post">POST /</a></li>
+              <li><a href="#recipes-reviewed">GET /reviewedRecipes</a></li>
+              <li><a href="#recipes-recipeId-get">GET /:recipeId</a></li>
+              <li><a href="#recipes-recipeId-patch">PATCH /:recipeId</a></li>
+              <li><a href="#recipes-recipeId-delete">DELETE /:recipeId</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#reviews">REVIEWS</a>
+            <ul>
+              <li><a href="#review-post">POST /:recipeId</a></li>
+              <li><a href="#review-patch">PATCH /:reviewId</a></li>
+              <li><a href="#review-delete">DELETE /:reviewId</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#comments">COMMENTS</a>
+            <ul>
+              <li><a href="#comment-post">POST /:reviewId</a></li>
+              <li><a href="#comment-patch">PATCH /:commentId</a></li>
+              <li><a href="#comment-delete">DELETE /:commentId</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#tags">TAGS</a>
+            <ul>
+              <li><a href="#tags-get-all">GET /</a></li>
+              <li><a href="#tags-get-recipes">GET /:tagName/recipes</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h1>API Documentation</h1>
+
+      <div id="users">
+        <h2>
+          USERS
+        </h2>
+        <div id="users-get">
+          <h3>GET /</h3>
+          <ul>
+            <li>
+              GET request for info on all user.
+            </li>
+            <li>
+              No parameters or authorization required.
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="users-register">
+          <h3>POST /register</h3>
+          <ul>
+            <li>
+              POST request for registering a new user.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>None</li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>username</li>
+                <li>name</li>
+                <li>email</li>
+                <li>password</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="users-login">
+          <h3>POST /login</h3>
+          <ul>
+            <li>
+              POST request for logging in a user.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>None</li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>username</li>
+                <li>password</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="users-me-get">
+          <h3>GET /me</h3>
+          <ul>
+            <li>
+              GET request for getting your account information.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>Authorization with JWT</li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>None</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="users-me-patch">
+          <h3>PATCH /me</h3>
+          <ul>
+            <li>
+              PATCH request for your account info.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>Authentication with JWT.</li>
+              </ul>
+            </li>
+            <li>
+              Body: (all optional)
+              <ul>
+                <li>username</li>
+                <li>name</li>
+                <li>email</li>
+                <li>password</li>
+                <li>imgurl</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="users-userId-get">
+          <h3>GET /:userId</h3>
+          <ul>
+            <li>
+              GET request for another user's account info.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>Optional authentication with JWT and admin check.</li>
+              </ul>
+            </li>
+            <li>
+              Body: 
+              <ul>
+                <li>none</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request for user</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response for user</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="request">
+            <h3>Sample Request for admin</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response for admin</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="recipes">
+        <h2>
+          RECIPES
+        </h2>
+        <div id="recipes-get">
+          <h3>GET /</h3>
+          <ul>
+            <li>
+              GET request for info on all recipes.
+            </li>
+            <li>
+              No parameters or authorization required.
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="recipes-post">
+            <h3>POST /</h3>
+            <ul>
+              <li>
+                POST request for a new recipe.
+              </li>
+              <li>
+                Headers:
+                <ul>
+                  <li>Authorization with JWT, admin role required.</li>
+                </ul>
+              </li>
+              <li>
+                Body:
+                <ul>
+                  <li>title</li>
+                  <li>ingredients (array)</li>
+                  <li>procedure (array)</li>
+                  <li>imgUrl</li>
+                  <li>notes (array, optional)</li>
+                  <li>tags (array, optional)</li>
+                </ul>
+              </li>
+            </ul>
+            <div class="request">
+              <h3>Sample Request</h3>
+              <pre>
+                <code class="language-js">
+                </code>
+              </pre>
+            </div>
+            <div class="response">
+              <h3>Sample Response</h3>
+              <pre>
+                <code class="language-js">
+                </code>
+              </pre>
+            </div>
+        </div>
+        <div id="recipes-reviewed">
+          <h3>GET /reviewedRecipes</h3>
+          <ul>
+            <li>
+              GET request for info on all reviewed recipes.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>
+                  Authorization with JWT, admin role required.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body: 
+              <ul>
+                <li>
+                  None.
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="recipes-recipeId-get">
+          <h3>GET /:recipeId</h3>
+          <ul>
+            <li>
+              GET request for info on a specific recipe.
+            </li>
+            <li>
+              No parameters or authorization required.
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="recipes-recipeId-patch">
+          <h3>PATCH /:recipeId</h3>
+          <ul>
+            <li>
+              PATCH request for a specific recipe.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>
+                  Authorization with JWT, admin role required.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body: (All optional)
+              <ul>
+                <li>title</li>
+                <li>ingredients (array)</li>
+                <li>procedure (array)</li>
+                <li>imgUrl</li>
+                <li>notes (array, optional)</li>
+                <li>tags (array, optional)</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="recipes-recipeId-delete">
+          <h3>DELETE /:recipeId</h3>
+          <ul>
+            <li>
+              DELETE request for a specific recipe.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>
+                  Authorization with JWT, admin role required.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>None.</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="reviews">
+        <h2>REVIEWS</h2>
+        <div id="review-post">
+          <h3>
+           POST /:recipeId
+          </h3>
+          <ul>
+            <li>POST request for a new Review.</li>
+            <li>Headers: 
+              <ul>
+                <li>
+                  Authentication with JWT.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>content</li>
+                <li>rating</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="review-patch">
+          <h3>
+            PATCH /:reviewId
+          </h3>
+          <ul>
+            <li>PATCH request for a single review.</li>
+            <li>
+              Headers:
+              <ul>
+                <li>
+                  Authentication with JWT.
+                </li>
+                <li>
+                  Checks for authorizied user or admin.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body: (optional)
+              <ul>
+                <li>content</li>
+                <li>rating</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Authorized User/Admin Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Unauthorized Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="review-delete">
+          <h3>
+            DELETE /:reviewId
+          </h3>
+          <ul>
+            <li>DELETE request for a single review.</li>
+            <li>
+              Headers:
+              <ul>
+                <li>
+                  Authentication with JWT.
+                </li>
+                <li>
+                  Checks for authorizied user or admin.
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Authorized User/Admin Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Unauthorized Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="comments">
+        <h2>COMMENTS</h2>
+        <div id="comment-post">
+          <h3>
+           POST /:reviewId
+          </h3>
+          <ul>
+            <li>
+              POST request for a new Comment.
+            </li>
+            <li>Headers: 
+              <ul>
+                <li>
+                  Authentication with JWT.
+                </li>
+                <li>
+                  Only one per user.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>content</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="comment-patch">
+          <h3>
+            PATCH /:commentId
+          </h3>
+          <ul>
+            <li>PATCH request for a single comment.</li>
+            <li>
+              Headers:
+              <ul>
+                <li>
+                  Authentication with JWT.
+                </li>
+                <li>
+                  Checks for authorizied user or admin.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body: (optional)
+              <ul>
+                <li>content</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Authorized User/Admin Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Unauthorized Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="comment-delete">
+          <h3>
+            DELETE /:commentId
+          </h3>
+          <ul>
+            <li>DELETE request for a single comment.</li>
+            <li>
+              Headers:
+              <ul>
+                <li>
+                  Authentication with JWT.
+                </li>
+                <li>
+                  Checks for authorizied user or admin.
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Authorized User/Admin Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Unauthorized Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+      </div>
+        
+      <div id="tags">
+        <h2>TAGS</h2>
+        <div id="tags-get-all">
+          <h3>GET /</h3>
+          <ul>
+            <li>
+              GET request for info on all tags.
+            </li>
+            <li>
+              No parameters or authorization required.
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="tags-get-one">
+          <h3>GET /:tagName/recipes</h3>
+          <ul>
+            <li>
+              GET request for info recipes with a given tag.
+            </li>
+            <li>
+              No parameters or authorization required.
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+              </code>
+            </pre>
+          </div>
+        </div>
+      </div>
+
+    </main>
   </body>
 </html>
