@@ -39,6 +39,8 @@ export default function SingleRecipe ({token, admin}) {
     const [recipeAreYouSure, setRecipeAreYouSure] = useState(false);
     const [deleteRecipeErrMess, setDeleteRecipeErrMess] = useState(false);
 
+    const [alreadyReviewed, setAlreadyReviewed] = useState(false);
+
 
  
 
@@ -66,6 +68,15 @@ export default function SingleRecipe ({token, admin}) {
     
             const potentialRecipe = await handleGetRecipeFetch();
             if (potentialRecipe.recipe) {
+                const potentiallyAlreadyReviewed = potentialRecipe.recipe.reviews.find((review)=>{
+                    return (review.userid === potentialRecipe.userId);
+                });
+                console.log(potentiallyAlreadyReviewed);
+                if (potentiallyAlreadyReviewed){
+                    setAlreadyReviewed(true);
+                } else {
+                    setAlreadyReviewed(false);
+                }
                 setRecipe(potentialRecipe.recipe);
                 setUserId(potentialRecipe.userId);
                 setErrMess(false);
@@ -433,24 +444,28 @@ async function handleDeleteRecipe(recipeId){
                     <li key={item}>{item}</li>
                     )})}
             </ol>
-            {token ?
-                <>
-                    {!leavingAReview ?
-                    <button onClick= {()=>{
-                        setLeavingAReview(true);
-                        setReviewTitle('');
-                        setReviewRating(1);
-                        setReviewContent('');
-                    }}>Leave a review</button>
-                    :
-                    <button onClick= {()=>setLeavingAReview(false)}>Close review form </button>
-                    } 
-                    {leavingAReviewForm()}
-                </>
+            {(token && alreadyReviewed)?
+                <p>You have already left a review on this recipe.</p>
                 
-            :
+            :   ((token) ?
+                    <>
+                         {!leavingAReview ?
+                            <button onClick= {()=>{
+                            setLeavingAReview(true);
+                            setReviewTitle('');
+                            setReviewRating(1);
+                            setReviewContent('');
+                            }}>Leave a review</button>
+                         :
+                             <button onClick= {()=>setLeavingAReview(false)}>Close review form </button>
+                        } 
+                         {leavingAReviewForm()}
+                     </>
+        
+                 :
                 <button onClick={()=>navigate('/login')}>Sign in to leave a review</button>
-             }
+                )
+            }
             {reviewErrMess && <p>There has been an error submitting the review.</p>}
             <h2>Reviews:</h2>
             {!recipe.reviews.length ?
