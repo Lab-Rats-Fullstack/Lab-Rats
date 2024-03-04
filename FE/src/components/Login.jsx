@@ -1,7 +1,9 @@
 import {useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 
-export default function Login ({token, setToken}) {
+const API = 'http://localhost:3000/api/';
+
+export default function Login ({token, setToken, setAdmin}) {
     const [email, setEmail] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
@@ -17,7 +19,7 @@ export default function Login ({token, setToken}) {
     async function loginUser(event) {
         event.preventDefault ();
         try {
-            const response = await fetch (ENDPOINT, {
+            const response = await fetch (`${API}users/login`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -30,6 +32,7 @@ export default function Login ({token, setToken}) {
             const userAuth = await response.json();
             if (userAuth.token) {
                 setToken(userAuth.token);
+                setAdmin(userAuth.admin);
                 alert(userAuth.message);
                 navigate('/account');
             } else {
@@ -43,7 +46,7 @@ export default function Login ({token, setToken}) {
     async function registerUser(event) {
         event.preventDefault ();
         try {
-            const response = await fetch ( ENDPOINT, {
+            const response = await fetch ( `${API}users/register`, {
                 method: "POST",
                 headers: {
                     'Content-Type': 'application/json',
@@ -58,6 +61,7 @@ export default function Login ({token, setToken}) {
             const userAuth = await response.json();
             if (userAuth.token){
                 setToken(userAuth.token);
+                setAdmin(userAuth.admin);
                 alert(userAuth.message);
                 navigate('/account');
             } else {
