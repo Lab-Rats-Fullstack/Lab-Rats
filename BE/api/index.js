@@ -13,7 +13,6 @@ apiRouter.use(async (req, res, next) => {
   const token = auth?.split(" ")[1];
 
   if (!auth) next();
-  else if (token === "null") next();
   else {
     try {
       const { id } = jwt.verify(token, JWT_SECRET);
