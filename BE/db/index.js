@@ -298,7 +298,7 @@ async function getAverageRating(recipeId){
         ratingsSum = ratingsSum + rating.rating;
       });
 
-      avgRating = Math.round(((ratingsSum / ratings.length) * 10)/10);
+      avgRating = Math.round((ratingsSum / ratings.length) * 10) / 10;
     }
 
     return avgRating;

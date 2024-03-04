@@ -407,6 +407,11 @@ async function handleDeleteRecipe(recipeId){
         <div className="singleRecipeCard">
             <h1>{recipe.title}</h1>
             <h5>@{recipe.user.username}</h5>
+            {recipe.avgRating ?
+                <p>Average Rating: {recipe.avgRating}</p>
+            :
+                <p>This recipe has not yet been reviewed.</p>
+            }
             {admin &&
             <>
                 <button onClick={()=>navigate(`/recipes/${recipe.id}/edit`)}>Edit Recipe</button>
