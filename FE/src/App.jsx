@@ -10,6 +10,7 @@ import Login from './components/Login'
 import Account from './components/Account'
 import UserProfile from './components/UserProfile'
 import Admin from './components/Admin'
+import RecipesByTag from './components/RecipesByTag'
 
 function App() {
   const [token, setToken] = useState(null);
@@ -24,6 +25,7 @@ function App() {
       <Route path ="/recipes" element={<Recipes token ={token} currentUser ={currentUser}/>}></Route>
       <Route path ="/recipes/:recipeId" element={<SingleRecipe token ={token} currentUser ={currentUser}/>}></Route>
       <Route path ="/recipes/:recipeId/edit" element={<EditRecipe token ={token}/>}></Route>
+      <Route path ="/tags/:tagname/recipes" element={<RecipesByTag />}></Route>
       <Route path ="/recipes/new" element={<NewRecipe token ={token}/>}></Route>
       <Route path ="/login" element={<Login token ={token} setToken ={setToken} setAdmin ={setAdmin} setCurrentUser ={setCurrentUser}/>}></Route>
       <Route path ="/account/*" element={<Account token ={token} admin={admin} currentUser ={currentUser}/>}></Route>
