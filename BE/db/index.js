@@ -1,8 +1,12 @@
-const { Client } = require('pg') // imports the pg module
+const { Client } = require("pg"); // imports the pg module
 
 const client = new Client({
-  connectionString: process.env.DATABASE_URL || 'postgres://localhost:5432/lab-rats-dev',
-  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : undefined,
+  connectionString:
+    process.env.DATABASE_URL || "postgres://localhost:5432/lab-rats-dev",
+  ssl:
+    process.env.NODE_ENV === "production"
+      ? { rejectUnauthorized: false }
+      : undefined,
 });
 
 /**
@@ -10,26 +14,23 @@ const client = new Client({
  */
 
 // CREATES USER IN DB
-async function createUser({ 
-    email,
-    password,
-    username,
-    name,
-    imgUrl,
-    admin
-}) {
-
-  if (admin == null){
+async function createUser({ email, password, username, name, imgUrl, admin }) {
+  if (admin == null) {
     admin = false;
   }
 
   try {
-    const { rows: [ user ] } = await client.query(`
+    const {
+      rows: [user],
+    } = await client.query(
+      `
       INSERT INTO users(email, password, username, name, imgUrl, admin) 
       VALUES($1, $2, $3, $4, $5, $6) 
       ON CONFLICT (username) DO NOTHING 
       RETURNING *;
-    `, [email, password, username, name, imgUrl, admin]);
+    `,
+      [email, password, username, name, imgUrl, admin]
+    );
 
     return user;
   } catch (error) {
@@ -40,9 +41,9 @@ async function createUser({
 // EDITS USER IN DB
 async function updateUser(id, fields = {}) {
   // build the set string
-  const setString = Object.keys(fields).map(
-    (key, index) => `"${ key }"=$${ index + 1 }`
-  ).join(', ');
+  const setString = Object.keys(fields)
+    .map((key, index) => `"${key}"=$${index + 1}`)
+    .join(", ");
 
   // return early if this is called without fields
   if (setString.length === 0) {
@@ -50,12 +51,17 @@ async function updateUser(id, fields = {}) {
   }
 
   try {
-    const { rows: [ user ] } = await client.query(`
+    const {
+      rows: [user],
+    } = await client.query(
+      `
       UPDATE users
-      SET ${ setString }
-      WHERE id=${ id }
+      SET ${setString}
+      WHERE id=${id}
       RETURNING *;
-    `, Object.values(fields));
+    `,
+      Object.values(fields)
+    );
 
     return user;
   } catch (error) {
@@ -65,50 +71,66 @@ async function updateUser(id, fields = {}) {
 
 async function destroyUserById(userId) {
   try {
-
     const destroyedUser = await getUserById(userId);
 
-    const {rows: commentIds} = await client.query(`
+    const { rows: commentIds } = await client.query(
+      `
         SELECT id
         FROM comments
         WHERE userId=$1;
-    `, [userId]);
+    `,
+      [userId]
+    );
 
     if (commentIds.length > 0) {
-      await Promise.all(commentIds.map((comment) => {
-        return destroyCommentById(comment.id);
-      }));
+      await Promise.all(
+        commentIds.map((comment) => {
+          return destroyCommentById(comment.id);
+        })
+      );
     }
-    
-    const {rows: reviewIds} = await client.query(`
+
+    const { rows: reviewIds } = await client.query(
+      `
         SELECT id
         FROM reviews
         WHERE userId=$1;
-    `, [userId]);
+    `,
+      [userId]
+    );
 
-    if (reviewIds.length > 0){
-      await Promise.all(reviewIds.map((review) => {
-        return destroyReviewById(review.id);
-      }));
+    if (reviewIds.length > 0) {
+      await Promise.all(
+        reviewIds.map((review) => {
+          return destroyReviewById(review.id);
+        })
+      );
     }
 
-    const {rows: recipeIds} = await client.query(`
+    const { rows: recipeIds } = await client.query(
+      `
         SELECT id
         FROM recipes
         WHERE userId=$1;
-    `, [userId]);
+    `,
+      [userId]
+    );
 
-
-    if (recipeIds.length > 0){
-      await Promise.all(recipeIds.map((recipe) => {
+    if (recipeIds.length > 0) {
+      await Promise.all(
+        recipeIds.map((recipe) => {
           return destroyRecipeById(recipe.id);
-      }));
-     }
+        })
+      );
+    }
 
-    await client.query(`
+    await client.query(
+      `
         DELETE FROM users
         WHERE id = $1
-    `, [userId]);
+    `,
+      [userId]
+    );
 
     return destroyedUser;
   } catch (error) {
@@ -123,7 +145,7 @@ async function getAllUsers() {
       SELECT id, email, username, name, imgUrl, admin, reviewCount
       FROM users;
     `);
-  
+
     return userInfo;
   } catch (error) {
     throw error;
@@ -138,13 +160,13 @@ async function getUserById(userId) {
     if (!user) {
       throw {
         name: "UserNotFoundError",
-        message: "A user with that id does not exist"
-      }
+        message: "A user with that id does not exist",
+      };
     }
 
-    user.recipes = await getRecipesByUser(userId); 
-    user.reviews = await getReviewsByUser(userId); 
-    user.comments = await getCommentsByUser(userId); 
+    user.recipes = await getRecipesByUser(userId);
+    user.reviews = await getReviewsByUser(userId);
+    user.comments = await getCommentsByUser(userId);
 
     return user;
   } catch (error) {
@@ -155,11 +177,16 @@ async function getUserById(userId) {
 // GET USER BY USERNAME IN DB
 async function getUserByUsername(username) {
   try {
-    const { rows: [ user ] } = await client.query(`
+    const {
+      rows: [user],
+    } = await client.query(
+      `
       SELECT *
       FROM users
       WHERE username=$1
-    `, [ username ]);
+    `,
+      [username]
+    );
 
     return user;
   } catch (error) {
@@ -170,10 +197,12 @@ async function getUserByUsername(username) {
 // GET USER INFO BY ID IN DB
 async function getUserInfoById(userId) {
   try {
-    const { rows: [ user ] } = await client.query(`
+    const {
+      rows: [user],
+    } = await client.query(`
       SELECT id, email, username, name, imgUrl, admin, reviewCount
       FROM users
-      WHERE id=${ userId }
+      WHERE id=${userId}
     `);
 
     return user;
@@ -185,10 +214,12 @@ async function getUserInfoById(userId) {
 // GET USER INFO WITH PASSWORD BY ID IN DB
 async function getUserInfoWithPasswordById(userId) {
   try {
-    const { rows: [ user ] } = await client.query(`
+    const {
+      rows: [user],
+    } = await client.query(`
       SELECT *
       FROM users
-      WHERE id=${ userId }
+      WHERE id=${userId}
     `);
 
     return user;
@@ -196,9 +227,9 @@ async function getUserInfoWithPasswordById(userId) {
     throw error;
   }
 }
- 
-async function getUserPageById(userId){
-  try{
+
+async function getUserPageById(userId) {
+  try {
     const userInfo = await getUserInfoById(userId);
     const recipes = await getUserPageRecipesByUser(userId);
     const reviews = await getUserPageReviewsByUser(userId);
@@ -208,13 +239,12 @@ async function getUserPageById(userId){
       ...userInfo,
       recipes: recipes,
       reviews: reviews,
-      comments: comments
-    }
+      comments: comments,
+    };
 
     return userObject;
-
   } catch (error) {
-    throw (error);
+    throw error;
   }
 }
 
@@ -222,206 +252,235 @@ async function getUserPageById(userId){
  * RECIPES Methods
  */
 
-
 // GET RECIPE INFO BY ID IN DB
 async function getRecipeInfoById(recipeId) {
   try {
-    const { rows: [ recipe ]  } = await client.query(`
+    const {
+      rows: [recipe],
+    } = await client.query(
+      `
       SELECT *
       FROM recipes
       WHERE id=$1;
-    `, [recipeId]);
+    `,
+      [recipeId]
+    );
 
     if (!recipe) {
       throw {
         name: "RecipeNotFoundError",
-        message: "Could not find a recipe with that recipeId"
+        message: "Could not find a recipe with that recipeId",
       };
     }
 
     return recipe;
   } catch (error) {
-    throw (error);
+    throw error;
   }
 }
 
-
 // GET RECIPE BY ID IN DB
 async function getRecipeById(recipeId) {
-    try {
-      const recipe = await getRecipeInfoById(recipeId);
-  
-      const { rows: tags } = await client.query(`
+  try {
+    const recipe = await getRecipeInfoById(recipeId);
+
+    const { rows: tags } = await client.query(
+      `
         SELECT tags.*
         FROM tags
         JOIN recipe_tags ON tags.id=recipe_tags.tagId
         WHERE recipe_tags.recipeId=$1;
-      `, [recipeId])
+      `,
+      [recipeId]
+    );
 
-      const reviews = await getReviewsByRecipe(recipeId);
+    const reviews = await getReviewsByRecipe(recipeId);
   
       const { rows: [user] } = await client.query(`
-        SELECT id, email, username, name, imgUrl, admin
+        SELECT id, email, username, name, imgUrl, admin, reviewCount
         FROM users
         WHERE id=$1;
-      `, [recipe.userid])
+      `,
+      [recipe.userid]
+    );
 
-      const recipeObject = {
-        ...recipe,
-        tags: tags,
-        reviews: reviews,
-        user: user
-      }
-  
-      return recipeObject;
-    } catch (error) {
-      throw error;
-    }
+    const recipeObject = {
+      ...recipe,
+      tags: tags,
+      reviews: reviews,
+      user: user,
+    };
+
+    return recipeObject;
+  } catch (error) {
+    throw error;
+  }
 }
-
 
 // GET RECIPES BY USER IN DB
 async function getRecipesByUser(userId) {
-    try {
-      const { rows: recipeIds } = await client.query(`
-        SELECT id 
-        FROM recipes
-        WHERE userId=${ userId };
-      `);
-  
-      const recipes = await Promise.all(recipeIds.map(
-        recipe => getRecipeById( recipe.id )
-      ));
-  
-      return recipes;
-    } catch (error) {
-      throw error;
-    }
-  }
-
-  //GET USER PAGE RECIPE BY ID
-async function getUserPageRecipeById(recipeId){
-  try {
-    const {rows: [recipeInfo]} = await client.query(`
-      SELECT id, title, imgUrl
-      FROM recipes
-      WHERE id=$1;
-    `, [recipeId]);
-
-    const { rows: tags } = await client.query(`
-    SELECT tags.*
-    FROM tags
-    JOIN recipe_tags ON tags.id=recipe_tags.tagId
-    WHERE recipe_tags.recipeId=$1;
-  `, [recipeId]);
-
-    const recipeObject = {
-      ...recipeInfo,
-      tags: tags,
-    }
-  
-    return recipeObject;
-  } catch (error) {
-    throw (error);
-  }
-
-}
-
-  //GET OTHER PAGE RECIPE BY ID
-  async function getOtherPageRecipeById(recipeId){
-    try {
-      const {rows: [recipeInfo]} = await client.query(`
-      SELECT id, userId, title, imgUrl
-      FROM recipes
-      WHERE id=$1;
-    `, [recipeId]);
-  
-      const { rows: tags } = await client.query(`
-      SELECT tags.*
-      FROM tags
-      JOIN recipe_tags ON tags.id=recipe_tags.tagId
-      WHERE recipe_tags.recipeId=$1;
-    `, [recipeId]);
-  
-      const {rows: [userInfo]} = await client.query(`
-        SELECT id, email, username, name, imgUrl
-        FROM users
-        WHERE id = $1;
-      `, [recipeInfo.userid]);
-  
-      const recipeObject = {
-        ...recipeInfo,
-        tags: tags,
-        user: userInfo
-      }
-    
-      return recipeObject;
-    } catch (error) {
-      throw (error);
-    }
-  
-  }
-
-//GET USER PAGE RECIPES BY USER
-async function getUserPageRecipesByUser(userId){
   try {
     const { rows: recipeIds } = await client.query(`
-      SELECT id 
-      FROM recipes
-      WHERE userId=${ userId };
-    `);
+        SELECT id 
+        FROM recipes
+        WHERE userId=${userId};
+      `);
 
-    const recipes = await Promise.all(recipeIds.map(
-      recipe => getUserPageRecipeById( recipe.id )
-    ));
+    const recipes = await Promise.all(
+      recipeIds.map((recipe) => getRecipeById(recipe.id))
+    );
 
     return recipes;
   } catch (error) {
     throw error;
   }
-
 }
 
+//GET USER PAGE RECIPE BY ID
+async function getUserPageRecipeById(recipeId) {
+  try {
+    const {
+      rows: [recipeInfo],
+    } = await client.query(
+      `
+      SELECT id, title, imgUrl
+      FROM recipes
+      WHERE id=$1;
+    `,
+      [recipeId]
+    );
+
+    const { rows: tags } = await client.query(
+      `
+    SELECT tags.*
+    FROM tags
+    JOIN recipe_tags ON tags.id=recipe_tags.tagId
+    WHERE recipe_tags.recipeId=$1;
+  `,
+      [recipeId]
+    );
+
+    const recipeObject = {
+      ...recipeInfo,
+      tags: tags,
+    };
+
+    return recipeObject;
+  } catch (error) {
+    throw error;
+  }
+}
+
+//GET OTHER PAGE RECIPE BY ID
+async function getOtherPageRecipeById(recipeId) {
+  try {
+    const {
+      rows: [recipeInfo],
+    } = await client.query(
+      `
+      SELECT id, userId, title, imgUrl
+      FROM recipes
+      WHERE id=$1;
+    `,
+      [recipeId]
+    );
+
+    const { rows: tags } = await client.query(
+      `
+      SELECT tags.*
+      FROM tags
+      JOIN recipe_tags ON tags.id=recipe_tags.tagId
+      WHERE recipe_tags.recipeId=$1;
+    `,
+      [recipeId]
+    );
+
+    const {
+      rows: [userInfo],
+    } = await client.query(
+      `
+        SELECT id, email, username, name, imgUrl
+        FROM users
+        WHERE id = $1;
+      `,
+      [recipeInfo.userid]
+    );
+
+    const recipeObject = {
+      ...recipeInfo,
+      tags: tags,
+      user: userInfo,
+    };
+
+    return recipeObject;
+  } catch (error) {
+    throw error;
+  }
+}
+
+//GET USER PAGE RECIPES BY USER
+async function getUserPageRecipesByUser(userId) {
+  try {
+    const { rows: recipeIds } = await client.query(`
+      SELECT id 
+      FROM recipes
+      WHERE userId=${userId};
+    `);
+
+    const recipes = await Promise.all(
+      recipeIds.map((recipe) => getUserPageRecipeById(recipe.id))
+    );
+
+    return recipes;
+  } catch (error) {
+    throw error;
+  }
+}
 
 // GET RECIPES BY TAG NAME IN DB
 async function getRecipesByTagName(tagName) {
   try {
-    const { rows: recipeIds } = await client.query(`
+    const { rows: recipeIds } = await client.query(
+      `
       SELECT recipes.id
       FROM recipes
       JOIN recipe_tags ON recipes.id=recipe_tags.recipeId
       JOIN tags ON tags.id=recipe_tags.tagId
       WHERE tags.name=$1;
-    `, [tagName]);
-    
-    return await Promise.all(recipeIds.map(
-      recipe => getOtherPageRecipeById(recipe.id)
-    ));
+    `,
+      [tagName]
+    );
+
+    return await Promise.all(
+      recipeIds.map((recipe) => getOtherPageRecipeById(recipe.id))
+    );
   } catch (error) {
     throw error;
   }
-} 
+}
 
 // GET USER RECIPES BY TAG NAME IN DB
 async function getUserRecipesByTagName(userId, tagName) {
   try {
-    const { rows: recipeIds } = await client.query(`
+    const { rows: recipeIds } = await client.query(
+      `
       SELECT recipes.id
       FROM recipes
       JOIN users ON users.id=recipes.userId
       JOIN recipe_tags ON recipes.id=recipe_tags.recipeId
       JOIN tags ON tags.id=recipe_tags.tagId
       WHERE tags.name=$1 AND users.id=$2;
-    `, [tagName, userId]);
-    
-    return await Promise.all(recipeIds.map(
-      recipe => getUserPageRecipeById(recipe.id)
-    ));
+    `,
+      [tagName, userId]
+    );
+
+    return await Promise.all(
+      recipeIds.map((recipe) => getUserPageRecipeById(recipe.id))
+    );
   } catch (error) {
     throw error;
   }
-} 
-
+}
 
 // GET ALL RECIPES IN DB
 async function getAllRecipes() {
@@ -431,9 +490,9 @@ async function getAllRecipes() {
       FROM recipes;
     `);
 
-    const recipes = await Promise.all(recipeIds.map(
-      recipe => getRecipeById( recipe.id )
-    ));
+    const recipes = await Promise.all(
+      recipeIds.map((recipe) => getRecipeById(recipe.id))
+    );
 
     return recipes;
   } catch (error) {
@@ -442,42 +501,41 @@ async function getAllRecipes() {
 }
 
 // GET ALL RECIPES PAGE
-async function getAllRecipesPage(){
+async function getAllRecipesPage() {
   try {
     const { rows: recipeIds } = await client.query(`
     SELECT id
     FROM recipes;
   `);
 
-  const recipes = await Promise.all(recipeIds.map(
-    recipe => getOtherPageRecipeById( recipe.id )
-  ));
+    const recipes = await Promise.all(
+      recipeIds.map((recipe) => getOtherPageRecipeById(recipe.id))
+    );
 
-  return recipes;
-  } catch (error){
-    throw (error);
+    return recipes;
+  } catch (error) {
+    throw error;
   }
 }
 
-async function getReviewedRecipesPage(){
-  try{
-    const {rows: reviews} = await client.query(`
+async function getReviewedRecipesPage() {
+  try {
+    const { rows: reviews } = await client.query(`
     SELECT DISTINCT recipeId
     FROM reviews;
     `);
 
-    const reviewedRecipes = await Promise.all(reviews.map((review) => {
-      return getOtherPageRecipeById(review.recipeid);
-    }));
+    const reviewedRecipes = await Promise.all(
+      reviews.map((review) => {
+        return getOtherPageRecipeById(review.recipeid);
+      })
+    );
 
     return reviewedRecipes;
-  } catch (error){
-    throw (error)
+  } catch (error) {
+    throw error;
   }
-
-
 }
-
 
 // CREATE RECIPE IN DB
 async function createRecipe({
@@ -487,19 +545,23 @@ async function createRecipe({
   procedure,
   imgUrl,
   notes = [],
-  tags = []
+  tags = [],
 }) {
   try {
-
-    const { rows: [ recipe ] } = await client.query(`
+    const {
+      rows: [recipe],
+    } = await client.query(
+      `
       INSERT INTO recipes(userId, title, ingredients, procedure, imgUrl, notes) 
       VALUES($1, $2, $3, $4, $5, $6)
       RETURNING *;
-    `, [userId, title, ingredients, procedure, imgUrl, notes]);
+    `,
+      [userId, title, ingredients, procedure, imgUrl, notes]
+    );
 
-    const tagList = await createTags(tags); 
+    const tagList = await createTags(tags);
 
-    await addTagsToRecipe(recipe.id, tagList); 
+    await addTagsToRecipe(recipe.id, tagList);
 
     return getRecipeById(recipe.id);
   } catch (error) {
@@ -509,25 +571,29 @@ async function createRecipe({
 
 // EDIT RECIPE IN DB
 async function updateRecipe(recipeId, fields = {}) {
-  // read off the tags & remove that field 
+  // read off the tags & remove that field
   const { tags } = fields; // might be undefined
   delete fields.tags;
 
   // build the set string
-  const setString = Object.keys(fields).map(
-    (key, index) => `"${ key }"=$${ index + 1 }`
-  ).join(', ');
+  const setString = Object.keys(fields)
+    .map((key, index) => `"${key}"=$${index + 1}`)
+    .join(", ");
 
   try {
     // update any fields that need to be updated
     if (setString.length > 0) {
-      const { rows: [recipe] } = await client.query(`
+      const {
+        rows: [recipe],
+      } = await client.query(
+        `
         UPDATE recipes
-        SET ${ setString }
-        WHERE id=${ recipeId }
+        SET ${setString}
+        WHERE id=${recipeId}
         RETURNING *;
-      `, Object.values(fields));
-      
+      `,
+        Object.values(fields)
+      );
     }
 
     // return early if there's no tags to update
@@ -536,21 +602,22 @@ async function updateRecipe(recipeId, fields = {}) {
     }
 
     // make any new tags that need to be made
-    const tagList = await createTags(tags); 
-    const tagListIdString = tagList.map(
-      tag => `${ tag.id }`
-    ).join(', ');
+    const tagList = await createTags(tags);
+    const tagListIdString = tagList.map((tag) => `${tag.id}`).join(", ");
 
     // delete any recipe_tags from the database which aren't in that tagList
-    await client.query(`
+    await client.query(
+      `
       DELETE FROM recipe_tags
       WHERE tagId
-      NOT IN (${ tagListIdString })
+      NOT IN (${tagListIdString})
       AND recipeId=$1;
-    `, [recipeId]);
-    
+    `,
+      [recipeId]
+    );
+
     // and create recipe_tags as necessary
-    await addTagsToRecipe(recipeId, tagList); 
+    await addTagsToRecipe(recipeId, tagList);
 
     return await getRecipeById(recipeId);
   } catch (error) {
@@ -560,30 +627,40 @@ async function updateRecipe(recipeId, fields = {}) {
 
 async function destroyRecipeById(recipeId) {
   try {
-
     const destroyedRecipe = await getRecipeById(recipeId);
 
-    await client.query(`
+    await client.query(
+      `
         DELETE FROM recipe_tags
         WHERE recipeId=$1;
-    `, [recipeId]);
+    `,
+      [recipeId]
+    );
 
-    const {rows: reviewIds} = await client.query(`
+    const { rows: reviewIds } = await client.query(
+      `
         SELECT id
         FROM reviews
         WHERE recipeId=$1;
-    `, [recipeId]);
+    `,
+      [recipeId]
+    );
 
-    if (reviewIds.length > 0){
-      await Promise.all(reviewIds.map((review) => {
-        return destroyReviewById(review.id);
-      }));
+    if (reviewIds.length > 0) {
+      await Promise.all(
+        reviewIds.map((review) => {
+          return destroyReviewById(review.id);
+        })
+      );
     }
 
-    await client.query(`
+    await client.query(
+      `
         DELETE FROM recipes
         WHERE id = $1
-    `, [recipeId]);
+    `,
+      [recipeId]
+    );
 
     return destroyedRecipe;
   } catch (error) {
@@ -603,26 +680,29 @@ async function getAllTags() {
       FROM tags;
     `);
 
-    return { rows }
+    return { rows };
   } catch (error) {
     throw error;
   }
 }
 
 // GETS ALL TAGS BY USER
-async function getTagsByUser(userId){
-  try{
-    const {rows: tags} = await client.query(`
+async function getTagsByUser(userId) {
+  try {
+    const { rows: tags } = await client.query(
+      `
     SELECT tags.id, tags.name
     FROM tags
     JOIN recipe_tags ON recipe_tags.tagId=tags.id
     JOIN recipes ON recipes.id=recipe_tags.recipeId
     WHERE recipes.userId=$1;
-    `, [userId]);
+    `,
+      [userId]
+    );
 
     return tags;
-  } catch (error){
-    throw (error);
+  } catch (error) {
+    throw error;
   }
 }
 
@@ -632,28 +712,34 @@ async function createTags(tagList) {
     return;
   }
 
-  const valuesStringInsert = tagList.map(
-    (_, index) => `$${index + 1}`
-  ).join('), (');
+  const valuesStringInsert = tagList
+    .map((_, index) => `$${index + 1}`)
+    .join("), (");
 
-  const valuesStringSelect = tagList.map(
-    (_, index) => `$${index + 1}`
-  ).join(', ');
+  const valuesStringSelect = tagList
+    .map((_, index) => `$${index + 1}`)
+    .join(", ");
 
   try {
     // insert all, ignoring duplicates
-    await client.query(`
+    await client.query(
+      `
       INSERT INTO tags(name)
-      VALUES (${ valuesStringInsert })
+      VALUES (${valuesStringInsert})
       ON CONFLICT (name) DO NOTHING;
-    `, tagList);
+    `,
+      tagList
+    );
 
     // grab all and return
-    const { rows } = await client.query(`
+    const { rows } = await client.query(
+      `
       SELECT * FROM tags
       WHERE name
-      IN (${ valuesStringSelect });
-    `, tagList);
+      IN (${valuesStringSelect});
+    `,
+      tagList
+    );
 
     return rows;
   } catch (error) {
@@ -668,8 +754,8 @@ async function addTagsToRecipe(recipeId, tagList) {
   }
 
   try {
-    const createRecipeTagPromises = tagList.map(
-      tag => createRecipeTag(recipeId, tag.id)
+    const createRecipeTagPromises = tagList.map((tag) =>
+      createRecipeTag(recipeId, tag.id)
     );
 
     await Promise.all(createRecipeTagPromises);
@@ -682,12 +768,14 @@ async function addTagsToRecipe(recipeId, tagList) {
 
 async function destroyTagById(tagId) {
   try {
-
-    const destroyedTag = await client.query(`
+    const destroyedTag = await client.query(
+      `
       DELETE FROM tags
       WHERE id=$1
       RETURN *
-    `, [tagId]);
+    `,
+      [tagId]
+    );
 
     return destroyedTag;
   } catch (error) {
@@ -702,11 +790,14 @@ async function destroyTagById(tagId) {
 // CREATE RECIPE_TAG IN JUNCTION TABLE FROM DB
 async function createRecipeTag(recipeId, tagId) {
   try {
-    await client.query(`
+    await client.query(
+      `
       INSERT INTO recipe_tags(recipeId, tagId)
       VALUES ($1, $2)
       ON CONFLICT (recipeId, tagId) DO NOTHING;
-    `, [ recipeId, tagId ]);
+    `,
+      [recipeId, tagId]
+    );
   } catch (error) {
     throw error;
   }
@@ -717,146 +808,159 @@ async function createRecipeTag(recipeId, tagId) {
  */
 
 //GET REVIEW INFO BY ID IN DB
-async function getReviewInfoById(reviewId){
-  try{
-    const {rows: [review]} = await client.query(`
+async function getReviewInfoById(reviewId) {
+  try {
+    const {
+      rows: [review],
+    } = await client.query(`
     SELECT *
     FROM reviews
     WHERE id = ${reviewId};
     `);
-  
+
     if (!review) {
-        throw {
-          name: "ReviewNotFoundError",
-          message: "Could not find a review with that reviewId"
-        };
-      }
+      throw {
+        name: "ReviewNotFoundError",
+        message: "Could not find a review with that reviewId",
+      };
+    }
     return review;
-  } catch (error){
-    throw (error);
+  } catch (error) {
+    throw error;
   }
 }
 
-
 //GET USER PAGE REVIEW BY ID
-async function getUserPageReviewById(reviewId){
+async function getUserPageReviewById(reviewId) {
   try {
     const {rows: [reviewInfo]} = await client.query(`
-      SELECT id, recipeId, content, rating
+      SELECT id, recipeId, title, content, rating
       FROM reviews
       WHERE id=$1;
-    `, [reviewId]);
+    `,
+      [reviewId]
+    );
 
-    const {rows: [recipeInfo]} = await client.query(`
+    const {
+      rows: [recipeInfo],
+    } = await client.query(
+      `
       SELECT id, userId, title, imgUrl
       FROM recipes
       WHERE id=$1;
-    `, [reviewInfo.recipeid]);
+    `,
+      [reviewInfo.recipeid]
+    );
 
-    const {rows: [recipeUserInfo]} = await client.query(`
+    const {
+      rows: [recipeUserInfo],
+    } = await client.query(
+      `
       SELECT id, email, username, name, imgUrl
       FROM users
       WHERE id=$1;
-    `, [recipeInfo.userid]);
-    
+    `,
+      [recipeInfo.userid]
+    );
 
     const reviewObject = {
       ...reviewInfo,
       recipe: {
         ...recipeInfo,
-        user: recipeUserInfo
-      }
-    }
-  
+        user: recipeUserInfo,
+      },
+    };
+
     return reviewObject;
   } catch (error) {
-    throw (error);
+    throw error;
   }
-
 }
 
 //GET USER PAGE REVIEWS BY USER
-async function getUserPageReviewsByUser(userId){
+async function getUserPageReviewsByUser(userId) {
   try {
     const { rows: reviewIds } = await client.query(`
       SELECT id 
       FROM reviews
-      WHERE userId=${ userId };
+      WHERE userId=${userId};
     `);
 
-    const reviews = await Promise.all(reviewIds.map(
-      review => getUserPageReviewById( review.id )
-    ));
+    const reviews = await Promise.all(
+      reviewIds.map((review) => getUserPageReviewById(review.id))
+    );
 
     return reviews;
   } catch (error) {
     throw error;
   }
-
 }
 
 // GET REVIEW BY ID IN DB
-async function getReviewById(reviewId){
-    try{
-        const review = await getReviewInfoById(reviewId);
+async function getReviewById(reviewId) {
+  try {
+    const review = await getReviewInfoById(reviewId);
 
-        const comments = await getCommentsByReview(reviewId);
+    const comments = await getCommentsByReview(reviewId);
+
 
         const { rows: [user] } = await client.query(`
-        SELECT id, email, username, name, imgUrl, admin
+        SELECT id, email, username, name, imgUrl, admin, reviewCount
         FROM users
         WHERE id=$1;
-      `, [review.userid]);
+      `,
+      [review.userid]
+    );
 
-        const reviewObject = {
-          ...review,
-          comments: comments,
-          user: user
-        }
+    const reviewObject = {
+      ...review,
+      comments: comments,
+      user: user,
+    };
 
-        return reviewObject;
-    } catch (error){
-        throw error;
-    }
+    return reviewObject;
+  } catch (error) {
+    throw error;
+  }
 }
 
 // GET REVIEWS BY USER IN DB
 async function getReviewsByUser(userId) {
-    try {
-      const { rows: reviewIds } = await client.query(`
+  try {
+    const { rows: reviewIds } = await client.query(`
         SELECT id 
         FROM reviews
-        WHERE userId=${ userId };
+        WHERE userId=${userId};
       `);
-  
-      const reviews = await Promise.all(reviewIds.map(
-        review => getReviewById( review.id )
-      ));
-  
-      return reviews;
-    } catch (error) {
-      throw error;
-    }
+
+    const reviews = await Promise.all(
+      reviewIds.map((review) => getReviewById(review.id))
+    );
+
+    return reviews;
+  } catch (error) {
+    throw error;
   }
+}
 
 // GET REVIEWS BY RECIPE IN DB
 async function getReviewsByRecipe(recipeId) {
-    try {
-      const { rows: reviewIds } = await client.query(`
+  try {
+    const { rows: reviewIds } = await client.query(`
         SELECT id 
         FROM reviews
-        WHERE userId=${ recipeId };
+        WHERE userId=${recipeId};
       `);
-  
-      const reviews = await Promise.all(reviewIds.map(
-        review => getReviewById( review.id )
-      ));
-  
-      return reviews;
-    } catch (error) {
-      throw error;
-    }
+
+    const reviews = await Promise.all(
+      reviewIds.map((review) => getReviewById(review.id))
+    );
+
+    return reviews;
+  } catch (error) {
+    throw error;
   }
+}
 
 // GET ALL REVIEWS IN DB
 async function getAllReviews() {
@@ -866,9 +970,9 @@ async function getAllReviews() {
       FROM reviews;
     `);
 
-    const reviews = await Promise.all(reviewIds.map(
-      review => getReviewById( review.id )
-    ));
+    const reviews = await Promise.all(
+      reviewIds.map((review) => getReviewById(review.id))
+    );
 
     return reviews;
   } catch (error) {
@@ -877,27 +981,28 @@ async function getAllReviews() {
 }
 
 // CREATE REVIEW IN DB
+
 async function createReview({
   userId,
   recipeId,
+  title,
   content,
   rating
 }) {
   try {
     const { rows: [ review ] } = await client.query(`
-      INSERT INTO reviews(userId, recipeId, content, rating) 
-      VALUES($1, $2, $3, $4)
+      INSERT INTO reviews(userId, recipeId, title, content, rating) 
+      VALUES($1, $2, $3, $4, $5)
       RETURNING *;
-    `, [userId, recipeId, content, rating]);
+    `, [userId, recipeId, title, content, rating]);
 
     await client.query(`
       UPDATE users
       SET reviewCount = reviewCount + 1
-      WHERE id=${ userId };
-    `)
+      WHERE id=${userId};
+    `);
 
-  return await getReviewById(review.id);
-
+    return await getReviewById(review.id);
   } catch (error) {
     throw error;
   }
@@ -905,24 +1010,27 @@ async function createReview({
 
 // EDIT REVIEW IN DB
 async function updateReview(reviewId, fields = {}) {
-
   // build the set string
-  const setString = Object.keys(fields).map(
-    (key, index) => `"${ key }"=$${ index + 1 }`
-  ).join(', ');
+  const setString = Object.keys(fields)
+    .map((key, index) => `"${key}"=$${index + 1}`)
+    .join(", ");
 
   try {
     // update any fields that need to be updated
     if (setString.length > 0) {
-      const {rows: [review]} = await client.query(`
+      const {
+        rows: [review],
+      } = await client.query(
+        `
         UPDATE reviews
-        SET ${ setString }
-        WHERE id=${ reviewId }
+        SET ${setString}
+        WHERE id=${reviewId}
         RETURNING *;
-      `, Object.values(fields));
-    } 
-      return await getReviewById(reviewId);
-
+      `,
+        Object.values(fields)
+      );
+    }
+    return await getReviewById(reviewId);
   } catch (error) {
     throw error;
   }
@@ -930,25 +1038,37 @@ async function updateReview(reviewId, fields = {}) {
 
 async function destroyReviewById(reviewId) {
   try {
-
     const destroyedReview = await getReviewById(reviewId);
 
-    const {rows: commentIds} = await client.query(`
+    const { rows: commentIds } = await client.query(
+      `
         SELECT id
         FROM comments
         WHERE reviewId=$1;
-    `, [reviewId]);
+    `,
+      [reviewId]
+    );
 
-    if (commentIds.length > 0){
-      await Promise.all(commentIds.map((comment) => {
-        return destroyCommentById(comment.id);
-      }));
+    if (commentIds.length > 0) {
+      await Promise.all(
+        commentIds.map((comment) => {
+          return destroyCommentById(comment.id);
+        })
+      );
     }
+
+    await client.query(`
+      UPDATE users
+      SET reviewCount = reviewCount - 1
+      WHERE id=$1;
+    `, [destroyedReview.userid]);
 
     await client.query(`
         DELETE FROM reviews
         WHERE id = $1
-    `, [reviewId]);
+    `,
+      [reviewId]
+    );
 
     return destroyedReview;
   } catch (error) {
@@ -961,52 +1081,82 @@ async function destroyReviewById(reviewId) {
  */
 
 // GET COMMENT INFO BY ID IN DB
-async function getCommentInfoById(commentId){
-  try{
-      const { rows: [comment] } = await client.query(`
+async function getCommentInfoById(commentId) {
+  try {
+    const {
+      rows: [comment],
+    } = await client.query(
+      `
       SELECT *
       FROM comments
       WHERE id=$1;
-  `, [commentId])
+  `,
+      [commentId]
+    );
 
     return comment;
-  } catch (error){
-    throw (error);
+  } catch (error) {
+    throw error;
   }
 }
 
 //GET USER PAGE COMMENT BY ID
-async function getUserPageCommentById(commentId){
+async function getUserPageCommentById(commentId) {
   try {
-    const {rows: [commentInfo]} = await client.query(`
+    const {
+      rows: [commentInfo],
+    } = await client.query(
+      `
       SELECT *
       FROM comments
       WHERE id=$1;
-    `, [commentId]);
+    `,
+      [commentId]
+    );
 
-    const {rows: [reviewInfo]} = await client.query(`
+    const {
+      rows: [reviewInfo],
+    } = await client.query(
+      `
       SELECT *
       FROM reviews
       WHERE id=$1;
-    `, [commentInfo.reviewid]);
+    `,
+      [commentInfo.reviewid]
+    );
 
-    const {rows: [reviewUserInfo]} = await client.query(`
+    const {
+      rows: [reviewUserInfo],
+    } = await client.query(
+      `
       SELECT id, email, username, name, imgUrl
       FROM users
       WHERE id=$1;
-    `, [reviewInfo.userid]);
+    `,
+      [reviewInfo.userid]
+    );
 
-    const {rows: [recipeInfo]} = await client.query(`
+    const {
+      rows: [recipeInfo],
+    } = await client.query(
+      `
       SELECT id, userId, title, imgUrl
       FROM recipes
       WHERE id=$1;
-    `, [reviewInfo.recipeid]);
+    `,
+      [reviewInfo.recipeid]
+    );
 
-    const {rows: [recipeUserInfo]} = await client.query(`
+    const {
+      rows: [recipeUserInfo],
+    } = await client.query(
+      `
     SELECT id, email, username, name, imgUrl
     FROM users
     WHERE id=$1;
-  `, [recipeInfo.userid]);
+  `,
+      [recipeInfo.userid]
+    );
 
     const commentObject = {
       ...commentInfo,
@@ -1015,99 +1165,104 @@ async function getUserPageCommentById(commentId){
         user: reviewUserInfo,
         recipe: {
           ...recipeInfo,
-          user: recipeUserInfo
-        }
+          user: recipeUserInfo,
+        },
       },
-     
-    }
-  
+    };
+
     return commentObject;
   } catch (error) {
-    throw (error);
+    throw error;
   }
-
 }
 
 //GET USER PAGE COMMENTS BY USER
-async function getUserPageCommentsByUser(userId){
+async function getUserPageCommentsByUser(userId) {
   try {
     const { rows: commentIds } = await client.query(`
       SELECT id 
       FROM comments
-      WHERE userId=${ userId };
+      WHERE userId=${userId};
     `);
 
-    const comments = await Promise.all(commentIds.map(
-      comment => getUserPageCommentById( comment.id )
-    ));
+    const comments = await Promise.all(
+      commentIds.map((comment) => getUserPageCommentById(comment.id))
+    );
 
     return comments;
   } catch (error) {
     throw error;
   }
-
 }
 
 // GET COMMENT BY ID IN DB
-async function getCommentById(commentId){
-    try{
-      const comment = await getCommentInfoById(commentId);
+async function getCommentById(commentId) {
+  try {
+    const comment = await getCommentInfoById(commentId);
+
 
       const { rows: [user] } = await client.query(`
-      SELECT id, email, username, name, imgUrl, admin
+      SELECT id, email, username, name, imgUrl, admin, reviewCount
       FROM users
       WHERE id=$1;
-    `, [comment.userid]);
+    `,
+      [comment.userid]
+    );
 
     const commentObject = {
       ...comment,
-      user: user
-    }
+      user: user,
+    };
 
-      return commentObject;
-    } catch (error) {
-        throw error;
-      }
+    return commentObject;
+  } catch (error) {
+    throw error;
+  }
 }
 
-
 // GET COMMENTS BY REVIEW IN DB
-async function getCommentsByReview(reviewId){
-    try{
-        const { rows: commentIds } = await client.query(`
+async function getCommentsByReview(reviewId) {
+  try {
+    const { rows: commentIds } = await client.query(
+      `
         SELECT id
         FROM comments
         WHERE reviewId=$1;
-    `, [reviewId])
+    `,
+      [reviewId]
+    );
 
-        const comments = await Promise.all(commentIds.map(
-        comment => getCommentById( comment.id )
-        ));
+    const comments = await Promise.all(
+      commentIds.map((comment) => getCommentById(comment.id))
+    );
 
-        return comments;
-    } catch (error) {
-        throw error;
-      }
+    return comments;
+  } catch (error) {
+    throw error;
+  }
 }
-   
+
 // GET COMMENTS BY USER IN DB
 async function getCommentsByUser(userId) {
-    try{
-        const { rows: commentIds } = await client.query(`
+  try {
+    const { rows: commentIds } = await client.query(
+      `
         SELECT id
         FROM comments
         WHERE userId=$1;
-    `, [userId])
+    `,
+      [userId]
+    );
 
-        const comments = await Promise.all(commentIds.map(
-        comment => getCommentById( comment.id )
-        ));
+    const comments = await Promise.all(
+      commentIds.map((comment) => getCommentById(comment.id))
+    );
 
-        return comments;
-    } catch (error) {
-        throw error;
-      }
+    return comments;
+  } catch (error) {
+    throw error;
   }
+}
 
 // GET ALL COMMENTS IN DB
 async function getAllComments() {
@@ -1117,9 +1272,9 @@ async function getAllComments() {
       FROM comments;
     `);
 
-    const comments = await Promise.all(commentIds.map(
-      comment => getCommentById( comment.id )
-    ));
+    const comments = await Promise.all(
+      commentIds.map((comment) => getCommentById(comment.id))
+    );
 
     return comments;
   } catch (error) {
@@ -1128,20 +1283,20 @@ async function getAllComments() {
 }
 
 // CREATE COMMENT IN DB
-async function createComment({
-  userId,
-  reviewId,
-  content
-}) {
+async function createComment({ userId, reviewId, content }) {
   try {
-    const { rows: [ comment ] } = await client.query(`
+    const {
+      rows: [comment],
+    } = await client.query(
+      `
       INSERT INTO comments(userId, reviewId, content) 
       VALUES($1, $2, $3)
       RETURNING *;
-    `, [userId, reviewId, content]);
+    `,
+      [userId, reviewId, content]
+    );
 
     return await getCommentById(comment.id);
-
   } catch (error) {
     throw error;
   }
@@ -1149,24 +1304,27 @@ async function createComment({
 
 // EDIT COMMENT IN DB
 async function updateComment(commentId, fields = {}) {
-
   // build the set string
-  const setString = Object.keys(fields).map(
-    (key, index) => `"${ key }"=$${ index + 1 }`
-  ).join(', ');
+  const setString = Object.keys(fields)
+    .map((key, index) => `"${key}"=$${index + 1}`)
+    .join(", ");
 
   try {
     // update any fields that need to be updated
     if (setString.length > 0) {
-      const { rows: [ comment ] }  = await client.query(`
+      const {
+        rows: [comment],
+      } = await client.query(
+        `
         UPDATE comments
-        SET ${ setString }
-        WHERE id=${ commentId }
+        SET ${setString}
+        WHERE id=${commentId}
         RETURNING *;
-      `, Object.values(fields));
-    } 
-      return await getCommentById(commentId);
-
+      `,
+        Object.values(fields)
+      );
+    }
+    return await getCommentById(commentId);
   } catch (error) {
     throw error;
   }
@@ -1176,10 +1334,13 @@ async function destroyCommentById(commentId) {
   try {
     const destroyedComment = await getCommentById(commentId);
 
-    await client.query(`
+    await client.query(
+      `
         DELETE FROM comments
         WHERE id = $1
-    `, [commentId]);
+    `,
+      [commentId]
+    );
 
     return destroyedComment;
   } catch (error) {
@@ -1187,8 +1348,7 @@ async function destroyCommentById(commentId) {
   }
 }
 
-
-module.exports = {  
+module.exports = {
   client,
   createUser,
   updateUser,
@@ -1198,15 +1358,15 @@ module.exports = {
   getUserInfoWithPasswordById,
   getUserByUsername,
   createRecipe,
-  updateRecipe, 
-  getAllRecipes, 
-  getRecipesByTagName, 
-  getAllTags, 
-  createReview, 
-  updateReview, 
-  getAllReviews, 
-  createComment, 
-  updateComment, 
+  updateRecipe,
+  getAllRecipes,
+  getRecipesByTagName,
+  getAllTags,
+  createReview,
+  updateReview,
+  getAllReviews,
+  createComment,
+  updateComment,
   getAllComments,
   getUserPageCommentsByUser,
   getUserPageReviewsByUser,
@@ -1220,5 +1380,8 @@ module.exports = {
   destroyReviewById,
   destroyCommentById,
   getUserPageById,
-  getTagsByUser
-}
+  getTagsByUser,
+  getRecipeById,
+  getReviewById,
+  getCommentById,
+};

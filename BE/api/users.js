@@ -47,9 +47,12 @@ usersRouter.post("/register", async (req, res, next) => {
       expiresIn: "1w",
     });
 
+    const {admin} = newUser
+
     res.send({
       message: "Thank you for signing up!",
       token,
+      admin
     });
   } catch ({ name, message }) {
     next({ name, message });
@@ -66,13 +69,24 @@ usersRouter.post("/login", async (req, res, next) => {
   }
   try {
     const user = await getUserByUsername(username);
-    if (user && bcrypt.compare(user.password, password)) {
-      const token = jwt.sign({ id: user.id }, process.env.JWT_SECRET, {
-        expiresIn: "1w",
-      });
+    console.log("user", user);
+    let auth;
+    if (user){
+      auth = await bcrypt.compare(password, user.password);
+    } 
+    if (user && auth) {
+      const token = jwt.sign(
+        { id: user.id, username },
+        process.env.JWT_SECRET,
+        {
+          expiresIn: "1w",
+        }
+      );
+      const {admin} = user
       res.send({
         message: "Successfully logged in!",
         token,
+        admin
       });
     } else {
       next({
@@ -85,7 +99,7 @@ usersRouter.post("/login", async (req, res, next) => {
   }
 });
 
-usersRouter.get("/me", requireUser, async (req, res) => {
+usersRouter.get("/me", requireUser, async (req, res, next) => {
   const { user } = req;
   const { id: userId } = user;
   try {
@@ -110,7 +124,7 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
   }
 });
 
-usersRouter.get("/:userId/", async (req, res) => {
+usersRouter.get("/:userId/", async (req, res, next) => {
   const { userId } = req.params;
   try {
     const user = await getUserPageById(userId);

@@ -1,76 +1,79 @@
 const express = require("express");
 const recipesRouter = express.Router();
+const { requireUser, requireAdmin } = require("./utils");
 
-// require user function
+const {
+  getAllRecipesPage,
+  createRecipe,
+  getReviewedRecipesPage,
+  getRecipeById,
+  updateRecipe,
+  destroyRecipeById,
+} = require("../db");
 
-// db functions
-
-recipesRouter.get("/", (req, res) => {
+recipesRouter.get("/", async (req, res, next) => {
   try {
-    res.json({
-      message: `testing get all recipes`,
-    });
+    const allRecipes = await getAllRecipesPage();
+    res.send(allRecipes);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
-recipesRouter.post("/", async (req, res) => {
-  console.log(req.body);
+recipesRouter.post("/", requireAdmin, async (req, res, next) => {
+  const { id: userId } = req.user;
+  const { body } = req;
+  // requireAdmin eventually
+  const recipe = { ...body, userId };
+  try {
+    const newRecipe = await createRecipe(recipe);
+    res.send(newRecipe);
+  } catch (err) {
+    next(err);
+  }
+});
+
+recipesRouter.get("/reviewedRecipes", requireAdmin, async (req, res, next) => {
   // requireAdmin eventually
   try {
-    res.json({
-      message: `testing post a recipe`,
-    });
+    const reviewedRecipes = await getReviewedRecipesPage();
+    res.send(reviewedRecipes);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
-recipesRouter.get("/reviewedRecipes", async (req, res) => {
-  // requireAdmin eventually
-  try {
-    res.json({
-      message: `testing get all reviewed recipes`,
-    });
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-recipesRouter.post("/:recipeId", async (req, res) => {
+recipesRouter.get("/:recipeId", async (req, res, next) => {
   const { recipeId } = req.params;
 
   try {
-    res.json({
-      message: `testing get a recipe with the id: ${recipeId}`,
-    });
+    const recipe = await getRecipeById(recipeId);
+    res.send(recipe);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
-recipesRouter.patch("/:recipeId", async (req, res) => {
+recipesRouter.patch("/:recipeId", requireAdmin, async (req, res, next) => {
   const { recipeId } = req.params;
+  const { body: fields } = req;
   // requireAdmin eventually
   try {
-    res.json({
-      message: `testing patch a recipe with the id: ${recipeId}`,
-    });
+    const updatedRecipe = await updateRecipe(recipeId, fields);
+    res.send(updatedRecipe);
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 
-recipesRouter.delete("/:recipeId", async (req, res) => {
+recipesRouter.delete("/:recipeId", requireAdmin, async (req, res, next) => {
   const { recipeId } = req.params;
   // requireAdmin eventually
   try {
-    res.json({
-      message: `testing delete a recipe with the id: ${recipeId}`,
-    });
+    const destroyedRecipe = await destroyRecipeById(recipeId);
+    res.send({name: "DeleteConfirmation", message: `${destroyedRecipe.title} has been deleted.`});
   } catch (err) {
-    res.status(500).json(err);
+    next(err);
   }
 });
 

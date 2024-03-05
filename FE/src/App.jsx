@@ -13,12 +13,12 @@ import Admin from './components/Admin'
 
 function App() {
   const [token, setToken] = useState(null);
-  const [admin, setAdmin] = useState(null);
-  const [currentUser, setCurrentUser] = useState (null);
+  const [admin, setAdmin] = useState(false);
+  const [currentUser, setCurrentUser] = useState ('');
 
   return (
     <><h1>Hello Lab Rats</h1>
-    <NavBar token= {token} setToken={setToken}/>
+    <NavBar token= {token} setToken={setToken} admin={admin}/>
     <Routes>
       <Route path ="/" element={<MainPage token ={token}/>}></Route>
       <Route path ="/recipes" element={<Recipes token ={token} currentUser ={currentUser}/>}></Route>
@@ -31,7 +31,7 @@ function App() {
       <Route path ="/admin" element={<Admin token ={token}/>}></Route>
     </Routes>
     </>
-  )
+  );
 }
 
 export default App;
