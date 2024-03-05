@@ -93,6 +93,10 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+                async function getAllUsers() {
+                  const allUsers = await fetch(`${APIURL}/api/users`);
+                  return allUsers.json();
+                }
               </code>
             </pre>
           </div>
@@ -130,6 +134,21 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+                async function registerUser(username, name, email, password) {
+                  const newUser = await fetch(`${APIURL}/api/users`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      username,
+                      name,
+                      email,
+                      password
+                    })
+                  })
+                  return newUser.json();
+                }
               </code>
             </pre>
           </div>
@@ -165,6 +184,19 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+               async function loginUser(username, password) {
+                  const me = await fetch(`${APIURL}/api/users/login`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                      username,
+                      password
+                    })
+                  });
+                  return me.json();
+                }
               </code>
             </pre>
           </div>
@@ -199,6 +231,16 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+                async function getMyAccount(token) { 
+                  const me = await fetch(`${APIURL}/api/me`, {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    }
+                  });
+                  return me.json();
+                }
               </code>
             </pre>
           </div>
@@ -237,6 +279,23 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+                async function updateMyAccount(token, username, name, email, password, imgurl) {
+                  const me = await fetch(`${APIURL}/api/me`, {
+                    method: 'PATCH',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                      username,
+                      name,
+                      email,
+                      password,
+                      imgurl
+                    })
+                  });
+                  return me.json();
+                }
               </code>
             </pre>
           </div>
@@ -271,6 +330,10 @@
             <h3>Sample Request for user</h3>
             <pre>
               <code class="language-js">
+                async function getUser(userId) {
+                  const user = await fetch(`${APIURL}/api/users/${userId}`);
+                  return user.json();
+                }
               </code>
             </pre>
           </div>
@@ -285,6 +348,18 @@
             <h3>Sample Request for admin</h3>
             <pre>
               <code class="language-js">
+                async function adminUserRequest(userId, token){
+                  const user = await fetch(`${APIURL}/api/users/${userId}`,
+                  {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    }
+                  }
+                  );
+                  return user.json();
+                }
               </code>
             </pre>
           </div>
@@ -316,6 +391,10 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+                async function getRecipes() {
+                  const recipes = await fetch(`${APIURL}/api/recipes`);
+                  return recipes.json();
+                }
               </code>
             </pre>
           </div>
@@ -355,6 +434,24 @@
               <h3>Sample Request</h3>
               <pre>
                 <code class="language-js">
+                  async function createRecipe(token, title, ingredients, procedure, imgUrl, notes, tags) {
+                    const recipe = await fetch(`${APIURL}/api/recipes`, {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`
+                      },
+                      body: JSON.stringify({
+                        title,
+                        ingredients,
+                        procedure,
+                        imgUrl,
+                        notes,
+                        tags
+                      })
+                    });
+                    return recipe.json();
+                  }
                 </code>
               </pre>
             </div>
@@ -393,6 +490,16 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+                async function getReviewedRecipes(token) {
+                  const recipes = await fetch(`${APIURL}/api/recipes/reviewedRecipes`, {
+                    method: 'GET',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    }
+                  });
+                  return recipes.json();
+                }
               </code>
             </pre>
           </div>
@@ -418,6 +525,10 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+                async function getRecipe(recipeId) {
+                  const recipe = await fetch(`${APIURL}/api/recipes/${recipeId}`);
+                  return recipe.json();
+                }
               </code>
             </pre>
           </div>
@@ -459,6 +570,24 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+                async function patchRecipe(recipeId, token, title, ingredients, procedure, imgUrl, notes, tags) {
+                  const recipe = await fetch(`${APIURL}/api/recipes/${recipeId}`, {
+                    method: 'PATCH',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                      title,
+                      ingredients,
+                      procedure,
+                      imgUrl,
+                      notes,
+                      tags
+                    })
+                  });
+                  return recipe.json();
+                }
               </code>
             </pre>
           </div>
@@ -502,6 +631,16 @@
             <h3>Sample Response</h3>
             <pre>
               <code class="language-js">
+                async function deleteRecipe(recipeId, token) {
+                  const recipe = await fetch(`${APIURL}/api/recipes/${recipeId}`, {
+                    method: 'DELETE',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    }
+                  });
+                  return recipe.json();
+                }
               </code>
             </pre>
           </div>
@@ -535,6 +674,20 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+                async function postReview(recipeId, token, content, rating) {
+                  const review = await fetch(`${APIURL}/api/reviews/${recipeId}`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                      content,
+                      rating
+                    })
+                  });
+                  return review.json();
+                }
               </code>
             </pre>
           </div>
@@ -559,7 +712,7 @@
                   Authentication with JWT.
                 </li>
                 <li>
-                  Checks for authorizied user or admin.
+                  Checks for authorized user or admin.
                 </li>
               </ul>
             </li>
@@ -575,6 +728,20 @@
             <h3>Sample Authorized User/Admin Request</h3>
             <pre>
               <code class="language-js">
+                async function patchReview(reviewId, token, content, rating) {
+                  const review = await fetch(`${APIURL}/api/reviews/${reviewId}`, {
+                    method: 'PATCH',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                      content,
+                      rating
+                    })
+                  });
+                  return review.json();
+                }
               </code>
             </pre>
           </div>
@@ -606,7 +773,7 @@
                   Authentication with JWT.
                 </li>
                 <li>
-                  Checks for authorizied user or admin.
+                  Checks for authorized user or admin.
                 </li>
               </ul>
             </li>
@@ -666,6 +833,19 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+                async function postComment(reviewId, token, content) {
+                  const comment = await fetch(`${APIURL}/api/comments/${reviewId}`, {
+                    method: 'POST',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                      content
+                    })
+                  });
+                  return comment.json();
+                }
               </code>
             </pre>
           </div>
@@ -690,7 +870,7 @@
                   Authentication with JWT.
                 </li>
                 <li>
-                  Checks for authorizied user or admin.
+                  Checks for authorized user or admin.
                 </li>
               </ul>
             </li>
@@ -705,6 +885,19 @@
             <h3>Sample Authorized User/Admin Request</h3>
             <pre>
               <code class="language-js">
+                async function patchComment(commentId, token, content) {
+                  const comment = await fetch(`${APIURL}/api/comments/${commentId}`, {
+                    method: 'PATCH',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    },
+                    body: JSON.stringify({
+                      content
+                    })
+                  });
+                  return comment.json();
+                }
               </code>
             </pre>
           </div>
@@ -736,7 +929,7 @@
                   Authentication with JWT.
                 </li>
                 <li>
-                  Checks for authorizied user or admin.
+                  Checks for authorized user or admin.
                 </li>
               </ul>
             </li>
@@ -745,6 +938,16 @@
             <h3>Sample Authorized User/Admin Request</h3>
             <pre>
               <code class="language-js">
+                async function deleteComment(commentId, token) {
+                  const comment = await fetch(`${APIURL}/api/comments/${commentId}`, {
+                    method: 'DELETE',
+                    headers: {
+                      'Content-Type': 'application/json',
+                      'Authorization': `Bearer ${token}`
+                    }
+                  });
+                  return comment.json();
+                }
               </code>
             </pre>
           </div>
@@ -781,6 +984,10 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+                async function getAllTags() {
+                  const tags = await fetch(`${APIURL}/api/tags`);
+                  return tags.json();
+                }
               </code>
             </pre>
           </div>
@@ -806,6 +1013,10 @@
             <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
+                async function getRecipesByTag(tagName) {
+                  const recipes = await fetch(`${APIURL}/api/tags/${tagName}/recipes`);
+                  return recipes.json();
+                }
               </code>
             </pre>
           </div>
