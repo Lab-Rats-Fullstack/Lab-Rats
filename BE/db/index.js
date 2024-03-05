@@ -1285,7 +1285,7 @@ async function getCommentsByUser(userId) {
     const { rows: commentIds } = await client.query(
       `
         SELECT id
-        FROM comment
+        FROM comments
         WHERE userId=$1;
     `,
       [userId]
