@@ -182,9 +182,12 @@ async function createInitialRecipes() {
         "Serve with naan and rice. Garnish with your chopped cilantro.",
       ],
       imgUrl:
-        "https://www.foodiesfeed.com/wp-content/uploads/2023/03/close-up-of-butter-chicken-indian-dish.jpg",
+        "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
       notes: [
         "I like to make the naan too as its a very easy and approachable flat bread to make at home.",
+      ],
+      tags: [
+        "Main", "Curry", "Chicken", "Rice", "Indian"
       ],
     });
     await createRecipe({
@@ -217,7 +220,7 @@ async function createInitialRecipes() {
         "Season to taste. I like to start with the Tony's until it is most of the way there, then make small adjustments to heat and salinity with the others. If your nose doesn't run, it's not spicy enough.",
         "Serve with rice and plenty of hot sauce. Garlic bread is also a great addition.",
       ],
-      imgUrl: "BE/db/photos/gumbo-pic.jpg",
+      imgUrl: "https://res.cloudinary.com/dbwbh7oxd/image/upload/chicken_and_sausage_gumbo?_a=BAMHUyRg0",
       notes: [
         'You should aim for what\'s called a "red roux" which is just past a dark dirt brown. This step takes practice to get right.',
         "You can alternatively brown these before you start the roux in the same pot/dutch oven, but you have to be careful not to burn the fond when making the roux.",
@@ -254,8 +257,11 @@ async function createInitialRecipes() {
         "Once your buns are toasted coat your chicken in the sauce and quickly assemble your sandwich with the pickled onions and peppers and blue cheese sauce.",
         "Enjoy with french fries.",
       ],
-      imgUrl: "BE/db/photos/buffalo-chicken-pic.JPG",
+      imgUrl: "https://res.cloudinary.com/dbwbh7oxd/image/upload/buffalo_chicken_sandwhich?_a=BAMHUyRg0",
       notes: [],
+      tags: [
+        "Sandwhiches", "Chicken", "American", "Main", "Lunch"
+      ]
     });
     await createRecipe({
       userId: adminTest.id,
@@ -282,6 +288,9 @@ async function createInitialRecipes() {
       notes: [
         "Pick a really good blue cheese for this and you'd be amazed how excellent this can be.",
       ],
+      tags: [
+        "Condiments", "Sauces"
+      ]
     });
     await createRecipe({
       userId: adminTest.id,
@@ -308,6 +317,335 @@ async function createInitialRecipes() {
         "This is good with any vegetable, but particularly with peppers and/or onions.",
         "You can use plain sugar, honey, or any other sweetener. Vary the amount too depending on the vegetables you are using. I like more sweetness with peppers for example.",
       ],
+      tags: [
+        "Condiments", "Vegetables"
+      ]
+    });
+    await createRecipe({
+      userId: adminTest.id,
+      title: "Beef Birria Tacos",
+      ingredients: [
+        "3 lbs beef chuck roast, cut into chunks (or goat meat if preferred)",
+        "5 dried guajillo chilies, seeded and deveined",
+        "3 dried ancho chilies, seeded and deveined",
+        "3 cloves garlic, minced",
+        "1 medium-sized onion, chopped",
+        "1 teaspoon dried oregano",
+        "1 teaspoon ground cumin",
+        "1/2 teaspoon ground cloves",
+        "1/4 teaspoon ground cinnamon",
+        "Salt to taste",
+        "Black pepper to taste",
+        "4 cups beef or chicken broth",
+        "2 bay leaves",
+        "2 tablespoons vegetable oil",
+        "Corn tortillas",
+        "Chopped fresh cilantro",
+        "Diced onions",
+        "Lime wedges"
+      ],
+      procedure: [
+        "Toast the dried guajillo and ancho chilies in a hot, dry skillet.",
+        "Remove stems, seeds, and devein the chilies. Soak them in hot water for about 20 minutes.",
+        "In a blender, combine soaked chilies, minced garlic, chopped onion, oregano, cumin, cloves, cinnamon, salt, and black pepper. Blend into a smooth paste.",
+        "Heat vegetable oil in a large pot. Brown beef chunks on all sides.",
+        "Add the chili paste to the pot, stirring to coat the meat evenly.",
+        "Pour in the broth, add bay leaves, and bring the mixture to a simmer.",
+        "Reduce heat, cover, and simmer for 2-3 hours or until the meat is tender and shreds easily.",
+        "Shred the cooked meat with two forks, removing any excess fat.",
+        "Heat corn tortillas in a skillet or over an open flame.",
+        "Spoon shredded birria meat into warm tortillas.",
+        "Top with chopped cilantro and diced onions.",
+        "Serve with lime wedges on the side.",
+        "Enjoy your Birria Tacos! Optionally, serve with consomé for dipping."
+      ], 
+      imgUrl: "https://res.cloudinary.com/dbwbh7oxd/image/upload/birria_tacos?_a=BAMHUyRg0",
+      notes: [
+        "For a spicier flavor, you can add a couple of dried arbol chilies to the blender when making the chili paste.",
+        "Adjust the salt and pepper according to your taste preferences. Taste the birria broth as it simmers and adjust as needed.",
+        "Consomé, the flavorful broth from cooking the meat, is a key component. Save some to serve alongside the tacos for dipping.",
+        "Consider garnishing with radishes, avocado slices, or your favorite salsa for added freshness and flavor.",
+        "To save time, you can use a pressure cooker or slow cooker to cook the birria meat until tender.",
+        "Leftover birria can be refrigerated and used in quesadillas, burritos, or as a topping for rice and salads.",
+        "Serve the tacos with warm tortillas to enhance their flavor and make them more pliable.",
+        "Feel free to experiment with different types of meat or a combination for a unique twist on the traditional recipe.",
+        "The lime wedges add a bright citrusy kick; squeeze some over the tacos just before eating for a burst of freshness."
+      ], 
+      tags: ["Main", "Beef", "Mexican", "Tacos", "Sauces"]
+    });
+    await createRecipe({
+      userId: adminTest.id,
+      title: "French Dip Sandwhich",
+      ingredients: [
+        "2 lbs beef sirloin or chuck roast, thinly sliced",
+        "4 cloves garlic, minced",
+        "1 onion, thinly sliced",
+        "2 tablespoons olive oil",
+        "4 cups beef broth",
+        "1 cup red wine (optional)",
+        "1 teaspoon dried thyme",
+        "1 teaspoon dried rosemary",
+        "Salt and black pepper to taste",
+        "4-6 French rolls or baguettes",
+        "Provolone or Swiss cheese slices (optional)",
+        "For Au Jus:",
+        "- Reserved cooking liquid",
+        "- Additional beef broth if needed",
+        "- Salt and pepper to taste"
+      ],
+      procedure: [
+        "Preheat your oven to 350°F (175°C).",
+        "In a large oven-safe skillet, heat olive oil over medium-high heat.",
+        "Season the thinly sliced beef with salt, black pepper, and minced garlic.",
+        "Sear the beef slices in the skillet until browned on both sides. Remove and set aside.",
+        "In the same skillet, sauté thinly sliced onions until softened and golden.",
+        "Pour in the beef broth and red wine (if using). Add dried thyme and rosemary.",
+        "Return the seared beef to the skillet. Cover and transfer to the preheated oven for about 20-25 minutes, or until the beef is tender.",
+        "While the beef cooks, prepare the Au Jus by straining the cooking liquid. Add more beef broth if needed. Season with salt and pepper to taste.",
+        "Slice the French rolls or baguettes and, if desired, add a slice of provolone or Swiss cheese.",
+        "Divide the cooked beef among the rolls. Serve with a side of Au Jus for dipping.",
+        "Enjoy your delicious French Dip sandwiches!"
+      ], 
+      imgUrl: "https://res.cloudinary.com/dbwbh7oxd/image/upload/french_dip?_a=BAMHUyRg0",
+      notes: [
+        "For a richer flavor, you can use a combination of beef broth and reserved cooking liquid for the Au Jus.",
+        "Feel free to customize the sandwich by adding caramelized onions, sautéed mushrooms, or your favorite condiments.",
+        "If you don't have red wine, you can omit it and use additional beef broth in its place.",
+        "Toasting the French rolls or baguettes before assembling the sandwiches adds a nice crunch.",
+        "Serve with a side of coleslaw, pickles, or a green salad for a complete meal."
+      ], 
+      tags: ["Main", "Beef", "Sandwhiches", "Sauces"]
+    });
+    await createRecipe({
+      userId: adminTest.id,
+      title: "Criossants",
+      ingredients: [
+        "4 cups all-purpose flour, plus extra for dusting",
+        "1/4 cup granulated sugar",
+        "1 tablespoon active dry yeast",
+        "1 1/4 cups warm milk",
+        "1 teaspoon salt",
+        "1 cup unsalted butter, cold",
+        "1 egg (for egg wash)",
+      ],
+      procedure: [
+        "In a bowl, combine warm milk and active dry yeast. Let it sit for 5 minutes until frothy.",
+        "In a large mixing bowl, combine flour, sugar, and salt. Make a well in the center and pour in the yeast mixture.",
+        "Mix until a dough forms, then knead on a floured surface for about 5-7 minutes until smooth.",
+        "Roll the dough into a rectangle, wrap it in plastic wrap, and refrigerate for 1 hour.",
+        "Take the cold butter and place it between sheets of parchment paper. Roll it out into a rectangle.",
+        "Roll out the chilled dough on a floured surface into a larger rectangle. Place the butter layer on two-thirds of the dough.",
+        "Fold the uncovered third over the butter, then fold the other third on top (similar to a letter fold).",
+        "Wrap the dough and refrigerate for 30 minutes. Repeat this folding process two more times, chilling between each fold.",
+        "After the final fold, refrigerate the dough for at least 4 hours or overnight.",
+        "Roll out the chilled dough into a large rectangle and cut it into triangles.",
+        "Roll each triangle from the wide end towards the tip to form a crescent shape.",
+        "Place the shaped croissants on a baking sheet, cover, and let them rise for 1-2 hours, or until doubled in size.",
+        "Preheat the oven to 400°F (200°C). Beat an egg and brush it over the croissants for a golden finish.",
+        "Bake for 15-20 minutes or until the croissants are golden brown and flaky.",
+        "Allow them to cool on a wire rack before serving.",
+      ], 
+      imgUrl: "https://res.cloudinary.com/dbwbh7oxd/image/upload/criossant?_a=BAMHUyRg0",
+      notes: [
+        "Ensure that your butter is cold, and the dough stays chilled during the folding process to create those flaky layers.",
+        "You can prepare the dough the night before and let it rise in the refrigerator overnight for a convenient morning bake.",
+        "Feel free to fill the croissants with chocolate, almond paste, or ham and cheese for variations.",
+        "Serve with your favorite jam or enjoy them plain with a hot cup of coffee.",
+        "This recipe requires some patience, but the result is delicious, homemade croissants."
+      ], 
+      tags: ["Breakfast", "Pastries", "Grains", "Yeast"]
+    });
+    await createRecipe({
+      userId: adminTest.id,
+      title: "Pizza Dough",
+      ingredients: [
+        "4 cups all-purpose flour, plus extra for dusting",
+        "1 tablespoon sugar",
+        "1 tablespoon active dry yeast",
+        "1 1/2 cups warm water",
+        "2 tablespoons olive oil",
+        "1 teaspoon salt",
+      ],
+      procedure: [
+        "In a bowl, combine warm water and sugar. Stir until the sugar dissolves. Sprinkle the yeast over the water and let it sit for 5-10 minutes, or until foamy.",
+        "In a large mixing bowl, combine flour and salt. Make a well in the center and pour in the yeast mixture and olive oil.",
+        "Stir the ingredients together until a dough forms. Knead the dough on a floured surface for about 5-7 minutes, until smooth and elastic.",
+        "Place the dough in a lightly oiled bowl, cover with a damp cloth, and let it rise in a warm place for 1-2 hours, or until doubled in size.",
+        "Preheat your oven to the highest setting (usually around 475-500°F or 245-260°C). If you have a pizza stone, place it in the oven while preheating.",
+        "Punch down the risen dough and divide it into desired portions for your pizzas. Roll or stretch each portion into the desired shape and thickness.",
+        "If using a pizza stone, transfer the rolled-out dough onto a pizza peel or an inverted baking sheet dusted with flour or cornmeal.",
+        "Add your favorite pizza toppings, sauce, cheese, and bake in the preheated oven for 10-15 minutes, or until the crust is golden and the cheese is bubbly and browned.",
+        "Remove from the oven, let it cool for a few minutes, then slice and enjoy your homemade pizza!",
+      ], 
+      imgUrl: "https://res.cloudinary.com/dbwbh7oxd/image/upload/pizza_dough?_a=BAMHUyRg0",
+      notes: [
+        "Experiment with different flours, such as bread flour or 00 flour, for variations in texture and flavor.",
+        "For a hint of garlic flavor, add a minced garlic clove or garlic powder to the dough mixture.",
+        "Letting the dough rise in the refrigerator overnight can enhance its flavor and make it easier to work with.",
+        "You can freeze extra dough portions for later use. Just thaw in the refrigerator before using.",
+        "Feel free to get creative with toppings, from classic Margherita to BBQ chicken or veggie-loaded options."
+      ], 
+      tags: ["Grain", "Bread", "Base", "Yeast"]
+    });
+    await createRecipe({
+      userId: adminTest.id,
+      title: "Naan",
+      ingredients: [
+        "3 cups all-purpose flour, plus extra for dusting",
+        "1 teaspoon active dry yeast",
+        "1 teaspoon sugar",
+        "1 cup warm water",
+        "1/4 cup plain yogurt",
+        "2 tablespoons melted butter or ghee",
+        "1 teaspoon salt",
+        "Garlic butter for brushing (optional)",
+        "Chopped fresh cilantro for garnish (optional)"
+      ],
+      procedure: [
+      "In a small bowl, combine warm water, sugar, and active dry yeast. Stir and let it sit for 5-10 minutes, or until foamy.",
+      "In a large mixing bowl, combine flour and salt. Make a well in the center and pour in the yeast mixture, yogurt, and melted butter or ghee.",
+      "Mix the ingredients until a dough forms. Knead the dough on a floured surface for about 5-7 minutes, until smooth and elastic.",
+      "Place the dough in a lightly oiled bowl, cover with a damp cloth, and let it rise in a warm place for 1-2 hours, or until doubled in size.",
+      "Preheat a skillet or griddle over medium-high heat.",
+      "Punch down the risen dough and divide it into equal-sized portions. Roll each portion into a ball.",
+      "Roll out each ball of dough into an oval or teardrop shape, about 1/4 inch thick.",
+      "Place the rolled-out dough onto the preheated skillet or griddle. Cook for 1-2 minutes on each side, or until golden brown and puffed up.",
+      "Brush each cooked naan with garlic butter and sprinkle with chopped cilantro, if desired.",
+      "Serve warm and enjoy your homemade naan bread with your favorite curry or as a delicious side!"
+    ], 
+      imgUrl: "https://res.cloudinary.com/dbwbh7oxd/image/upload/naan?_a=BAMHUyRg0",
+      notes: [
+        "For a softer texture, you can replace some of the all-purpose flour with bread flour or use whole wheat flour for a nuttier flavor.",
+        "If you don't have yogurt, you can substitute it with an equal amount of milk or dairy-free yogurt.",
+        "To add flavor variations, you can mix in minced garlic, chopped herbs, or spices like cumin or nigella seeds into the dough.",
+        "Naan can also be cooked on a grill for a smoky flavor.",
+        "Leftover naan can be stored in an airtight container or frozen for later use. Reheat before serving for best results."
+      ], 
+      tags: ["Bread", "Side", "Indian", "Grain", "Yeast"]
+    });
+    await createRecipe({
+      userId: adminTest.id,
+      title: "Chili in a Sourdough Bread Bowl",
+      ingredients: [
+        "1 lb ground beef",
+        "1 onion, diced",
+        "2 cloves garlic, minced",
+        "1 bell pepper, diced",
+        "1 can (14 oz) diced tomatoes",
+        "1 can (15 oz) kidney beans, drained and rinsed",
+        "1 can (15 oz) black beans, drained and rinsed",
+        "1 can (15 oz) tomato sauce",
+        "1 cup beef broth",
+        "2 tablespoons chili powder",
+        "1 teaspoon ground cumin",
+        "1 teaspoon paprika",
+        "1/2 teaspoon cayenne pepper (optional, for heat)",
+        "Salt and black pepper to taste",
+        "Sourdough bread bowls"
+      ],
+      procedure: [
+        "In a large pot or Dutch oven, brown the ground beef over medium-high heat. Drain excess fat if needed.",
+        "Add diced onions, minced garlic, and bell pepper to the pot. Sauté until vegetables are softened.",
+        "Stir in diced tomatoes, kidney beans, black beans, tomato sauce, and beef broth.",
+        "Add chili powder, ground cumin, paprika, cayenne pepper (if using), salt, and black pepper. Mix well.",
+        "Bring the chili to a simmer, then reduce the heat to low and let it simmer for at least 30 minutes to allow the flavors to meld. Stir occasionally.",
+        "While the chili is simmering, preheat the oven to 350°F (175°C). Slice off the tops of sourdough bread and hollow out the center to create bread bowls.",
+        "Place the bread bowls on a baking sheet and toast them in the preheated oven for about 8-10 minutes or until they are slightly crispy.",
+        "Once the chili is ready, ladle it into the toasted sourdough bread bowls.",
+        "Serve the chili-filled bread bowls hot, optionally topped with shredded cheese, sour cream, green onions, or your favorite chili toppings.",
+        "Enjoy your delicious chili in a sourdough bread bowl!"
+      ], 
+      imgUrl: "https://res.cloudinary.com/dbwbh7oxd/image/upload/chili_in_bread_bowl?_a=BAMHUyRg0",
+      notes: [
+        "Feel free to customize the chili by adding other ingredients like corn, diced jalapeños, or different types of beans.",
+        "For a vegetarian version, substitute the ground beef with plant-based protein or extra beans.",
+        "You can prepare the chili ahead of time and reheat it before serving in the bread bowls.",
+        "Consider making smaller bread bowls for appetizer-sized servings.",
+        "The hollowed-out bread from the centers of the bowls can be used for dipping or making croutons."
+      ], 
+      tags: ["Bread", "Beef", "American", "Grain", "Yeast"]
+    });
+    await createRecipe({
+      userId: adminTest.id,
+      title: "Hotdog with Beer Cheese Sauce and Homemade Buns",
+      ingredients: [
+        "Good Hotdogs",
+        "Hotdog buns (homemade recipe below)",
+        "1 cup shredded cheddar cheese",
+        "1/2 cup shredded mozzarella cheese",
+        "1/2 cup beer (choose your favorite type)",
+        "2 tablespoons all-purpose flour",
+        "2 tablespoons unsalted butter",
+        "1/2 cup diced bell peppers (assorted colors)",
+        "1/2 cup diced onions",
+        "Salt and black pepper to taste",
+        "4 cups bread flour",
+        "1 tablespoon sugar",
+        "1 tablespoon active dry yeast",
+        "1 teaspoon salt",
+        "1 cup warm milk",
+        "1/4 cup unsalted butter, melted",
+        "1 egg, beaten (for egg wash)"
+      ],
+      procedure: [
+        "Preheat your grill or stovetop grilling pan.",
+        "Grill the hotdog sausages until they are cooked to your liking.",
+        "In a saucepan, melt butter over medium heat. Add diced bell peppers and onions, and sauté until they are soft and lightly caramelized.",
+        "In a separate saucepan, melt butter over medium heat. Add flour and stir to form a roux.",
+        "Slowly pour in the beer while continuously whisking to avoid lumps. Continue whisking until the mixture thickens.",
+        "Reduce the heat to low, add shredded cheddar and mozzarella cheese, and stir until the cheese is melted and the sauce is smooth.",
+        "Season the cheese sauce with salt and black pepper to taste. Keep warm on low heat while assembling the hotdogs.",
+        "For the homemade buns (optional): Mix flour, sugar, yeast, and salt in a bowl. Add warm milk, melted butter, and knead until the dough is smooth. Let it rise until doubled, then shape into buns, and bake at 375°F (190°C) until golden brown.",
+        "Place the grilled hotdog sausages into the buns. Top with the beer cheese sauce and sautéed peppers and onions.",
+        "Serve your gourmet hotdogs immediately, and enjoy!"
+      ], 
+      imgUrl: "https://res.cloudinary.com/dbwbh7oxd/image/upload/hotdog_beer_cheese?_a=BAMHUyRg0",
+      notes: [
+        "Experiment with different types of sausages, such as bratwurst or chorizo, for variety.",
+        "If you prefer a non-alcoholic version, you can substitute the beer in the cheese sauce with chicken or vegetable broth.",
+        "Feel free to customize your toppings with additional ingredients like pickles, mustard, or jalapeños.",
+        "You can prepare the buns in advance and freeze them for quick use when needed.",
+        "Pair your gourmet hotdogs with your favorite side dishes, such as sweet potato fries or coleslaw."
+      ], 
+      tags: ["Homemade", "Side", "Buns", "Bread", "Yeast", "Cheese", "Beer"]
+    });
+    await createRecipe({
+      userId: adminTest.id,
+      title: "Fish and Chips",
+      ingredients: [
+        "4 large russet potatoes, peeled and cut into thick fries",
+        "Vegetable oil, for frying",
+        "1 1/2 cups all-purpose flour",
+        "1 teaspoon baking powder",
+        "1/2 teaspoon baking soda",
+        "1/2 teaspoon salt",
+        "1 1/4 cups cold club soda",
+        "1 1/2 lbs white fish fillets (such as cod or haddock)",
+        "Salt and black pepper to taste",
+        "Lemon wedges, for serving",
+        "Malt vinegar, for serving",
+        "Tartar sauce, for serving"
+      ],
+      procedure: [
+        "Preheat the oven to 200°F (95°C) to keep the cooked items warm while preparing the rest.",
+        "In a large, deep pot, heat vegetable oil to 350°F (180°C) for frying the potatoes.",
+        "While the oil is heating, rinse the cut potatoes under cold water to remove excess starch. Pat them dry with paper towels.",
+        "In batches, carefully add the potatoes to the hot oil and fry for 4-5 minutes or until golden brown and crispy. Use a slotted spoon to remove them and place them on a paper towel-lined baking sheet. Keep warm in the preheated oven.",
+        "For the fish batter, in a large bowl, whisk together flour, baking powder, baking soda, and salt. Gradually whisk in the cold club soda until you have a smooth batter.",
+        "Season the fish fillets with salt and black pepper. Dip each fillet into the batter, allowing excess to drip off.",
+        "Carefully place the battered fish into the hot oil and fry for 3-4 minutes per side, or until golden brown and the fish is cooked through. Remove and place on a paper towel-lined plate.",
+        "Serve the fish and chips hot, sprinkled with additional salt if desired. Accompany with lemon wedges, malt vinegar, and tartar sauce.",
+        "Enjoy your homemade fish and chips!"
+      ], 
+      imgUrl: "https://res.cloudinary.com/dbwbh7oxd/image/upload/fish_and_chips?_a=BAMHUyRg0",
+      notes: [
+        "For a lighter version, you can bake the fries instead of frying. Just toss them with a bit of oil and bake in a preheated oven at 425°F (220°C) until golden brown and crispy.",
+        "Experiment with different types of white fish for the fillets, depending on your preference and availability.",
+        "Adjust the thickness of the fries and fish fillets based on your desired level of crispiness and cooking time.",
+        "Serve with traditional British accompaniments like mushy peas or coleslaw for an authentic experience.",
+        "Be cautious when working with hot oil, and use a deep-fry thermometer to monitor the temperature."
+      ], 
+      tags: ["British", "Seafood", "Main"]
     });
     console.log("Finished creating recipes!");
   } catch (error) {
@@ -397,7 +735,7 @@ async function testDB() {
 
     console.log("Calling updateRecipe on recipes[1], only updating tags");
     const updateRecipeTagsResult = await updateRecipe(recipes[1].id, {
-      tags: ["pastries", "classic", "salads"],
+      tags: ["Soup/Stews", "Pork", "Poultry", "American"],
     });
     console.log("Result:", updateRecipeTagsResult);
 
