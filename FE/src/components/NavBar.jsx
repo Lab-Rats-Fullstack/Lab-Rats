@@ -2,14 +2,12 @@ import { Link } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
 import { useState } from 'react'
 
-export default function NavBar ({token, setToken}) {
+export default function NavBar ({token, setToken, admin}) {
+    
     const navigate = useNavigate();
 
     function renderNav () {
-        let admin = false;
-        let token = true;
- 
- 
+
         if (admin && token) {
             return <div>
             <Link to="/account">Account</Link>
