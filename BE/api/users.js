@@ -9,6 +9,7 @@ const {
   getAllUsers,
   getUserByUsername,
   getUserPageById,
+  getPublicUserPageById
 } = require("../db");
 
 const jwt = require("jsonwebtoken");
@@ -114,6 +115,9 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
   try {
     const { id } = req.user;
     const { body: fields } = req;
+    if (fields.admin) {
+      delete fields.admin;
+    }
     if (fields.password) {
       fields.password = await bcrypt.hash(fields.password, 10);
     }
@@ -127,8 +131,16 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
 usersRouter.get("/:userId/", async (req, res, next) => {
   const { userId } = req.params;
   try {
-    const user = await getUserPageById(userId);
+    let user;
+
+    if (req.user && req.user.admin) {
+      user = await getUserPageById(userId);
+    } else {
+      user = await getPublicUserPageById(userId);
+    }
+
     res.send(user);
+    
   } catch (err) {
     next(err);
   }
