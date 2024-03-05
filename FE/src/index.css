@@ -34,6 +34,9 @@ h3 {
 
 img {
   max-width: 100%;
+  border-radius: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
 }
 
 button,
@@ -72,11 +75,13 @@ a:focus {
 
 .navbar {
   left: 0;
+  top: 0;
   width: 100%;
   display: flex;
   justify-content: space-between;
   align-items: center;
   background-color: var(--clr-secondary);
+  position: sticky;
 }
 
 .navbar a,
@@ -134,9 +139,6 @@ a:focus {
   object-fit: cover;
 }
 
-/* .userUpdateForm {
-  grid-column-start: 1;
-} */
 .userItems {
   grid-column-start: 2;
   grid-row-start: 1;
@@ -150,6 +152,17 @@ a:focus {
   width: 100%;
   grid-template-columns: 1fr 1fr 1fr;
   gap: 0.5rem;
+}
+
+.allUsers, .userCard, .reviewedRecipes, .reviewedRecipeCard {
+  width: 100%;
+  display: grid;
+  place-items: center;
+  margin-block: 1rem;
+}
+
+.userCard img, .reviewedRecipeCard img {
+  max-width: 20%;
 }
 
 .recipesContainer {
@@ -252,6 +265,7 @@ a:focus {
 
 .newRecipeForm {
   border: 1px solid var(--clr-accent-two);
+  background-color: var(--clr-accent-four);
   border-radius: 10px;
   display: grid;
   padding: 1rem;
