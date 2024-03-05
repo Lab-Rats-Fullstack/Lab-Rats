@@ -292,7 +292,7 @@ async function getAverageRating(recipeId){
     let avgRating;
 
     if (ratings.length == 0){
-      avgRating = null;
+      avgRating = 0;
     } else {
       ratings.forEach((rating)=>{
         ratingsSum = ratingsSum + rating.rating;
