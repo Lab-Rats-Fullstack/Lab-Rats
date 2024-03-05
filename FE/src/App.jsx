@@ -1,17 +1,18 @@
-import { useState } from 'react'
-import { Routes, Route} from 'react-router-dom'
-import NavBar from './components/NavBar'
-import MainPage from './components/MainPage'
-import Recipes from './components/Recipes'
-import SingleRecipe from './components/SingleRecipe'
-import NewRecipe from './components/NewRecipe'
-import EditRecipe from './components/EditRecipe'
-import Login from './components/Login'
-import Account from './components/Account'
-import Admin from './components/Admin'
+import { useState } from "react";
+import { Routes, Route } from "react-router-dom";
+import NavBar from "./components/NavBar";
+import MainPage from "./components/MainPage";
+import Recipes from "./components/Recipes";
+import SingleRecipe from "./components/SingleRecipe";
+import NewRecipe from "./components/NewRecipe";
+import EditRecipe from "./components/EditRecipe";
+import Login from "./components/Login";
+import Account from "./components/Account";
+import Admin from "./components/Admin";
 
 function App() {
   const [token, setToken] = useState(null);
+
   const [admin, setAdmin] = useState(false);
 
   return (
@@ -28,7 +29,7 @@ function App() {
       <Route path ="/admin" element={<Admin token ={token}/>}></Route>
     </Routes>
     </>
-  )
+  );
 }
 
 export default App;
