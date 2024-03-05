@@ -9,6 +9,7 @@ const {
   getAllUsers,
   getUserByUsername,
   getUserPageById,
+  getPublicUserPageById
 } = require("../db");
 
 const jwt = require("jsonwebtoken");
@@ -47,9 +48,12 @@ usersRouter.post("/register", async (req, res, next) => {
       expiresIn: "1w",
     });
 
+    const {admin} = newUser
+
     res.send({
       message: "Thank you for signing up!",
       token,
+      admin
     });
   } catch ({ name, message }) {
     next({ name, message });
@@ -78,9 +82,11 @@ usersRouter.post("/login", async (req, res, next) => {
           expiresIn: "1w",
         }
       );
+      const {admin} = user
       res.send({
         message: "Successfully logged in!",
         token,
+        admin
       });
     } else {
       next({
@@ -124,8 +130,16 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
 usersRouter.get("/:userId/", async (req, res, next) => {
   const { userId } = req.params;
   try {
-    const user = await getUserPageById(userId);
+    let user;
+
+    if (req.user && req.user.admin) {
+      user = await getUserPageById(userId);
+    } else {
+      user = await getPublicUserPageById(userId);
+    }
+
     res.send(user);
+    
   } catch (err) {
     next(err);
   }
