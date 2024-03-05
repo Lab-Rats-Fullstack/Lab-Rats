@@ -118,6 +118,15 @@ a:focus {
   top: 25%;
 }
 
+.userUpdateForm form {
+  display: grid;
+  gap: 1rem;
+}
+
+.userUpdateForm input {
+  margin-left: 0.5rem;
+}
+
 .userInfo img {
   width: 200px;
   height: 200px;
@@ -317,6 +326,7 @@ a:focus {
 }
 
 .allTags {
+  display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
