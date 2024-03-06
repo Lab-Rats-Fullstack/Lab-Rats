@@ -28,7 +28,7 @@ function App() {
       <Route path ="/login" element={<Login token ={token} setToken ={setToken} setAdmin ={setAdmin} setCurrentUser ={setCurrentUser}/>}></Route>
       <Route path ="/account/*" element={<Account token ={token} admin={admin} currentUser ={currentUser}/>}></Route>
       <Route path ="/users/:userId/*" element={<UserProfile token ={token} admin={admin} currentUser ={currentUser}/>}></Route>
-      <Route path ="/admin" element={<Admin token ={token}/>}></Route>
+      <Route path ="/admin" element={<Admin token ={token} admin={admin}/>}></Route>
     </Routes>
     </>
   );
