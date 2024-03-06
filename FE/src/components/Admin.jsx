@@ -8,7 +8,7 @@ export default function Admin ({token, admin}) {
     const [allUsers, setAllUsers] =useState(true);
     const [reviewedRecipes, setReviewedRecipes] =useState(false);
     const [recipeTags, setrecipeTags] =useState(false);
-    const [usersList, setUsersList] = useState({});
+    const [usersList, setUsersList] = useState([]);
     const [reviewedRecipesList, setReviewedRecipesList] = useState([]);
     const [tagsList, setTagsList] = useState({});
     const [error, setError] = useState(null);
@@ -73,7 +73,6 @@ export default function Admin ({token, admin}) {
             }
 
             const potentialAllTags = await allTagsCheck();
-            console.log("potentialAllTags:", potentialAllTags);
             if (potentialAllTags.rows.length > 0){
                 setTagsList(potentialAllTags.rows);
             } else {
@@ -82,6 +81,36 @@ export default function Admin ({token, admin}) {
 
         }
         allTagsFetch();
+    }, [])
+
+    useEffect(()=>{
+        async function allUsersFetch(){
+            async function allUsersCheck () {
+                try {
+                    const response = await fetch(`${API}users`, {
+                         method: "GET",
+                         headers: {
+                             "Content-Type":"application/json",
+                         "Authorization": `Bearer ${token}`,
+                        }
+                     });
+                    const result = await response.json()       
+                    return result;
+                } catch (error) {
+                    setError(error.message);
+                    throw (error);
+                }
+            }
+
+            const potentialAllUsers = await allUsersCheck();
+            if (potentialAllUsers.users.length > 0){
+                setUsersList(potentialAllUsers.users);
+            } else {
+                setError("No Users.");
+            }
+
+        }
+        allUsersFetch();
     }, [])
 
     return (
@@ -94,7 +123,7 @@ export default function Admin ({token, admin}) {
                     <p>Only admin are granted access to this page.</p>
                 :
                 <>
-                    <p>This is the Admin page for admin specific tasks</p>
+                    <p>This is the Admin page for admin specific tasks.</p>
                     <div className = 'wrapper'>
                         <div className='adminNav'>
                             <button onClick={() => {
@@ -118,13 +147,12 @@ export default function Admin ({token, admin}) {
                         :
                         <div>
                         {allUsers &&
-                        <p>users list</p>
-                        /*<div className = 'allUsers'>
+                        <div className = 'allUsers'>
                             <h2>All Users</h2>
                             {usersList.map((user)=> {
                                 return (
                                     <div className ="userCard" key = {user.id}>
-                                    <img src={user.imgurl} alt={`User account image for ${user.username}`} height="15%" width="22.5%"/>
+                                    <img src={user.imgurl} alt={`User account image for ${user.username}`}/>
                                     <h3>Username: {user.username}</h3>
                                     <p>Name: {user.name}</p>
                                     <p>Email: {user.email}</p>
@@ -135,7 +163,7 @@ export default function Admin ({token, admin}) {
                                 </div>
                                 )
                             })}
-                        </div>*/}
+                        </div>}
                         {reviewedRecipes &&
                         <div className = 'reviewedRecipes'>
                             <h2>All Reviewed Recipes</h2>
@@ -171,7 +199,7 @@ export default function Admin ({token, admin}) {
                                     {tagsList.map((tag)=>{
                                         return(
                                             <div className='tag' key ={tag.id}>
-                                                <p><em>{tag.name}</em></p>
+                                                <p>{tag.name}</p>
                                             </div>
                                         )
                                     })}
