@@ -4,7 +4,8 @@ import NavButton from "./NavButton";
 import defaultImg from "../assets/default food.jpeg";
 
 export default function RecipeInfo({ recipe, admin, currentUser }) {
-  return (
+
+return (
     <div className="recipeCard">
       <img
         src={recipe.imgurl || defaultImg}

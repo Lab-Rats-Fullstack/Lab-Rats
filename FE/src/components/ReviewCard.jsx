@@ -1,5 +1,5 @@
 import React from 'react';
-import NavButton from './NavButton';
+import NavButton from "./NavButton";
 
 export default function ReviewInfo ({review}) {
 
