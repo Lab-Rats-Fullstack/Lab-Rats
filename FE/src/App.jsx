@@ -23,7 +23,7 @@ function App() {
     <Routes>
       <Route path ="/" element={<MainPage token ={token}/>}></Route>
       <Route path ="/recipes" element={<Recipes token ={token} currentUser ={currentUser}/>}></Route>
-      <Route path ="/recipes/:recipeId" element={<SingleRecipe token ={token} admin={admin}/>}></Route>
+      <Route path ="/recipes/:recipeId" element={<SingleRecipe token ={token} admin={admin} currentUser={currentUser}/>}></Route>
       <Route path ="/recipes/:recipeId/edit" element={<EditRecipe token ={token}/>}></Route>
       <Route path ="/tags/:tagname/recipes" element={<RecipesByTag />}></Route>
       <Route path ="/recipes/new" element={<NewRecipe token ={token}/>}></Route>
