@@ -1,5 +1,5 @@
 import { useState } from 'react'
-
+// import FormTags from './FormTags.jsx'
 
 export default function NewRecipe ({token}) {
    const [title, setTitle] = useState("");
@@ -73,25 +73,39 @@ export default function NewRecipe ({token}) {
     return output;
    }
 
-   function handleSubmit(e) {
+   async function handleSubmit(e) {
         e.preventDefault();
 
         let ingredArray = rearrange(ingredientList, 'ingredient');
         let instructArray = rearrange(instructionList, 'instruction');
         let noteArray = rearrange(notesList, 'note');
-
-
+        
         let data = {
             title: title,
-            estTime: estTime,
+            esttime: estTime,
             ingredients: ingredArray,
             procedure: instructArray,
-            image: image,
+            imgurl: image,
             notes: noteArray,
             tags: tags
         };
+        console.log(data);
+        try {
+            const response = await fetch("http://localhost:3000/api/recipes", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}` 
+                },
+                body: JSON.stringify(data)
+            });
 
-        console.log(data)
+            const result = await response.json();
+            console.log(result);
+
+        } catch (error) {
+            console.error(error);
+        }
     }
 
    return (
@@ -158,7 +172,7 @@ export default function NewRecipe ({token}) {
                 setTags(e.target.value);
                }}/>
 
-               <input type="button" id="submit" value="button" onClick={handleSubmit}/>
+               <input type="submit" id="submit" value="submit"/>
            </form>
        </div>
    )
