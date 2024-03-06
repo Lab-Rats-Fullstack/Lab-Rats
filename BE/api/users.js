@@ -53,7 +53,8 @@ usersRouter.post("/register", async (req, res, next) => {
     res.send({
       message: "Thank you for signing up!",
       token,
-      admin
+      admin,
+      username
     });
   } catch ({ name, message }) {
     next({ name, message });
@@ -86,7 +87,8 @@ usersRouter.post("/login", async (req, res, next) => {
       res.send({
         message: "Successfully logged in!",
         token,
-        admin
+        admin,
+        username
       });
     } else {
       next({
