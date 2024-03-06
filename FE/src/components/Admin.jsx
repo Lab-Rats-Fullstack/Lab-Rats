@@ -1,6 +1,7 @@
 import {useEffect, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import AverageStars from './AverageStars'
+import altImg from "../assets/Default_pfp.jpeg"
 
 const API = "http://localhost:3000/api/";
 
@@ -152,7 +153,8 @@ export default function Admin ({token, admin}) {
                             {usersList.map((user)=> {
                                 return (
                                     <div className ="userCard" key = {user.id}>
-                                    <img src={user.imgurl} alt={`User account image for ${user.username}`}/>
+                                    <img src={user.imgurl || altImg}
+                                        alt={`User account image for ${user.username}`} />
                                     <h3>Username: {user.username}</h3>
                                     <p>Name: {user.name}</p>
                                     <p>Email: {user.email}</p>
