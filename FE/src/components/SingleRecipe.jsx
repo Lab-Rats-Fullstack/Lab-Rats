@@ -438,7 +438,7 @@ export default function SingleRecipe({ token, admin, currentUser }) {
           <div className="top">
             <h1>{recipe.title}</h1>
             {(recipe.user.username === currentUser) ?
-              <Link to={`/users/account`}>@{recipe.user.username}</Link>
+              <Link to={`/account`}>@{recipe.user.username}</Link>
               :
               <Link to={`/users/${recipe.user.id}`}>@{recipe.user.username}</Link>
             }
@@ -543,7 +543,7 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                     <div key={review.id}>
                       <h3>{review.title}</h3>
                       {(review.user.username === currentUser) ?
-                        <Link to={`/users/account`}>@{review.user.username}</Link>
+                        <Link to={`/account`}>@{review.user.username}</Link>
                       :
                         <Link to={`/users/${review.user.id}`}>@{review.user.username}</Link>
                       }
@@ -653,7 +653,7 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                               <div key={comment.id}>
                                 <p>{comment.content}</p>
                                 {(comment.user.username === currentUser) ?
-                                   <Link to={`/users/account`}>@{comment.user.username}</Link>
+                                   <Link to={`/account`}>@{comment.user.username}</Link>
                                 :
                                    <Link to={`/users/${comment.user.id}`}>@{comment.user.username}</Link>
                                 }

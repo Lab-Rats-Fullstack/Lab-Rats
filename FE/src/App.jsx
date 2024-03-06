@@ -19,7 +19,7 @@ function App() {
 
   return (
     <><h1>Hello Lab Rats</h1>
-    <NavBar token= {token} setToken={setToken} admin={admin}/>
+    <NavBar token= {token} setToken={setToken} admin={admin} setAdmin={setAdmin} setCurrentUser={setCurrentUser}/>
     <Routes>
       <Route path ="/" element={<MainPage token ={token}/>}></Route>
       <Route path ="/recipes" element={<Recipes token ={token} currentUser ={currentUser}/>}></Route>

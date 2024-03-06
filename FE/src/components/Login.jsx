@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 
 const API = 'http://localhost:3000/api/';
 
-export default function Login ({token, setToken, setAdmin}) {
+export default function Login ({token, setToken, setAdmin, setCurrentUser}) {
     const [email, setEmail] = useState('');
     const [loginPassword, setLoginPassword] = useState('');
     const [registerPassword, setRegisterPassword] = useState('');
@@ -33,6 +33,7 @@ export default function Login ({token, setToken, setAdmin}) {
             if (userAuth.token) {
                 setToken(userAuth.token);
                 setAdmin(userAuth.admin);
+                setCurrentUser(userAuth.username);
                 alert(userAuth.message);
                 navigate('/account');
             } else {
@@ -62,6 +63,7 @@ export default function Login ({token, setToken, setAdmin}) {
             if (userAuth.token){
                 setToken(userAuth.token);
                 setAdmin(userAuth.admin);
+                setCurrentUser(userAuth.username);
                 alert(userAuth.message);
                 navigate('/account');
             } else {
