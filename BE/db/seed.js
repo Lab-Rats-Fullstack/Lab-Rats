@@ -716,48 +716,48 @@ async function testDB() {
     const users = await getAllUsers();
     console.log("Result:", users);
 
-    console.log("Calling updateUser on users[0]");
+    /*console.log("Calling updateUser on users[0]");
     const updateUserResult = await updateUser(users[1].id, {
       name: "User Test Updated Name",
     });
-    console.log("Result:", updateUserResult);
+    console.log("Result:", updateUserResult);*/
 
     console.log("Calling getAllRecipes");
     const recipes = await getAllRecipes();
     console.log("Result:", recipes);
 
-    console.log("Calling updateRecipe on recipes[0]");
+    /*console.log("Calling updateRecipe on recipes[0]");
     const updateRecipeResult = await updateRecipe(recipes[0].id, {
       title: "New Title",
       procedure: ["Updated Content"],
     });
-    console.log("Result:", updateRecipeResult);
+    console.log("Result:", updateRecipeResult);*/
 
-    console.log("Calling updateRecipe on recipes[1], only updating tags");
+   /* console.log("Calling updateRecipe on recipes[1], only updating tags");
     const updateRecipeTagsResult = await updateRecipe(recipes[1].id, {
       tags: ["Soup/Stews", "Pork", "Poultry", "American"],
     });
-    console.log("Result:", updateRecipeTagsResult);
+    console.log("Result:", updateRecipeTagsResult);*/
 
     console.log("Calling getAllReviews");
     const reviews = await getAllReviews();
     console.log("Result:", reviews);
 
-    console.log("Calling updateReview on reviews[0]");
+   /* console.log("Calling updateReview on reviews[0]");
     const updateReviewResult = await updateReview(reviews[0].id, {
       content: "This is cool 2",
     });
-    console.log("Result:", updateReviewResult);
+    console.log("Result:", updateReviewResult);*/
 
     console.log("Calling getAllComments");
     const comments = await getAllComments();
     console.log("Result:", comments);
 
-    console.log("Calling updateComment on comments[0]");
+    /*console.log("Calling updateComment on comments[0]");
     const updateCommentResult = await updateComment(comments[0].id, {
       content: "thanks bruh 2",
     });
-    console.log("Result:", updateCommentResult);
+    console.log("Result:", updateCommentResult);*/
 
     console.log("Calling getUserById with 1");
     const admin = await getUserById(1);
