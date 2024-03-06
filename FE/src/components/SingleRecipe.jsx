@@ -472,7 +472,7 @@ export default function SingleRecipe({ token, admin }) {
                 )}
               </div>
             )}
-            <div>
+            <div className="singleRecipeTags">
               {recipe.tags.map((tag) => {
                 return (
                   <p key={tag.id}>
