@@ -175,6 +175,7 @@ a:focus {
   display: grid;
   place-items: center;
   margin-top: 1rem;
+  width: 100%;
 }
 
 .searchBar {
@@ -271,6 +272,13 @@ a:focus {
 
 .singleRecipeCard ul li {
   margin-inline: 0.5rem;
+}
+
+.singleRecipeTags {
+  grid-column: 1/-1;
+  grid-row-start: 2;
+  display: flex;
+  gap: 1rem;
 }
 
 .ingredientContainer {
@@ -446,7 +454,7 @@ a:focus {
     #ccc 30%,
     #ddd 50%,
     #ccc 70%,
-    #999 95%
+    #464444 95%
   );
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
   display: grid;
@@ -454,4 +462,74 @@ a:focus {
   margin-top: 10px;
   border-radius: 10px;
   position: relative;
+}
+
+.mainPageContainer {
+  margin-top: 2rem;
+  display: grid;
+  place-items: center;
+  gap: 1rem;
+  background-color: var(--clr-secondary);
+  border-radius: 10px;
+  width: 90%;
+}
+
+/* tabs styles */
+.tabrow {
+  margin-top: -1.75rem;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-wrap: wrap-reverse;
+  width: 100%;
+}
+
+.tab {
+  font-size: 1.5rem;
+  border: 1px solid #aaa;
+  color: var(--clr-accent-three);
+  background: var(--clr-accent-four);
+  background: linear-gradient(top, #ececec 50%, #d1d1d1 100%);
+  display: inline-block;
+  position: relative;
+  z-index: 0;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4), inset 0 1px 0 var(--clr-accent-four);
+  text-shadow: 0 1px var(--clr-accent-four);
+  margin: -2px -5px;
+  padding: 0 30px;
+  overflow: hidden;
+}
+
+.tab:focus,
+.tab:hover {
+  background: #fff;
+  color: var(--clr-secondary);
+  z-index: 2;
+  border-top-color: #fff;
+}
+
+.tab:before,
+.tab:after {
+  border: 1px solid #aaa;
+  position: absolute;
+  top: -1px;
+  width: 6px;
+  height: 6px;
+  content: "";
+}
+
+.tab:before {
+  left: -7px;
+  border-top-right-radius: 6px;
+  border-width: 1px 1px 0px 0px;
+  box-shadow: 2px 0px 0 #ececec;
+}
+
+.tab:after {
+  right: -7px;
+  border-top-left-radius: 6px;
+  border-width: 1px 0px 0px 1px;
+  box-shadow: -2px 0px 0 #ececec;
 }

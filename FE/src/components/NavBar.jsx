@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 
-export default function NavBar({ token, setToken, admin }) {
+export default function NavBar({ token, setToken, admin, setAdmin, setCurrentUser }) {
   const navigate = useNavigate();
 
   function renderNav() {
@@ -15,6 +15,8 @@ export default function NavBar({ token, setToken, admin }) {
             className="logout"
             onClick={() => {
               setToken(null);
+              setAdmin(false);
+              setCurrentUser('');
               navigate("/");
             }}
           >
