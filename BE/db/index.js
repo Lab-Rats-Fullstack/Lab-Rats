@@ -58,7 +58,7 @@ async function updateUser(id, fields = {}) {
       UPDATE users
       SET ${setString}
       WHERE id=${id}
-      RETURNING *;
+      RETURNING id, email, username, name, imgUrl, admin, reviewCount;
     `,
       Object.values(fields)
     );
@@ -211,23 +211,6 @@ async function getUserInfoById(userId) {
   }
 }
 
-// GET USER PUBLIC INFO BY ID IN DB
-async function getPublicUserInfoById(userId) {
-  try {
-    const {
-      rows: [user],
-    } = await client.query(`
-      SELECT id, username, imgUrl, admin, reviewCount
-      FROM users
-      WHERE id=${userId}
-    `);
-
-    return user;
-  } catch (error) {
-    throw error;
-  }
-}
-
 // GET USER INFO WITH PASSWORD BY ID IN DB
 async function getUserInfoWithPasswordById(userId) {
   try {
@@ -248,26 +231,6 @@ async function getUserInfoWithPasswordById(userId) {
 async function getUserPageById(userId) {
   try {
     const userInfo = await getUserInfoById(userId);
-    const recipes = await getUserPageRecipesByUser(userId);
-    const reviews = await getUserPageReviewsByUser(userId);
-    const comments = await getUserPageCommentsByUser(userId);
-
-    const userObject = {
-      ...userInfo,
-      recipes: recipes,
-      reviews: reviews,
-      comments: comments,
-    };
-
-    return userObject;
-  } catch (error) {
-    throw error;
-  }
-}
-
-async function getPublicUserPageById(userId) {
-  try {
-    const userInfo = await getPublicUserInfoById(userId);
     const recipes = await getUserPageRecipesByUser(userId);
     const reviews = await getUserPageReviewsByUser(userId);
     const comments = await getUserPageCommentsByUser(userId);
@@ -316,41 +279,10 @@ async function getRecipeInfoById(recipeId) {
   }
 }
 
-// GET AVG RATING BY ID IN DB
-async function getAverageRating(recipeId){
-  try{
-    const {rows: ratings} = await client.query(`
-      SELECT rating
-      FROM reviews
-      WHERE recipeId=$1;
-    `, [recipeId]);
-
-    let ratingsSum = 0;
-    let avgRating;
-
-    if (ratings.length == 0){
-      avgRating = 0;
-    } else {
-      ratings.forEach((rating)=>{
-        ratingsSum = ratingsSum + rating.rating;
-      });
-
-      avgRating = Math.round((ratingsSum / ratings.length) * 10) / 10;
-    }
-
-    return avgRating;
-
-  } catch (error){
-    throw (error);
-  }
-}
-
 // GET RECIPE BY ID IN DB
 async function getRecipeById(recipeId) {
   try {
     const recipe = await getRecipeInfoById(recipeId);
-
-    const avgRating = await getAverageRating(recipeId);
 
     const { rows: tags } = await client.query(
       `
@@ -365,7 +297,7 @@ async function getRecipeById(recipeId) {
     const reviews = await getReviewsByRecipe(recipeId);
   
       const { rows: [user] } = await client.query(`
-        SELECT id, username, imgUrl, admin, reviewCount
+        SELECT id, email, username, name, imgUrl, admin, reviewCount
         FROM users
         WHERE id=$1;
       `,
@@ -374,7 +306,6 @@ async function getRecipeById(recipeId) {
 
     const recipeObject = {
       ...recipe,
-      avgRating: avgRating,
       tags: tags,
       reviews: reviews,
       user: user,
@@ -419,8 +350,6 @@ async function getUserPageRecipeById(recipeId) {
       [recipeId]
     );
 
-    const avgRating = await getAverageRating(recipeId);
-
     const { rows: tags } = await client.query(
       `
     SELECT tags.*
@@ -433,7 +362,6 @@ async function getUserPageRecipeById(recipeId) {
 
     const recipeObject = {
       ...recipeInfo,
-      avgRating: avgRating,
       tags: tags,
     };
 
@@ -457,8 +385,6 @@ async function getOtherPageRecipeById(recipeId) {
       [recipeId]
     );
 
-    const avgRating = await getAverageRating(recipeId);
-
     const { rows: tags } = await client.query(
       `
       SELECT tags.*
@@ -473,7 +399,7 @@ async function getOtherPageRecipeById(recipeId) {
       rows: [userInfo],
     } = await client.query(
       `
-        SELECT id, username, imgUrl
+        SELECT id, email, username, name, imgUrl
         FROM users
         WHERE id = $1;
       `,
@@ -482,7 +408,6 @@ async function getOtherPageRecipeById(recipeId) {
 
     const recipeObject = {
       ...recipeInfo,
-      avgRating: avgRating,
       tags: tags,
       user: userInfo,
     };
@@ -927,23 +852,11 @@ async function getUserPageReviewById(reviewId) {
       [reviewInfo.recipeid]
     );
 
-    const avgRating = await getAverageRating(reviewInfo.recipeid);
-
-    const { rows: tags } = await client.query(
-      `
-    SELECT tags.*
-    FROM tags
-    JOIN recipe_tags ON tags.id=recipe_tags.tagId
-    WHERE recipe_tags.recipeId=$1;
-  `,
-      [reviewInfo.recipeid]
-    );
-
     const {
       rows: [recipeUserInfo],
     } = await client.query(
       `
-      SELECT id, username, imgUrl
+      SELECT id, email, username, name, imgUrl
       FROM users
       WHERE id=$1;
     `,
@@ -954,8 +867,6 @@ async function getUserPageReviewById(reviewId) {
       ...reviewInfo,
       recipe: {
         ...recipeInfo,
-        avgRating: avgRating,
-        tags: tags,
         user: recipeUserInfo,
       },
     };
@@ -994,7 +905,7 @@ async function getReviewById(reviewId) {
 
 
         const { rows: [user] } = await client.query(`
-        SELECT id, username, imgUrl, admin, reviewCount
+        SELECT id, email, username, name, imgUrl, admin, reviewCount
         FROM users
         WHERE id=$1;
       `,
@@ -1038,7 +949,7 @@ async function getReviewsByRecipe(recipeId) {
     const { rows: reviewIds } = await client.query(`
         SELECT id 
         FROM reviews
-        WHERE recipeId=${recipeId};
+        WHERE userId=${recipeId};
       `);
 
     const reviews = await Promise.all(
@@ -1218,7 +1129,7 @@ async function getUserPageCommentById(commentId) {
       rows: [reviewUserInfo],
     } = await client.query(
       `
-      SELECT id, username, imgUrl
+      SELECT id, email, username, name, imgUrl
       FROM users
       WHERE id=$1;
     `,
@@ -1236,23 +1147,11 @@ async function getUserPageCommentById(commentId) {
       [reviewInfo.recipeid]
     );
 
-    const avgRating = await getAverageRating(reviewInfo.recipeid);
-
-    const { rows: tags } = await client.query(
-      `
-    SELECT tags.*
-    FROM tags
-    JOIN recipe_tags ON tags.id=recipe_tags.tagId
-    WHERE recipe_tags.recipeId=$1;
-  `,
-      [reviewInfo.recipeid]
-    );
-
     const {
       rows: [recipeUserInfo],
     } = await client.query(
       `
-    SELECT id, username, imgUrl
+    SELECT id, email, username, name, imgUrl
     FROM users
     WHERE id=$1;
   `,
@@ -1266,8 +1165,6 @@ async function getUserPageCommentById(commentId) {
         user: reviewUserInfo,
         recipe: {
           ...recipeInfo,
-          avgRating: avgRating,
-          tags: tags,
           user: recipeUserInfo,
         },
       },
@@ -1305,7 +1202,7 @@ async function getCommentById(commentId) {
 
 
       const { rows: [user] } = await client.query(`
-      SELECT id, username, imgUrl, admin, reviewCount
+      SELECT id, email, username, name, imgUrl, admin, reviewCount
       FROM users
       WHERE id=$1;
     `,
@@ -1487,5 +1384,4 @@ module.exports = {
   getRecipeById,
   getReviewById,
   getCommentById,
-  getPublicUserPageById
 };
