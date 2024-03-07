@@ -1,91 +1,91 @@
-import { useNavigate } from 'react-router-dom'
-import { useState, useEffect } from 'react'
-import RecipeCard from './RecipeCard'
+import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import RecipeCard from "./RecipeCard";
+import Tabs from "./Tabs";
 
-export default function MainPage ({token}) {
-    const [recipes, setRecipes] = useState([]);
-    const [featRecipe, setFeatRecipe] = useState({});
-    const [tags, setTags] = useState([]);
-    const [tagsOutput, setTagsOutput] = useState([]);
-    const API = "http://localhost:3000/api";
-    const navigate = useNavigate();
+export default function MainPage({ token }) {
+  const [recipes, setRecipes] = useState([]);
+  const [featRecipe, setFeatRecipe] = useState({});
+  const [tags, setTags] = useState([]);
+  const [tagsOutput, setTagsOutput] = useState([]);
+  const API = "http://localhost:3000/api";
+  const navigate = useNavigate();
 
-    useEffect(() => {
-        async function getRecipes() {
-            try {
-                const response = await fetch(`${API}/recipes/`);
-                const result = await response.json();
-                return result;
-            } catch(error) {
-                console.error(error);
-            }
-        }
-    
-        async function setState() {
-            const someVar = await getRecipes();
-            if(someVar) {
-                setRecipes(someVar);
-            }
-        }
+  useEffect(() => {
+    async function getRecipes() {
+      try {
+        const response = await fetch(`${API}/recipes/`);
+        const result = await response.json();
+        return result;
+      } catch (error) {
+        console.error(error);
+      }
+    }
 
-        setState();
-    }, []);
+    async function setState() {
+      const someVar = await getRecipes();
+      if (someVar) {
+        setRecipes(someVar);
+      }
+    }
 
-    useEffect(() => {
-        function selectRecipe(array) {
-            let randIndex = Math.floor(Math.random() * (array.length -1));
-            let randRecipe = array[randIndex];
-            return randRecipe;
-        }
-    
-        let randRecipeState = selectRecipe(recipes);
-        setFeatRecipe(randRecipeState)
-    }, [recipes]);
+    setState();
+  }, []);
 
-    useEffect(() => {
-        async function getTags() {
-            try {
-                const response = await fetch(`${API}/tags`);
-                const result = await response.json();
-                setTags(result.rows);
-            } catch(error) {
-                console.error(error);
-            }
-        }
-        getTags();
-    }, []);
+  useEffect(() => {
+    function selectRecipe(array) {
+      let randIndex = Math.floor(Math.random() * (array.length - 1));
+      let randRecipe = array[randIndex];
+      return randRecipe;
+    }
 
-    useEffect(() => {
-        function rearrange (input, field) {
-            let output = [];
-            for (let i=0; i < input.length; i++) {
-                output.push(input[i][field]);
-            }
-            return output;
-        }
+    let randRecipeState = selectRecipe(recipes);
+    setFeatRecipe(randRecipeState);
+  }, [recipes]);
 
-        let rearrTags = rearrange(tags, 'name');
-        setTagsOutput(rearrTags);
-    }, [tags]);
+  useEffect(() => {
+    async function getTags() {
+      try {
+        const response = await fetch(`${API}/tags`);
+        const result = await response.json();
+        setTags(result.rows);
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getTags();
+  }, []);
 
-    function handleTagsClick(e) {
-        e.preventDefault();
-        let tagFromButton = e.target.value;
-        navigate(`/tags/${tagFromButton}/recipes`);
-    };
+  useEffect(() => {
+    function rearrange(input, field) {
+      let output = [];
+      for (let i = 0; i < input.length; i++) {
+        output.push(input[i][field]);
+      }
+      return output;
+    }
 
-    return (
-        <>
-        {recipes && featRecipe && featRecipe.tags ? <RecipeCard key={featRecipe.id} recipe={featRecipe}/>
-         : <div>error</div>}
-            
-        <div className="mainTags">
-            {tagsOutput.map((tag) => {
-                return (
-                    <button key={tag} onClick={handleTagsClick} value={tag}>{tag}</button>
-                )
-            })}
+    let rearrTags = rearrange(tags, "name");
+    setTagsOutput(rearrTags);
+  }, [tags]);
+
+  function handleTagsClick(e) {
+    e.preventDefault();
+    let tagFromButton = e.target.value;
+    navigate(`/tags/${tagFromButton}/recipes`);
+  }
+
+  return (
+    <div className="mainPageContainer">
+      {" "}
+      <Tabs tagsOutput={tagsOutput} handleTagsClick={handleTagsClick} />
+      {recipes && featRecipe && featRecipe.tags ? (
+        <div className="recipesContainer">
+          <RecipeCard key={featRecipe.id} recipe={featRecipe} />
         </div>
-        </>
-    )
+      ) : (
+        <div>error</div>
+      )}
+    </div>
+  );
 }
