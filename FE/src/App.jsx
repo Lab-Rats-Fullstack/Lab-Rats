@@ -71,7 +71,7 @@ function App() {
               />
             }
           ></Route>
-          <Route path="/admin" element={<Admin token={token} admin={admin}/>}></Route>
+          <Route path="/admin" element={<Admin token={token} admin={admin} currentUser={currentUser}/>}></Route>
         </Routes>
       </main>
     </>

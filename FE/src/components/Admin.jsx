@@ -1,11 +1,11 @@
 import {useEffect, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import AverageStars from './AverageStars'
 import altImg from "../assets/Default_pfp.jpeg"
 
 const API = "http://localhost:3000/api/";
 
-export default function Admin ({token, admin}) {
+export default function Admin ({token, admin, currentUser}) {
     const [allUsers, setAllUsers] =useState(true);
     const [reviewedRecipes, setReviewedRecipes] =useState(false);
     const [recipeTags, setrecipeTags] =useState(false);
@@ -153,13 +153,15 @@ export default function Admin ({token, admin}) {
                                     <div className ="userCard" key = {user.id}>
                                     <img src={user.imgurl || altImg}
                                         alt={`User account image for ${user.username}`} />
-                                    <h3>Username: {user.username}</h3>
+                                    <h3>Username:</h3>
+                                    {(user.username === currentUser) ?
+                                   <Link className="username"to={`/account`}>@{user.username}</Link>
+                                    :
+                                   <Link className="username"to={`/users/${user.id}`}>@{user.username}</Link>
+                                    }
                                     <p>Name: {user.name}</p>
                                     <p>Email: {user.email}</p>
                                     <p>Review count: {user.reviewcount}</p>
-                                    <button onClick={() => {
-                                        navigate(`/users/${user.id}`)
-                                    }}>View User</button>
                                 </div>
                                 )
                             })}
@@ -171,7 +173,11 @@ export default function Admin ({token, admin}) {
                                 return (
                                     <div className ="reviewedRecipeCard" key = {reviewedRecipe.id}>
                                         <h3>{reviewedRecipe.title}</h3>
-                                        <h4>{reviewedRecipe.user.username}</h4>
+                                        {(reviewedRecipe.user.username === currentUser) ?
+                                             <Link className="username"to={`/account`}>@{reviewedRecipe.user.username}</Link>
+                                             :
+                                             <Link className="username"to={`/users/${reviewedRecipe.user.id}`}>@{reviewedRecipe.user.username}</Link>
+                                         }
                                         <div className="averageRating">
                                            {reviewedRecipe.avgRating ? (
                                                 <AverageStars starAverage={reviewedRecipe.avgRating} />
