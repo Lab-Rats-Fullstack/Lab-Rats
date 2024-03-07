@@ -26,7 +26,7 @@ function App() {
           <Route path="/" element={<MainPage token={token} />}></Route>
           <Route
             path="/recipes"
-            element={<Recipes token={token} currentUser={currentUser} />}
+            element={<Recipes token={token} currentUser={currentUser} admin={admin}/>}
           ></Route>
           <Route
             path="/recipes/:recipeId"
