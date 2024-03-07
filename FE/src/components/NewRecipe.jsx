@@ -1,11 +1,11 @@
 import { useState } from 'react'
-// import FormTags from './FormTags.jsx'
+import FormTags from './FormTags.jsx'
 
 export default function NewRecipe ({token}) {
    const [title, setTitle] = useState("");
    const [estTime, setEstTime] = useState("");
    const [image, setImage] = useState("");
-   const [tags, setTags] = useState([]);
+   const [tagsList, setTagsList] = useState([{tag: ''}]);
    
    const [ingredientList, setIngredientList] = useState([{ingredient: ''}]);
    const [instructionList, setInstructionList] = useState([{instruction: ''}]);
@@ -79,6 +79,7 @@ export default function NewRecipe ({token}) {
         let ingredArray = rearrange(ingredientList, 'ingredient');
         let instructArray = rearrange(instructionList, 'instruction');
         let noteArray = rearrange(notesList, 'note');
+        let tagsArray = rearrange(tagsList, 'tag');
         
         let data = {
             title: title,
@@ -87,7 +88,7 @@ export default function NewRecipe ({token}) {
             procedure: instructArray,
             imgurl: image,
             notes: noteArray,
-            tags: tags
+            tags: tagsArray
         };
         console.log(data);
         try {
@@ -166,11 +167,10 @@ export default function NewRecipe ({token}) {
                     </div>
                 )
                })}
-               
-               <label>Tags: </label>
-               <input type="text" id="tags" name="tags" value={tags} onChange={(e) => {
-                setTags(e.target.value);
-               }}/>
+
+               <div>
+                    <FormTags tagsList={tagsList} setTagsList={setTagsList}/>
+               </div>
 
                <input type="submit" id="submit" value="submit"/>
            </form>
