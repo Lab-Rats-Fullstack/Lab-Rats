@@ -1,6 +1,7 @@
 const express = require("express");
 const recipesRouter = express.Router();
 const { requireUser, requireAdmin } = require("./utils");
+const { returnImageUrl } = require("./uploadImage");
 
 const {
   getAllRecipesPage,
@@ -23,16 +24,16 @@ recipesRouter.get("/", async (req, res, next) => {
 recipesRouter.post("/", requireAdmin, async (req, res, next) => {
   const { id: userId } = req.user;
   const { body } = req;
-  
   if (body.base64) {
-    const {base64} = body.base64
-    const imgUrl = await returnImageUrl(base64);
-    body.imgurl = imgUrl
+    const { base64: imagePath } = body;
+    const imgUrl = await returnImageUrl(imagePath);
+    body.imgUrl = imgUrl;
   }
 
-  delete fields.base64
-  
+  delete body.base64;
+
   const recipe = { ...body, userId };
+  console.log(recipe);
   try {
     const newRecipe = await createRecipe(recipe);
     res.send(newRecipe);
@@ -54,7 +55,7 @@ recipesRouter.get("/reviewedRecipes", requireAdmin, async (req, res, next) => {
 recipesRouter.get("/:recipeId", async (req, res, next) => {
   const { recipeId } = req.params;
   let userId = null;
-  if (req.user){
+  if (req.user) {
     userId = req.user.id;
   }
 
@@ -62,8 +63,8 @@ recipesRouter.get("/:recipeId", async (req, res, next) => {
     const recipe = await getRecipeById(recipeId);
     const response = {
       userId,
-      recipe
-    }
+      recipe,
+    };
     res.send(response);
   } catch (err) {
     next(err);
@@ -73,15 +74,15 @@ recipesRouter.get("/:recipeId", async (req, res, next) => {
 recipesRouter.patch("/:recipeId", requireAdmin, async (req, res, next) => {
   const { recipeId } = req.params;
   const { body: fields } = req;
- 
+
   if (fields.base64) {
-    const {base64} = fields.base64
-    const imgUrl = await returnImageUrl(base64);
-    fields.imgurl = imgUrl
+    const { base64: imagePath } = fields.base64;
+    const imgUrl = await returnImageUrl(imagePath);
+    fields.imgUrl = imgUrl;
   }
 
-  delete fields.base64
-  
+  delete fields.base64;
+
   try {
     const updatedRecipe = await updateRecipe(recipeId, fields);
     res.send(updatedRecipe);
@@ -95,7 +96,10 @@ recipesRouter.delete("/:recipeId", requireAdmin, async (req, res, next) => {
   // requireAdmin eventually
   try {
     const destroyedRecipe = await destroyRecipeById(recipeId);
-    res.send({name: "DeleteConfirmation", message: `${destroyedRecipe.title} has been deleted.`});
+    res.send({
+      name: "DeleteConfirmation",
+      message: `${destroyedRecipe.title} has been deleted.`,
+    });
   } catch (err) {
     next(err);
   }

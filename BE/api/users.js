@@ -2,7 +2,7 @@ const express = require("express");
 const usersRouter = express.Router();
 const bcrypt = require("bcrypt");
 const { requireUser } = require("./utils");
-const { returnImageUrl } = require("./uploadImage")
+const { returnImageUrl } = require("./uploadImage");
 
 const {
   createUser,
@@ -10,7 +10,7 @@ const {
   getAllUsers,
   getUserByUsername,
   getUserPageById,
-  getPublicUserPageById
+  getPublicUserPageById,
 } = require("../db");
 
 const jwt = require("jsonwebtoken");
@@ -49,13 +49,13 @@ usersRouter.post("/register", async (req, res, next) => {
       expiresIn: "1w",
     });
 
-    const {admin} = newUser
+    const { admin } = newUser;
 
     res.send({
       message: "Thank you for signing up!",
       token,
       admin,
-      username
+      username,
     });
   } catch ({ name, message }) {
     next({ name, message });
@@ -73,9 +73,9 @@ usersRouter.post("/login", async (req, res, next) => {
   try {
     const user = await getUserByUsername(username);
     let auth;
-    if (user){
+    if (user) {
       auth = await bcrypt.compare(password, user.password);
-    } 
+    }
     if (user && auth) {
       const token = jwt.sign(
         { id: user.id, username },
@@ -84,12 +84,12 @@ usersRouter.post("/login", async (req, res, next) => {
           expiresIn: "1w",
         }
       );
-      const {admin} = user
+      const { admin } = user;
       res.send({
         message: "Successfully logged in!",
         token,
         admin,
-        username
+        username,
       });
     } else {
       next({
@@ -125,12 +125,12 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
     }
 
     if (fields.base64) {
-      const {base64} = fields.base64
-      const imgUrl = await returnImageUrl(base64);
-      fields.imgurl = imgUrl
+      const { base64: imagePath } = fields;
+      const imgUrl = await returnImageUrl(imagePath);
+      fields.imgurl = imgUrl;
     }
 
-    delete fields.base64
+    delete fields.base64;
 
     const updatedUser = await updateUser(id, fields);
     res.send(updatedUser);
@@ -151,7 +151,6 @@ usersRouter.get("/:userId/", async (req, res, next) => {
     }
 
     res.send(user);
-    
   } catch (err) {
     next(err);
   }
