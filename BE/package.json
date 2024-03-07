@@ -7,7 +7,8 @@
     "seed:dev": "nodemon ./db/seed.js",
     "seed": "node ./db/seed.js",
     "start": "node index.js",
-    "start:dev": "nodemon index.js"
+    "start:dev": "nodemon index.js",
+    "build": "npm i && npm run seed"
   },
   "repository": {
     "type": "git",
