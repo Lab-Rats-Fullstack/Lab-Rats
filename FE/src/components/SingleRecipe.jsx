@@ -4,7 +4,7 @@ import BinderRings from "./BinderRings";
 import { useParams, useNavigate, Link } from "react-router-dom";
 
 export default function SingleRecipe({ token, admin, currentUser }) {
-  const API_URL = `http://localhost:3000/api/`;
+  const API_URL = `https://culinary-chronicle.onrender.com/api/`;
   const navigate = useNavigate();
   const { recipeId } = useParams();
   const [errMess, setErrMess] = useState(false);
@@ -437,11 +437,13 @@ export default function SingleRecipe({ token, admin, currentUser }) {
         <div className="singleRecipeCard">
           <div className="top">
             <h1>{recipe.title}</h1>
-            {(recipe.user.username === currentUser) ?
+            {recipe.user.username === currentUser ? (
               <Link to={`/account`}>@{recipe.user.username}</Link>
-              :
-              <Link to={`/users/${recipe.user.id}`}>@{recipe.user.username}</Link>
-            }
+            ) : (
+              <Link to={`/users/${recipe.user.id}`}>
+                @{recipe.user.username}
+              </Link>
+            )}
             <div className="averageRating">
               {recipe.avgRating ? (
                 <AverageStars starAverage={recipe.avgRating} />
@@ -542,11 +544,13 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                   return (
                     <div key={review.id}>
                       <h3>{review.title}</h3>
-                      {(review.user.username === currentUser) ?
+                      {review.user.username === currentUser ? (
                         <Link to={`/account`}>@{review.user.username}</Link>
-                      :
-                        <Link to={`/users/${review.user.id}`}>@{review.user.username}</Link>
-                      }
+                      ) : (
+                        <Link to={`/users/${review.user.id}`}>
+                          @{review.user.username}
+                        </Link>
+                      )}
                       <p>Rating: {review.rating}</p>
                       <p>{review.content}</p>
                       {token && (
@@ -652,11 +656,15 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                             return (
                               <div key={comment.id}>
                                 <p>{comment.content}</p>
-                                {(comment.user.username === currentUser) ?
-                                   <Link to={`/account`}>@{comment.user.username}</Link>
-                                :
-                                   <Link to={`/users/${comment.user.id}`}>@{comment.user.username}</Link>
-                                }
+                                {comment.user.username === currentUser ? (
+                                  <Link to={`/account`}>
+                                    @{comment.user.username}
+                                  </Link>
+                                ) : (
+                                  <Link to={`/users/${comment.user.id}`}>
+                                    @{comment.user.username}
+                                  </Link>
+                                )}
                                 {token && (
                                   <>
                                     {(comment.userid === userId || admin) && (

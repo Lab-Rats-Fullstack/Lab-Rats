@@ -7,7 +7,7 @@ import UserReviews from "./UserReviews";
 import UserComments from "./UserComments";
 import NavButton from "./NavButton";
 
-const API = "http://localhost:3000/api/";
+const API = "https://culinary-chronicle.onrender.com/api/";
 
 export default function Account({ token, admin, currentUser }) {
   const [userData, setUserData] = useState({});

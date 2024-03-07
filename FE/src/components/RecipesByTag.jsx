@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import RecipeCard from "./RecipeCard";
 
 export default function renderRecipesByTag() {
-  const API = "http://localhost:3000/api";
+  const API = "https://culinary-chronicle.onrender.com/api";
   const [recipeList, setRecipeList] = useState([]);
   const { tagname } = useParams();
 
