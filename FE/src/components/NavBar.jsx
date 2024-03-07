@@ -14,10 +14,10 @@ export default function NavBar({ token, setToken, admin, setAdmin, setCurrentUse
           <button
             className="logout"
             onClick={() => {
+              navigate("/");
               setToken(null);
               setAdmin(false);
               setCurrentUser('');
-              navigate("/");
             }}
           >
             Log Out
