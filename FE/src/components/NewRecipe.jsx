@@ -11,67 +11,67 @@ export default function NewRecipe ({token}) {
    const [instructionList, setInstructionList] = useState([{instruction: ''}]);
    const [notesList, setNotesList] = useState([{note: ''}]);
 
-   function handleIngredientAdd() {
-    setIngredientList([...ingredientList, {ingredient: ''}]);
-   };
+  function handleIngredientAdd() {
+    setIngredientList([...ingredientList, { ingredient: "" }]);
+  }
 
-   function handleInstructionAdd() {
-    setInstructionList([...instructionList, {instruction: ''}]);
-   };
+  function handleInstructionAdd() {
+    setInstructionList([...instructionList, { instruction: "" }]);
+  }
 
-   function handleNoteAdd() {
-    setNotesList([...notesList, {note: ''}]);
-   };
+  function handleNoteAdd() {
+    setNotesList([...notesList, { note: "" }]);
+  }
 
-   function handleIngredientDelete(index) {
+  function handleIngredientDelete(index) {
     const list = [...ingredientList];
     list.splice(index, 1);
     setIngredientList(list);
-   };
+  }
 
-   function handleInstructionDelete(index) {
+  function handleInstructionDelete(index) {
     const list = [...instructionList];
     list.splice(index, 1);
     setInstructionList(list);
-   };
+  }
 
-   function handleNoteDelete(index) {
+  function handleNoteDelete(index) {
     const list = [...notesList];
     list.splice(index, 1);
     setNotesList(list);
-   };
+  }
 
-   function handleIngredientChange(e, index) {
+  function handleIngredientChange(e, index) {
     e.preventDefault();
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     const list = [...ingredientList];
     list[index][name] = value;
     setIngredientList(list);
-   };
+  }
 
-   function handleInstructionChange(e, index) {
+  function handleInstructionChange(e, index) {
     e.preventDefault();
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     const list = [...instructionList];
     list[index][name] = value;
     setInstructionList(list);
-   };
+  }
 
-   function handleNoteChange(e, index) {
+  function handleNoteChange(e, index) {
     e.preventDefault();
-    const {name, value} = e.target;
+    const { name, value } = e.target;
     const list = [...notesList];
     list[index][name] = value;
     setNotesList(list);
-   };
+  }
 
-   function rearrange (input, field) {
+  function rearrange(input, field) {
     let output = [];
-    for (let i=0; i < input.length; i++) {
-        output.push(input[i][field]);
+    for (let i = 0; i < input.length; i++) {
+      output.push(input[i][field]);
     }
     return output;
-   }
+  }
 
    async function handleSubmit(e) {
         e.preventDefault();
