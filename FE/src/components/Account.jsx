@@ -18,7 +18,9 @@ export default function Account ({token, admin, currentUser}) {
     const [update, setUpdate] =useState(0);
     
     const [updatedUser, setUpdatedUser] =useState({});
-    const [updatedPassword, setUpdatedPassword] =useState({});
+    const [updatedPassword, setUpdatedPassword] =useState({
+        password:""
+    });
 
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
@@ -40,6 +42,13 @@ export default function Account ({token, admin, currentUser}) {
                 const result = await response.json();
                 if (token !== null) {
                     setUserData(result);
+                    setUpdatedUser({
+                        imgurl:result.imgurl,
+                        username:result.username,
+                        email:result.email,
+                        name:result.name,
+                        admin:result.admin
+                    });
                     setFail(false);
                 } else {
                     setFail(true);
@@ -59,29 +68,47 @@ export default function Account ({token, admin, currentUser}) {
     async function userUpdate(event) {
         event.preventDefault();
         try {
-            if (updatedUser == null && updatedPassword.password == ""){
-                setUserBio(false);
-                setUserForm(true);
-            }else if (updatedPassword.password == ""){
+            console.log(updatedUser);
+            console.log(userData);
+            console.log(updatedPassword);
+
+            if (updatedUser.imgurl == userData.imgurl
+                && updatedUser.username == userData.username 
+                && updatedUser.email == userData.email
+                && updatedUser.name == userData.name 
+                && updatedUser.admin == userData.admin
+                && updatedPassword.password == ""){
+                setUserBio(true);
+                setUserForm(false);
+                return;
+            }else if (updatedPassword.password === ""){
                 delete updatedPassword.password;
+            }else {
+                // console.log(updatedUser);
+                // console.log(updatedPassword);
+                console.log({
+                    ...updatedUser,
+                    ...updatedPassword
+                });
+                const response = await fetch(`${API}users/me`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type":"application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                        body: JSON.stringify({
+                            ...updatedUser,
+                            ...updatedPassword
+                        })
+                });
+                const result = await response.json()
+                console.log(result);          
+                setUserData(result);
+                setUpdate((version) => version +1);
+                setUserForm(false);
+                setUserBio(true);
             }
-            const response = await fetch(`${API}users/me`, {
-                method: "PATCH",
-                headers: {
-                    "Content-Type":"application/json",
-                    "Authorization": `Bearer ${token}`,
-                },
-                    body: JSON.stringify({
-                        ...updatedUser,
-                        ...updatedPassword
-                    })
-            });
-            const result = await response.json()
-            console.log(result);          
-            setUserData(result);
-            setUpdate((version) => version +1);
-            setUserForm(false);
-            setUserBio(true);
+            
         } catch (error) {
             setError(error.message);
             console.log( error );
@@ -180,7 +207,6 @@ export default function Account ({token, admin, currentUser}) {
                                 ...prev,
                                     password: e.target.value
                             }})}}
-                            // onChange = {(e)=> setPassword(e.target.value)}
                         />
                     </label>
                     <label>
