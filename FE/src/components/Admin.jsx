@@ -13,8 +13,6 @@ export default function Admin ({token, admin}) {
     const [reviewedRecipesList, setReviewedRecipesList] = useState([]);
     const [tagsList, setTagsList] = useState({});
     const [error, setError] = useState(null);
-    const [fail, setFail] = useState(false);
-    const [success, setSuccess] = useState(false);
     const navigate = useNavigate();
 
 
