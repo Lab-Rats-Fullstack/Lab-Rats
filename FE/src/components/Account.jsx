@@ -7,7 +7,7 @@ import UserReviews from "./UserReviews";
 import UserComments from "./UserComments";
 import NavButton from "./NavButton";
 import UploadImage from "./UploadImage";
-import defaultImg from "../assets/Default_pfp.jpeg"
+import defaultImg from "../assets/Default_pfp.jpeg";
 
 const API = "http://localhost:3000/api/";
 
@@ -32,7 +32,7 @@ export default function Account({ token, admin, currentUser }) {
   const [buttonStatus, setButtonStatus] = useState(true);
   const [userForm, setUserForm] = useState(false);
   const [userBio, setUserBio] = useState(true);
-  const [encoded, setEncoded] = useState({})
+  const [encoded, setEncoded] = useState({});
 
   useEffect(() => {
     async function userCheck() {
@@ -145,20 +145,18 @@ export default function Account({ token, admin, currentUser }) {
                 <form onSubmit={userUpdate}>
                   <label>
                     Profile Image:
-                    {userData.imgUrl && <img src={userData.imgUrl || defaultImg} alt={userData.username ? `${userData.username}'s profile picture.`: "Profile picture"}/>}
+                    {encoded && (
+                      <img
+                        src={encoded.base64 || defaultImg}
+                        alt={
+                          userData.username
+                            ? `${userData.username}'s profile picture.`
+                            : "Profile picture"
+                        }
+                      />
+                    )}
                     <p>Upload new Profile Image?</p>
-                    <UploadImage setEncoded={setEncoded}/>
-                    {/* <input
-                      defaultValue={userData.imgurl}
-                      onChange={(e) =>
-                        setUpdatedUser((prev) => {
-                          return {
-                            ...prev,
-                            imgurl: e.target.value,
-                          };
-                        })
-                      }
-                    /> */}
+                    <UploadImage setEncoded={setEncoded} />
                   </label>
                   <label>
                     Username:

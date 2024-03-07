@@ -1,17 +1,17 @@
-import { useState } from 'react'
-import FormTags from './FormTags.jsx'
-import UploadImage from './UploadImage.jsx';
-import defaultImg from "../assets/Default_pfp.jpeg"
+import { useState } from "react";
+import FormTags from "./FormTags.jsx";
+import UploadImage from "./UploadImage.jsx";
+import defaultImg from "../assets/Default_pfp.jpeg";
 
-export default function NewRecipe ({token}) {
-   const [title, setTitle] = useState("");
-   const [estTime, setEstTime] = useState("");
-   const [image, setImage] = useState("");
-   const [tagsList, setTagsList] = useState([{tag: ''}]);
-   
-   const [ingredientList, setIngredientList] = useState([{ingredient: ''}]);
-   const [instructionList, setInstructionList] = useState([{instruction: ''}]);
-   const [notesList, setNotesList] = useState([{note: ''}]);
+export default function NewRecipe({ token }) {
+  const [title, setTitle] = useState("");
+  const [estTime, setEstTime] = useState("");
+  const [image, setImage] = useState("");
+  const [tagsList, setTagsList] = useState([{ tag: "" }]);
+
+  const [ingredientList, setIngredientList] = useState([{ ingredient: "" }]);
+  const [instructionList, setInstructionList] = useState([{ instruction: "" }]);
+  const [notesList, setNotesList] = useState([{ note: "" }]);
 
   function handleIngredientAdd() {
     setIngredientList([...ingredientList, { ingredient: "" }]);
@@ -75,109 +75,169 @@ export default function NewRecipe ({token}) {
     return output;
   }
 
-   async function handleSubmit(e) {
-        e.preventDefault();
+  async function handleSubmit(e) {
+    e.preventDefault();
 
-        let ingredArray = rearrange(ingredientList, 'ingredient');
-        let instructArray = rearrange(instructionList, 'instruction');
-        let noteArray = rearrange(notesList, 'note');
-        let tagsArray = rearrange(tagsList, 'tag');
-        
-        let data = {
-            title: title,
-            esttime: estTime,
-            ingredients: ingredArray,
-            procedure: instructArray,
-            ...image,
-            notes: noteArray,
-            tags: tagsArray
-        };
-        console.log(data);
-        try {
-            const response = await fetch("http://localhost:3000/api/recipes", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    "Authorization": `Bearer ${token}` 
-                },
-                body: JSON.stringify(data)
-            });
+    let ingredArray = rearrange(ingredientList, "ingredient");
+    let instructArray = rearrange(instructionList, "instruction");
+    let noteArray = rearrange(notesList, "note");
+    let tagsArray = rearrange(tagsList, "tag");
 
-            const result = await response.json();
-            console.log(result);
+    let data = {
+      title: title,
+      esttime: estTime,
+      ingredients: ingredArray,
+      procedure: instructArray,
+      ...image,
+      notes: noteArray,
+      tags: tagsArray,
+    };
+    console.log(data);
+    try {
+      const response = await fetch("http://localhost:3000/api/recipes", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify(data),
+      });
 
-        } catch (error) {
-            console.error(error);
-        }
+      const result = await response.json();
+      console.log(result);
+    } catch (error) {
+      console.error(error);
     }
+  }
 
-   return (
-       <div>
-           <form onSubmit={handleSubmit}>
-               <label>Title: </label>
-               <input type="text" id="title" name="title" value={title} onChange={(e) => {
-                setTitle(e.target.value);
-               }}/>
+  return (
+    <div>
+      <form onSubmit={handleSubmit}>
+        <label>Title: </label>
+        <input
+          type="text"
+          id="title"
+          name="title"
+          value={title}
+          onChange={(e) => {
+            setTitle(e.target.value);
+          }}
+        />
 
-               <label>Estimated Time: </label>
-               <input list="times" id="estTime" name="estTime" value={estTime} onChange={(e) => {
-                setEstTime(e.target.value);
-               }}/>
-                   <datalist id="times">
-                       <option value="15 min"/>
-                       <option value="30 min"/>
-                       <option value="45 min"/>
-                       <option value="60 min"/>
-                       <option value="75 min"/>
-                       <option value="90 min"/>
-                   </datalist>
+        <label>Estimated Time: </label>
+        <input
+          list="times"
+          id="estTime"
+          name="estTime"
+          value={estTime}
+          onChange={(e) => {
+            setEstTime(e.target.value);
+          }}
+        />
+        <datalist id="times">
+          <option value="15 min" />
+          <option value="30 min" />
+          <option value="45 min" />
+          <option value="60 min" />
+          <option value="75 min" />
+          <option value="90 min" />
+        </datalist>
 
-               <label>Ingredients: </label>
-               {ingredientList.map((singleIngred, index) => {
-                return (
-                <div key={index}>
-                    <input type="text" name="ingredient"  value={singleIngred.ingredient} onChange={(e) => handleIngredientChange(e, index)}/>
-                    {ingredientList.length > 1 && <button type="button" onClick={() => handleIngredientDelete(index)}>-</button>}
-                    {ingredientList.length - 1 === index && ingredientList.length < 20 && <button type="button" onClick={handleIngredientAdd}>+</button>}
-                </div>
-                
-               )})}
+        <label>Ingredients: </label>
+        {ingredientList.map((singleIngred, index) => {
+          return (
+            <div key={index}>
+              <input
+                type="text"
+                name="ingredient"
+                value={singleIngred.ingredient}
+                onChange={(e) => handleIngredientChange(e, index)}
+              />
+              {ingredientList.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => handleIngredientDelete(index)}
+                >
+                  -
+                </button>
+              )}
+              {ingredientList.length - 1 === index &&
+                ingredientList.length < 20 && (
+                  <button type="button" onClick={handleIngredientAdd}>
+                    +
+                  </button>
+                )}
+            </div>
+          );
+        })}
 
-               <label>Instructions: </label>
-               {instructionList.map((singleInstruct, index) => {
-                return (
-                    <div key={index}>
-                        <input type="text" name="instruction" value={singleInstruct.instruction} onChange={(e) => handleInstructionChange(e, index)}/>
-                        {instructionList.length > 1 && <button type="button" onClick={() => handleInstructionDelete(index)}>-</button>}
-                    {instructionList.length - 1 === index && instructionList.length < 20 && <button type="button" onClick={handleInstructionAdd}>+</button>}
-                    </div>
-                )
-               })}
-    
-               <label>Image: </label>
-               <UploadImage setEncoded={setImage}/>
-               {image.base64 && <img src={image.base64 || defaultImg} alt={title ? `${title} image.` : "New Recipe Image."}/>}
-               {/* <input type="text" id="image" name="image" value={image} onChange={(e) => {
-                setImage(e.target.value);
-               }}/> */}
+        <label>Instructions: </label>
+        {instructionList.map((singleInstruct, index) => {
+          return (
+            <div key={index}>
+              <input
+                type="text"
+                name="instruction"
+                value={singleInstruct.instruction}
+                onChange={(e) => handleInstructionChange(e, index)}
+              />
+              {instructionList.length > 1 && (
+                <button
+                  type="button"
+                  onClick={() => handleInstructionDelete(index)}
+                >
+                  -
+                </button>
+              )}
+              {instructionList.length - 1 === index &&
+                instructionList.length < 20 && (
+                  <button type="button" onClick={handleInstructionAdd}>
+                    +
+                  </button>
+                )}
+            </div>
+          );
+        })}
 
-               <label>Notes: </label>
-               {notesList.map((singleNote, index) => {
-                return (
-                    <div key={index}>
-                        <input type="text" name="note" value={singleNote.note} onChange={(e) => handleNoteChange(e, index)}/>
-                        {notesList.length > 1 && <button type="button" onClick={() => handleNoteDelete(index)}>-</button>}
-                        {notesList.length - 1 === index && notesList.length < 20 && <button type="button" onClick={handleNoteAdd}>+</button>}
-                    </div>
-                )
-               })}
+        <label>Image: </label>
+        <UploadImage setEncoded={setImage} />
+        {image.base64 && (
+          <img
+            src={image.base64 || defaultImg}
+            alt={title ? `${title} image.` : "New Recipe Image."}
+          />
+        )}
 
-               <div>
-                    <FormTags tagsList={tagsList} setTagsList={setTagsList}/>
-               </div>
+        <label>Notes: </label>
+        {notesList.map((singleNote, index) => {
+          return (
+            <div key={index}>
+              <input
+                type="text"
+                name="note"
+                value={singleNote.note}
+                onChange={(e) => handleNoteChange(e, index)}
+              />
+              {notesList.length > 1 && (
+                <button type="button" onClick={() => handleNoteDelete(index)}>
+                  -
+                </button>
+              )}
+              {notesList.length - 1 === index && notesList.length < 20 && (
+                <button type="button" onClick={handleNoteAdd}>
+                  +
+                </button>
+              )}
+            </div>
+          );
+        })}
 
-               <input type="submit" id="submit" value="submit"/>
-           </form>
-       </div>
-   )
+        <div>
+          <FormTags tagsList={tagsList} setTagsList={setTagsList} />
+        </div>
+
+        <input type="submit" id="submit" value="submit" />
+      </form>
+    </div>
+  );
 }
