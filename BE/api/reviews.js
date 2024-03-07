@@ -47,7 +47,7 @@ reviewRouter.patch("/:reviewId", requireUser, async (req, res, next) => {
   }
 });
 
-reviewRouter.delete("/:reviewId", requireUser, async (req, res) => {
+reviewRouter.delete("/:reviewId", requireUser, async (req, res, next) => {
   const {
     params: { reviewId },
     user: { id },
