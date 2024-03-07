@@ -47,10 +47,10 @@ export default function NavBar({ token, setToken, admin }) {
   }
 
   return (
-    <div className="navbar">
+    <header className="navbar">
       <Link to="/">Home</Link>
       <Link to="/recipes">Recipes</Link>
       {renderNav()}
-    </div>
+    </header>
   );
 }
