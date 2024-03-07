@@ -2,6 +2,7 @@ const express = require("express");
 const usersRouter = express.Router();
 const bcrypt = require("bcrypt");
 const { requireUser } = require("./utils");
+const { returnImageUrl } = require("./uploadImage")
 
 const {
   createUser,
@@ -122,6 +123,15 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
     if (fields.password) {
       fields.password = await bcrypt.hash(fields.password, 10);
     }
+
+    if (fields.base64) {
+      const {base64} = fields.base64
+      const imgUrl = await returnImageUrl(base64);
+      fields.imgurl = imgUrl
+    }
+
+    delete fields.base64
+
     const updatedUser = await updateUser(id, fields);
     res.send(updatedUser);
   } catch (err) {

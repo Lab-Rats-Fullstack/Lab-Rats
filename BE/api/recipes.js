@@ -23,7 +23,15 @@ recipesRouter.get("/", async (req, res, next) => {
 recipesRouter.post("/", requireAdmin, async (req, res, next) => {
   const { id: userId } = req.user;
   const { body } = req;
-  // requireAdmin eventually
+  
+  if (body.base64) {
+    const {base64} = body.base64
+    const imgUrl = await returnImageUrl(base64);
+    body.imgurl = imgUrl
+  }
+
+  delete fields.base64
+  
   const recipe = { ...body, userId };
   try {
     const newRecipe = await createRecipe(recipe);
@@ -65,7 +73,15 @@ recipesRouter.get("/:recipeId", async (req, res, next) => {
 recipesRouter.patch("/:recipeId", requireAdmin, async (req, res, next) => {
   const { recipeId } = req.params;
   const { body: fields } = req;
-  // requireAdmin eventually
+ 
+  if (fields.base64) {
+    const {base64} = fields.base64
+    const imgUrl = await returnImageUrl(base64);
+    fields.imgurl = imgUrl
+  }
+
+  delete fields.base64
+  
   try {
     const updatedRecipe = await updateRecipe(recipeId, fields);
     res.send(updatedRecipe);
