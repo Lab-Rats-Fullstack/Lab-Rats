@@ -33,20 +33,62 @@ export default function NewRecipe ({token, admin, currentUser}) {
         }userCheck();
     }, [])
 
+    // async function userUpdate(event) {
+    //     event.preventDefault();
+    //     try {
+    //         if (updatedUser.imgurl == userData.imgurl
+    //             && updatedUser.username == userData.username 
+    //             && updatedUser.email == userData.email
+    //             && updatedUser.name == userData.name 
+    //             && updatedUser.admin == userData.admin
+    //             && updatedPassword.password == ""){
+    //             setUserBio(true);
+    //             setUserForm(false);
+    //             return;
+    //         }else if (updatedPassword.password === ""){
+    //             delete updatedPassword.password;
+    //         }else {
+    //             const response = await fetch(`${API}users/me`, {
+    //                 method: "PATCH",
+    //                 headers: {
+    //                     "Content-Type":"application/json",
+    //                     "Authorization": `Bearer ${token}`,
+    //                 },
+    //                     body: JSON.stringify({
+    //                         ...updatedUser,
+    //                         ...updatedPassword
+    //                     })
+    //             });
+    //             const result = await response.json()
+    //             console.log(result);          
+    //             setUserData(result);
+    //             setUpdate((version) => version +1);
+    //             setUserForm(false);
+    //             setUserBio(true);
+    //         }
+            
+    //     } catch (error) {
+    //         setError(error.message);
+    //         console.log( error );
+    //     }
+    // }
+
     return (
         <div className = 'wrapper'>
             {/* {error && <p>{error}</p>} */}
             {error ? <div className="error"><p>{error}</p></div> :
             <div className="userInfoContainer">
-                <div className="userInfo">
-                    <UserInfo
-                        key ={userData.id}
-                        token={token}
-                        userData={userData}
-                        admin={admin}/>
-                </div>
-
-                {userForm &&
+                {/* {userBio &&  */}
+                    <div className="userInfo">
+                        <UserInfo
+                            key ={userData.id}
+                            token={token}
+                            userData={userData}
+                            admin={admin}/>
+                        {admin && <button onClick={() => {setUserBio(false); setUserForm(true);}}>Update Profile</button>}
+                    </div>
+                {/* } */}
+                {/* {userForm &&
                 <div className = 'userUpdateForm'>
                     <form onSubmit = {userUpdate}>
                         <label>
@@ -96,35 +138,11 @@ export default function NewRecipe ({token, admin, currentUser}) {
                                 }})}
                             />
                         </label>
-                        <label>
-                            Password:
-                            <input
-                                type = "password"
-                                value = {password}
-                                autoComplete='off'
-                                onChange = {(e)=> {setPassword(e.target.value);
-                                    setUpdatedPassword((prev)=>{
-                                    return {
-                                    ...prev,
-                                        password: e.target.value
-                                }})}}
-                            />
-                        </label>
-                        <label>
-                            Confirm Password:
-                            <input
-                                type = "password"
-                                value = {confirmPassword}
-                                autoComplete='off'
-                                onChange = {(e)=> setConfirmPassword(e.target.value)}
-                            />
-                        </label>
-                        {buttonStatus == true && <p>Passwords must match</p>}
-                        <button type='submit' disabled = {buttonStatus} >Submit</button>
+                        <button type='submit'>Submit</button>
                         <button onClick={() => {setUserBio(true); setUserForm(false);}} >Cancel</button>
                     </form>
                 </div>
-                }
+                } */}
 
                 <div className = 'userItems'>
                     <div className='userItemsNav'>
