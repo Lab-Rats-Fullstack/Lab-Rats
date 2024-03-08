@@ -1,7 +1,7 @@
 import React from 'react';
 import ReviewCard from './ReviewCard';
 
-export default function UserReviews ({userData}) {
+export default function UserReviews ({userData, currentUser}) {
     const {reviews: reviewList=[]} = userData;
     return (
         <div className="reviewContainer">
@@ -9,7 +9,7 @@ export default function UserReviews ({userData}) {
                 <h2>Reviews</h2>
                 {reviewList.map((review)=>{
                     return (
-                        <ReviewCard key ={review.id} review = {review}/>
+                        <ReviewCard key ={review.id} review = {review} currentUser={currentUser}/>
                     )
                 })}
             </div>

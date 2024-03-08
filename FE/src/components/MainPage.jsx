@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import RecipeCard from "./RecipeCard";
 import Tabs from "./Tabs";
 
-export default function MainPage({ token }) {
+export default function MainPage({ token, currentUser }) {
   const [recipes, setRecipes] = useState([]);
   const [featRecipe, setFeatRecipe] = useState({});
   const [tags, setTags] = useState([]);
@@ -81,7 +81,7 @@ export default function MainPage({ token }) {
       <Tabs tagsOutput={tagsOutput} handleTagsClick={handleTagsClick} />
       {recipes && featRecipe && featRecipe.tags ? (
         <div className="recipesContainer">
-          <RecipeCard key={featRecipe.id} recipe={featRecipe} />
+          <RecipeCard key={featRecipe.id} recipe={featRecipe} currentUser={currentUser} />
         </div>
       ) : (
         <div>error</div>
