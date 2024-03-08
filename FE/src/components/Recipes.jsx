@@ -4,6 +4,7 @@ import RecipeCard from './RecipeCard';
 
 
 export default function Recipes({token, currentUser, admin}) {
+  const testAPI = 'http://localhost:3000/api/';
   const API = 'https://culinary-chronicle.onrender.com/api/';
   const [recipes, setRecipes] = useState([]);
 
@@ -13,7 +14,7 @@ export default function Recipes({token, currentUser, admin}) {
   useEffect(() => {
     async function getAllRecipes() {
       try{
-        const response = await fetch(`${API}recipes`);
+        const response = await fetch(`${testAPI}recipes`);
         const result = await response.json();
         setRecipes(result);
       } catch(error) {
@@ -21,6 +22,7 @@ export default function Recipes({token, currentUser, admin}) {
       }
     }
     getAllRecipes();
+    console.log(recipes);
   }, []);
 
   function changeSearch(e) {
