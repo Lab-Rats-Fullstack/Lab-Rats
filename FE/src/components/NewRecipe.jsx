@@ -107,8 +107,8 @@ export default function NewRecipe({ token, admin }) {
         body: JSON.stringify(data),
       });
 
-      const result = await response.json();
-      console.log(result);
+      const { id } = await response.json();
+      nav(`/recipes/${id}`);
     } catch (error) {
       console.error(error);
     }
@@ -129,23 +129,21 @@ export default function NewRecipe({ token, admin }) {
         />
 
         <label>Estimated Time: </label>
-        <input
+        <select
           list="times"
           id="estTime"
           name="estTime"
-          value={estTime}
           onChange={(e) => {
             setEstTime(e.target.value);
           }}
-        />
-        <datalist id="times">
-          <option value="15 min" />
-          <option value="30 min" />
-          <option value="45 min" />
-          <option value="60 min" />
-          <option value="75 min" />
-          <option value="90 min" />
-        </datalist>
+        >
+          <option value="15 min">15 min</option>
+          <option value="30 min">30 min</option>
+          <option value="45 min">45 min</option>
+          <option value="60 min">60 min</option>
+          <option value="75 min">75 min</option>
+          <option value="90 min">90 min</option>
+        </select>
 
         <label>Ingredients: </label>
         {ingredientList.map((singleIngred, index) => {
