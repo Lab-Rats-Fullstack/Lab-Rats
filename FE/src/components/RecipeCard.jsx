@@ -12,6 +12,7 @@ export default function RecipeInfo({ recipe, admin, currentUser, token}) {
         alt={`A picture of ${recipe.title}`}
       />
       <p className="recipeTitle">{recipe.title}</p>
+      <p className="recipeUsername">{recipe.username}</p>
       {recipe.tags.map((tag) => {
         return <TagInfo key={tag.id} tag={tag} />;
       })}
