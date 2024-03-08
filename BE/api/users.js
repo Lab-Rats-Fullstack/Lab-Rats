@@ -147,6 +147,7 @@ usersRouter.get("/:userId/", async (req, res, next) => {
 });
 
 usersRouter.patch("/:userId/", requireAdmin, async (req, res, next) => {
+  const { userId: id } = req.params;
   const { body: fields } = req;
   try {
     if (fields.password) {
