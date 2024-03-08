@@ -3,7 +3,8 @@ import TagInfo from "./TagInfo";
 import NavButton from "./NavButton";
 import defaultImg from "../assets/default food.jpeg";
 
-export default function RecipeInfo({ recipe, admin, currentUser }) {
+export default function RecipeInfo({ recipe, admin, currentUser, token}) {
+
   return (
     <div className="recipeCard">
       <img
@@ -17,10 +18,10 @@ export default function RecipeInfo({ recipe, admin, currentUser }) {
       })}
       <p>Est. Time: {recipe.estimatedtime}</p>
       <NavButton location={`/recipes/${recipe.id}`} buttonText={"See Recipe"} />
-      <NavButton
+      {admin ? (<NavButton
         location={`/recipes/${recipe.id}/edit`}
         buttonText={"Edit Recipe"}
-      />
+      />) : (<></>)}
       {/* need to make this conditional on being admin and tier 2 currentUser if username matches */}
     </div>
   );
