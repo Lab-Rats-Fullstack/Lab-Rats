@@ -1410,4 +1410,5 @@ module.exports = {
   getRecipeById,
   getReviewById,
   getCommentById,
+  getPublicUserPageById
 };
