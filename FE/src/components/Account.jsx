@@ -1,5 +1,5 @@
-import {useEffect, useState} from 'react'
-import { Routes, Route, useNavigate, useParams} from 'react-router-dom'
+import {useEffect, useState} from "react"
+import { Routes, Route, useNavigate } from "react-router-dom"
 import UserInfo from "./UserInfo"
 import UserRecipes from "./UserRecipes"
 import UserReviews from "./UserReviews"
@@ -68,10 +68,6 @@ export default function Account ({token, admin, currentUser}) {
     async function userUpdate(event) {
         event.preventDefault();
         try {
-            console.log(updatedUser);
-            console.log(userData);
-            console.log(updatedPassword);
-
             if (updatedUser.imgurl == userData.imgurl
                 && updatedUser.username == userData.username 
                 && updatedUser.email == userData.email
@@ -84,12 +80,6 @@ export default function Account ({token, admin, currentUser}) {
             }else if (updatedPassword.password === ""){
                 delete updatedPassword.password;
             }else {
-                // console.log(updatedUser);
-                // console.log(updatedPassword);
-                console.log({
-                    ...updatedUser,
-                    ...updatedPassword
-                });
                 const response = await fetch(`${API}users/me`, {
                     method: "PATCH",
                     headers: {
