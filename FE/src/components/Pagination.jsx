@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
-import RecipeInfo from "./RecipeCard";
+import RecipeCard from "./RecipeCard";
 
-export default function Pagination({recipeList, currentRecipes, setCurrentRecipes, numberPerPage, admin, currentUser, token }){
+export default function Pagination({recipeList, currentRecipes, setCurrentRecipes, numberPerPage, admin, currentUser, token}){
     const [numberOfPages, setNumberofPages] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
 
@@ -36,7 +36,10 @@ export default function Pagination({recipeList, currentRecipes, setCurrentRecipe
 
     return( 
         <div>
-            <RecipeCard recipe={currentRecipes} admin={admin} currentUser={currentUser} token={token}/>
+            {currentRecipes.map(
+                (recipe)=> {
+                return <RecipeCard recipe={recipe} admin={admin} currentUser={currentUser} token={token}/>
+            })}
             <CreatePageButtons/>
         </div>)
 }
