@@ -30,7 +30,8 @@ export default function Recipes({token, currentUser, admin}) {
   useEffect(() => {
     const filter = recipes.filter((recipe) => {
       const { title, tags } = recipe;
-      const tagsList = tags.join("");
+      const name = tags.map((tag) => tag.name);
+      const tagsList = name.join("");
       const search = searchTerm.toLowerCase();
       return (
         title.toLowerCase().includes(search) ||
