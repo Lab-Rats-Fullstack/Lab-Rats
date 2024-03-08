@@ -134,10 +134,10 @@ export default function NewRecipe ({token, admin, currentUser}) {
                     </div>
                     <div className='itemContent'>
                         <Routes>
-                            <Route async path="/" element={<UserRecipes userData={userData} admin={admin}/>}/>
-                            <Route path="/recipes" element={<UserRecipes userData={userData} admin={admin} />}/>
-                            <Route path="/reviews" element={<UserReviews userData={userData} admin={admin} />}/>
-                            <Route path="/comments" element={<UserComments userData={userData} admin={admin} />}/>
+                            <Route async path="/" element={<UserRecipes userData={userData} admin={admin} currentUser={currentUser}/>}/>
+                            <Route path="/recipes" element={<UserRecipes userData={userData} admin={admin} currentUser={currentUser}/>}/>
+                            <Route path="/reviews" element={<UserReviews userData={userData} admin={admin} currentUser={currentUser}/>}/>
+                            <Route path="/comments" element={<UserComments userData={userData} admin={admin} currentUser={currentUser}/>}/>
                         </Routes>
                     </div>
                 </div>
