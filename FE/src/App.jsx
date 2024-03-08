@@ -20,7 +20,7 @@ function App() {
   return (
     <>
       <h1>Culinary Chronicle</h1>
-      <NavBar token={token} setToken={setToken} admin={admin} />
+      <NavBar token={token} setToken={setToken} admin={admin} setAdmin={setAdmin} setCurrentUser={setCurrentUser} />
       <main>
         <Routes>
           <Route path="/" element={<MainPage token={token} />}></Route>
@@ -30,7 +30,7 @@ function App() {
           ></Route>
           <Route
             path="/recipes/:recipeId"
-            element={<SingleRecipe token={token} admin={admin} />}
+            element={<SingleRecipe token={token} admin={admin} currentUser={currentUser} />}
           ></Route>
           <Route
             path="/recipes/:recipeId/edit"
@@ -71,7 +71,7 @@ function App() {
               />
             }
           ></Route>
-          <Route path="/admin" element={<Admin token={token} />}></Route>
+          <Route path="/admin" element={<Admin token={token} admin={admin} currentUser={currentUser}/>}></Route>
         </Routes>
       </main>
     </>

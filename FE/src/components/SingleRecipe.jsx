@@ -71,7 +71,6 @@ export default function SingleRecipe({ token, admin, currentUser }) {
             return review.userid === potentialRecipe.userId;
           }
         );
-        console.log(potentiallyAlreadyReviewed);
         if (potentiallyAlreadyReviewed) {
           setAlreadyReviewed(true);
         } else {
@@ -84,6 +83,7 @@ export default function SingleRecipe({ token, admin, currentUser }) {
         setErrMess(true);
       }
     }
+    console.log("currentUser:",currentUser);
     handleGetRecipeById();
   }, [refreshCounter]);
 
@@ -438,9 +438,9 @@ export default function SingleRecipe({ token, admin, currentUser }) {
           <div className="top">
             <h1>{recipe.title}</h1>
             {(recipe.user.username === currentUser) ?
-              <Link to={`/account`}>@{recipe.user.username}</Link>
+              <Link className='username' to={`/account`}>@{recipe.user.username}</Link>
               :
-              <Link to={`/users/${recipe.user.id}`}>@{recipe.user.username}</Link>
+              <Link className='username' to={`/users/${recipe.user.id}`}>@{recipe.user.username}</Link>
             }
             <div className="averageRating">
               {recipe.avgRating ? (
