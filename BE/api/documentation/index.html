@@ -3,9 +3,1630 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-one-dark@1.0.0/prism-onedark.min.css">
+    <link rel="stylesheet" href="styles.css">
     <title>API Documentation</title>
   </head>
   <body>
-    <h1>Hello Lab Rats</h1>
+    <header>
+      <nav>
+        <ul>
+          <li>
+            <a href="#users">USERS</a>
+            <ul>
+              <li>
+               <a href="#users-get">GET /</a> 
+              </li>
+              <li>
+                <a href="#users-register">POST /register</a>
+              </li>
+              <li>
+                <a href="#users-login">POST /login</a>
+              </li>
+              <li>
+                <a href="#users-me-get">GET /me</a>
+              </li>
+              <li>
+                <a href="#users-me-patch">PATCH /me</a>
+              </li>
+              <li>
+                <a href="#users-userId-get">GET /:userId
+              </li></a>
+            </ul> 
+          </li>
+          <li>
+            <a href="#recipes">RECIPES</a>
+            <ul>
+              <li><a href="#recipes-get">GET /</a></li>
+              <li><a href="#recipes-post">POST /</a></li>
+              <li><a href="#recipes-reviewed">GET /reviewedRecipes</a></li>
+              <li><a href="#recipes-recipeId-get">GET /:recipeId</a></li>
+              <li><a href="#recipes-recipeId-patch">PATCH /:recipeId</a></li>
+              <li><a href="#recipes-recipeId-delete">DELETE /:recipeId</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#reviews">REVIEWS</a>
+            <ul>
+              <li><a href="#review-post">POST /:recipeId</a></li>
+              <li><a href="#review-patch">PATCH /:reviewId</a></li>
+              <li><a href="#review-delete">DELETE /:reviewId</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#comments">COMMENTS</a>
+            <ul>
+              <li><a href="#comment-post">POST /:reviewId</a></li>
+              <li><a href="#comment-patch">PATCH /:commentId</a></li>
+              <li><a href="#comment-delete">DELETE /:commentId</a></li>
+            </ul>
+          </li>
+          <li>
+            <a href="#tags">TAGS</a>
+            <ul>
+              <li><a href="#tags-get-all">GET /</a></li>
+              <li><a href="#tags-get-recipes">GET /:tagName/recipes</a></li>
+            </ul>
+          </li>
+        </ul>
+      </nav>
+    </header>
+    <main>
+      <h1>API Documentation</h1>
+
+      <div id="users">
+        <h2>
+          USERS
+        </h2>
+        <div id="users-get">
+          <h3>GET /</h3>
+          <ul>
+            <li>
+              GET request for info on all user.
+            </li>
+            <li>
+              No parameters or authorization required.
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function getAllUsers() {
+  const allUsers = await fetch(`${APIURL}/api/users`);
+  return allUsers.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+  {
+    "users": [
+        {
+            "id": 1,
+            "email": "adminTest@gmail.com",
+            "username": "adminTest",
+            "name": "Admin Test",
+            "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+            "admin": true,
+            "reviewcount": 0
+        },
+        {
+            "id": 2,
+            "email": "userTest@gmail.com",
+            "username": "userTest",
+            "name": "User Test",
+            "imgurl": "https://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg",
+            "admin": false,
+            "reviewcount": 1
+        }
+    ]
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="users-register">
+          <h3>POST /register</h3>
+          <ul>
+            <li>
+              POST request for registering a new user.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>None</li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>username</li>
+                <li>name</li>
+                <li>email</li>
+                <li>password</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function registerUser(username, name, email, password) {
+  const newUser = await fetch(`${APIURL}/api/users`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      username,
+      name,
+      email,
+      password
+    })
+  })
+  return newUser.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+{
+    "message": "Thank you for signing up!",
+    "token": "token string here",
+    "admin": false,
+    "username": "ljreaux"
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="users-login">
+          <h3>POST /login</h3>
+          <ul>
+            <li>
+              POST request for logging in a user.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>None</li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>username</li>
+                <li>password</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function loginUser(username, password) {
+  const me = await fetch(`${APIURL}/api/users/login`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json'
+    },
+    body: JSON.stringify({
+      username,
+      password
+    })
+  });
+  return me.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+                {
+                  "message": "Successfully logged in!",
+                  "token": "token string here",
+                  "admin": false,
+                  "username": "ljreaux"
+              }
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="users-me-get">
+          <h3>GET /me</h3>
+          <ul>
+            <li>
+              GET request for getting your account information.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>Authorization with JWT</li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>None</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function getMyAccount(token) { 
+  const me = await fetch(`${APIURL}/api/users/me`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  return me.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+{
+  "id": 3,
+  "email": "larryreaux@gmail.com",
+  "username": "ljreaux",
+  "name": "Larry Reaux",
+  "imgurl": null,
+  "admin": false,
+  "reviewcount": 0,
+  "recipes": [],
+  "reviews": [],
+  "comments": []
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="users-me-patch">
+          <h3>PATCH /me</h3>
+          <ul>
+            <li>
+              PATCH request for your account info.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>Authentication with JWT.</li>
+              </ul>
+            </li>
+            <li>
+              Body: (all optional)
+              <ul>
+                <li>username</li>
+                <li>name</li>
+                <li>email</li>
+                <li>password</li>
+                <li>imgurl</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function updateMyAccount(token, username, name, email, password, imgurl) {
+  const me = await fetch(`${APIURL}/api/me`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      username,
+      name,
+      email,
+      password,
+      imgurl
+    })
+  });
+  return me.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+{
+    "id": 3,
+    "email": "larryreaux@gmail.com",
+    "username": "ljreaux",
+    "name": "Larry R",
+    "imgurl": null,
+    "admin": false,
+    "reviewcount": 0
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="users-userId-get">
+          <h3>GET /:userId</h3>
+          <ul>
+            <li>
+              GET request for another user's account info.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>Optional authentication with JWT and admin check.</li>
+              </ul>
+            </li>
+            <li>
+              Body: 
+              <ul>
+                <li>none</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request for user</h3>
+            <pre>
+              <code class="language-js">
+async function getUser(userId) {
+  const user = await fetch(`${APIURL}/api/users/${userId}`);
+  return user.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response for user</h3>
+            <pre>
+              <code class="language-js">
+  {
+    "id": 1,
+    "username": "adminTest",
+    "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+    "admin": true,
+    "reviewcount": 0,
+    "recipes": [
+        {
+            "id": 1,
+            "title": "Butter Chicken",
+            "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
+            "avgRating": 4,
+            "tags": [
+                {
+                    "id": 1,
+                    "name": "Main"
+                },
+                ...
+            ]
+        },
+        ...
+        {
+            "id": 13,
+            "title": "Fish and Chips",
+            "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/fish_and_chips?_a=BAMHUyRg0",
+            "avgRating": 0,
+            "tags": [
+                {
+                    "id": 1,
+                    "name": "Main"
+                },
+                {
+                    "id": 49,
+                    "name": "British"
+                },
+                {
+                    "id": 50,
+                    "name": "Seafood"
+                }
+            ]
+        }
+    ],
+    "reviews": [],
+    "comments": [
+        {
+            "id": 1,
+            "userid": 1,
+            "reviewid": 1,
+            "content": "thanks bruh",
+            "review": {
+                "id": 1,
+                "userid": 2,
+                "recipeid": 1,
+                "title": "wow",
+                "content": "this is cool",
+                "rating": 4,
+                "user": {
+                    "id": 2,
+                    "username": "userTest",
+                    "imgurl": "https://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg"
+                },
+                "recipe": {
+                    "id": 1,
+                    "userid": 1,
+                    "title": "Butter Chicken",
+                    "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
+                    "avgRating": 4,
+                    "tags": [
+                        {
+                            "id": 1,
+                            "name": "Main"
+                        },
+                        ...
+                    ],
+                    "user": {
+                        "id": 1,
+                        "username": "adminTest",
+                        "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png"
+                    }
+                }
+            }
+        }
+    ]
+}
+              </code>
+            </pre>
+          </div>
+          <div class="request">
+            <h3>Sample Request for admin</h3>
+            <pre>
+              <code class="language-js">
+async function adminUserRequest(userId, token){
+  const user = await fetch(`${APIURL}/api/users/${userId}`,
+  {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  }
+  );
+  return user.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response for admin</h3>
+            <pre>
+              <code class="language-js">
+  {
+    "id": 1,
+    "email": "adminTest@gmail.com",
+    "username": "adminTest",
+    "name": "Admin Test",
+    "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+    "admin": true,
+    "reviewcount": 0,
+    "recipes": [
+        {
+            "id": 1,
+            "title": "Butter Chicken",
+            "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
+            "avgRating": 4,
+            "tags": [
+                {
+                    "id": 1,
+                    "name": "Main"
+                },
+                ...
+            ]
+        },
+        ...
+        {
+            "id": 13,
+            "title": "Fish and Chips",
+            "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/fish_and_chips?_a=BAMHUyRg0",
+            "avgRating": 0,
+            "tags": [
+                {
+                    "id": 1,
+                    "name": "Main"
+                },
+                {
+                    "id": 49,
+                    "name": "British"
+                },
+                {
+                    "id": 50,
+                    "name": "Seafood"
+                }
+            ]
+        }
+    ],
+    "reviews": [],
+    "comments": [
+        {
+            "id": 1,
+            "userid": 1,
+            "reviewid": 1,
+            "content": "thanks bruh",
+            "review": {
+                "id": 1,
+                "userid": 2,
+                "recipeid": 1,
+                "title": "wow",
+                "content": "this is cool",
+                "rating": 4,
+                "user": {
+                    "id": 2,
+                    "username": "userTest",
+                    "imgurl": "https://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg"
+                },
+                "recipe": {
+                    "id": 1,
+                    "userid": 1,
+                    "title": "Butter Chicken",
+                    "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
+                    "avgRating": 4,
+                    "tags": [
+                        {
+                            "id": 1,
+                            "name": "Main"
+                        },
+                        ...
+                    ],
+                    "user": {
+                        "id": 1,
+                        "username": "adminTest",
+                        "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png"
+                    }
+                }
+            }
+        }
+    ]
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="recipes">
+        <h2>
+          RECIPES
+        </h2>
+        <div id="recipes-get">
+          <h3>GET /</h3>
+          <ul>
+            <li>
+              GET request for info on all recipes.
+            </li>
+            <li>
+              No parameters or authorization required.
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function getRecipes() {
+  const recipes = await fetch(`${APIURL}/api/recipes`);
+  return recipes.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+[
+    {
+        "id": 1,
+        "userid": 1,
+        "title": "Butter Chicken",
+        "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
+        "avgRating": 4,
+        "tags": [
+            {
+                "id": 1,
+                "name": "Main"
+            },
+            {
+                "id": 2,
+                "name": "Curry"
+            },
+            {
+                "id": 3,
+                "name": "Chicken"
+            },
+            {
+                "id": 4,
+                "name": "Rice"
+            },
+            {
+                "id": 5,
+                "name": "Indian"
+            }
+        ],
+        "user": {
+            "id": 1,
+            "username": "adminTest",
+            "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png"
+        }
+    },
+    ...
+    {
+      "id": 13,
+      "userid": 1,
+      "title": "Fish and Chips",
+      "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/fish_and_chips?_a=BAMHUyRg0",
+      "avgRating": 0,
+      "tags": [
+          {
+              "id": 1,
+              "name": "Main"
+          },
+          {
+              "id": 49,
+              "name": "British"
+          },
+          {
+              "id": 50,
+              "name": "Seafood"
+          }
+      ],
+      "user": {
+          "id": 1,
+          "username": "adminTest",
+          "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png"
+      }
+  }
+]
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="recipes-post">
+            <h3>POST /</h3>
+            <ul>
+              <li>
+                POST request for a new recipe.
+              </li>
+              <li>
+                Headers:
+                <ul>
+                  <li>Authorization with JWT, admin role required.</li>
+                </ul>
+              </li>
+              <li>
+                Body:
+                <ul>
+                  <li>title</li>
+                  <li>ingredients (array)</li>
+                  <li>procedure (array)</li>
+                  <li>imgUrl</li>
+                  <li>notes (array, optional)</li>
+                  <li>tags (array, optional)</li>
+                </ul>
+              </li>
+            </ul>
+            <div class="request">
+              <h3>Sample Request</h3>
+              <pre>
+                <code class="language-js">
+async function createRecipe(token, title, ingredients, procedure, imgUrl, notes, tags) {
+  const recipe = await fetch(`${APIURL}/api/recipes`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      title,
+      ingredients,
+      procedure,
+      imgUrl,
+      notes,
+      tags
+    })
+  });
+  return recipe.json();
+}
+                </code>
+              </pre>
+            </div>
+            <div class="response">
+              <h3>Sample Response</h3>
+              <pre>
+                <code class="language-js">
+  {
+    "id": 14,
+    "userid": 1,
+    "title": "Test Recipe",
+    "ingredients": [
+        "bourbon",
+        "pepper",
+        "sprinkles"
+    ],
+    "procedure": [
+        "put stuff in pan",
+        "heat"
+    ],
+    "notes": [
+        "please don't try this."
+    ],
+    "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/v1709766661/eol9jztzwxxha6g5rezm.png",
+    "avgRating": 0,
+    "tags": [],
+    "reviews": [],
+    "user": {
+        "id": 1,
+        "username": "adminTest",
+        "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+        "admin": true,
+        "reviewcount": 0
+    }
+}
+                </code>
+              </pre>
+            </div>
+        </div>
+        <div id="recipes-reviewed">
+          <h3>GET /reviewedRecipes</h3>
+          <ul>
+            <li>
+              GET request for info on all reviewed recipes.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>
+                  Authorization with JWT, admin role required.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body: 
+              <ul>
+                <li>
+                  None.
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function getReviewedRecipes(token) {
+  const recipes = await fetch(`${APIURL}/api/recipes/reviewedRecipes`, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  return recipes.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+[
+    {
+        "id": 1,
+        "userid": 1,
+        "title": "Butter Chicken",
+        "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
+        "avgRating": 4,
+        "tags": [
+            {
+                "id": 1,
+                "name": "Main"
+            },
+            {
+                "id": 2,
+                "name": "Curry"
+            },
+            {
+                "id": 3,
+                "name": "Chicken"
+            },
+            {
+                "id": 4,
+                "name": "Rice"
+            },
+            {
+                "id": 5,
+                "name": "Indian"
+            }
+        ],
+        "user": {
+            "id": 1,
+            "username": "adminTest",
+            "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png"
+        }
+    }
+]
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="recipes-recipeId-get">
+          <h3>GET /:recipeId</h3>
+          <ul>
+            <li>
+              GET request for info on a specific recipe.
+            </li>
+            <li>
+              No parameters or authorization required.
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function getRecipe(recipeId) {
+  const recipe = await fetch(`${APIURL}/api/recipes/${recipeId}`);
+  return recipe.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+  {
+    "userId": 1,
+    "recipe": {
+        "id": 3,
+        "userid": 1,
+        "title": "Buffalo Chicken Sandwich",
+        "ingredients": [
+            "4 Chicken Thighs",
+            "1 cup Flour",
+            "1 Egg",
+            "1 cup Buttermilk",
+            "1 package of Panko Breadcrumbs",
+            "Spices of your own choice",
+            "Peanut oil for frying",
+            "1 cup Frank's Red Hot",
+            "2-4 tbsp Butter",
+            "1 dash Worcestershire Sauce",
+            "1 dash Honey",
+            "Blue Cheese Dressing to Taste",
+            "Pickled Peppers and Onions to Taste",
+            "4 Brioche Buns"
+        ],
+        "procedure": [
+            "Mix the buttermilk, egg, and spices of your own choice into a large bowl and add chicken thighs to marinate. Leave for at least 30 minutes, but up to overnight.",
+            "While the chicken is marinating, mix the flour with spices in a separate bowl. Set up a third bowl with your panko.",
+            "Heat your oil to 350°F and move your chicken fries from the buttermilk, into the flour, back into the buttermilk, and finally into the panko.",
+            "When your oil is ready, add your chicken to the oil and fry to golden brown.",
+            "While your chicken is cooking, add the Frank's Red Hot and butter to a separate pan to melt the butter. Stir in the honey and worcestershire sauce.",
+            "Once your chicken is cooked, place on a paper towel lined plate or a wire rack while you toast your brioche buns.",
+            "Once your buns are toasted coat your chicken in the sauce and quickly assemble your sandwich with the pickled onions and peppers and blue cheese sauce.",
+            "Enjoy with french fries."
+        ],
+        "notes": [],
+        "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/buffalo_chicken_sandwhich?_a=BAMHUyRg0",
+        "avgRating": 0,
+        "tags": [
+            {
+                "id": 1,
+                "name": "Main"
+            },
+            {
+                "id": 3,
+                "name": "Chicken"
+            },
+            {
+                "id": 6,
+                "name": "Sandwiches"
+            },
+            {
+                "id": 8,
+                "name": "American"
+            },
+            {
+                "id": 10,
+                "name": "Lunch"
+            }
+        ],
+        "reviews": [],
+        "user": {
+            "id": 1,
+            "username": "adminTest",
+            "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+            "admin": true,
+            "reviewcount": 0
+        }
+    }
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="recipes-recipeId-patch">
+          <h3>PATCH /:recipeId</h3>
+          <ul>
+            <li>
+              PATCH request for a specific recipe.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>
+                  Authorization with JWT, admin role required.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body: (All optional)
+              <ul>
+                <li>title</li>
+                <li>ingredients (array)</li>
+                <li>procedure (array)</li>
+                <li>imgUrl</li>
+                <li>notes (array, optional)</li>
+                <li>tags (array, optional)</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function patchRecipe(recipeId, token, title, ingredients, procedure, imgUrl, notes, tags) {
+  const recipe = await fetch(`${APIURL}/api/recipes/${recipeId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      title,
+      ingredients,
+      procedure,
+      imgUrl,
+      notes,
+      tags
+    })
+  });
+  return recipe.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+  {
+    "id": 14,
+    "userid": 1,
+    "title": "Test Recipe",
+    "ingredients": [
+        "bourbon",
+        "pepper",
+        "not sprinkles"
+    ],
+    "procedure": [
+        "put stuff in pan",
+        "heat"
+    ],
+    "notes": [
+        "please don't try this."
+    ],
+    "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/v1709766661/eol9jztzwxxha6g5rezm.png",
+    "avgRating": 0,
+    "tags": [],
+    "reviews": [],
+    "user": {
+        "id": 1,
+        "username": "adminTest",
+        "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+        "admin": true,
+        "reviewcount": 0
+    }
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="recipes-recipeId-delete">
+          <h3>DELETE /:recipeId</h3>
+          <ul>
+            <li>
+              DELETE request for a specific recipe.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>
+                  Authorization with JWT, admin role required.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>None.</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function deleteRecipe(recipeId, token) {
+  const recipe = await fetch(`${APIURL}/api/recipes/${recipeId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  return recipe.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+{
+    "name": "DeleteConfirmation",
+    "message": "Test Recipe has been deleted."
+}
+                </code>
+            </pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="reviews">
+        <h2>REVIEWS</h2>
+        <div id="review-post">
+          <h3>
+           POST /:recipeId
+          </h3>
+          <ul>
+            <li>POST request for a new Review.</li>
+            <li>Headers: 
+              <ul>
+                <li>
+                  Authentication with JWT.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>content</li>
+                <li>rating</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function postReview(recipeId, token, content, rating) {
+  const review = await fetch(`${APIURL}/api/reviews/${recipeId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      title,
+      content,
+      rating
+    })
+  });
+  return review.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+{
+    "id": 10,
+    "userid": 1,
+    "recipeid": 8,
+    "title": "Awesome Recipe",
+    "content": "This recipe is awesome",
+    "rating": 5,
+    "comments": [],
+    "user": {
+        "id": 1,
+        "username": "adminTest",
+        "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+        "admin": true,
+        "reviewcount": 1
+    }
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="review-patch">
+          <h3>
+            PATCH /:reviewId
+          </h3>
+          <ul>
+            <li>PATCH request for a single review.</li>
+            <li>
+              Headers:
+              <ul>
+                <li>
+                  Authentication with JWT.
+                </li>
+                <li>
+                  Checks for authorized user or admin.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body: (optional)
+              <ul>
+                <li>content</li>
+                <li>rating</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Authorized User/Admin Request</h3>
+            <pre>
+              <code class="language-js">
+async function patchReview(reviewId, token, content, rating) {
+  const review = await fetch(`${APIURL}/api/reviews/${reviewId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      content,
+      rating
+    })
+  });
+  return review.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+{
+    "id": 10,
+    "userid": 1,
+    "recipeid": 8,
+    "title": "Awesome Recipe",
+    "content": "This recipe is awesome",
+    "rating": 4,
+    "comments": [],
+    "user": {
+        "id": 1,
+        "username": "adminTest",
+        "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+        "admin": true,
+        "reviewcount": 1
+    }
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Unauthorized Response</h3>
+            <pre>
+              <code class="language-js">
+{
+    "name": "WrongUserError",
+    "message": "You cannot edit a review that is not yours."
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="review-delete">
+          <h3>
+            DELETE /:reviewId
+          </h3>
+          <ul>
+            <li>DELETE request for a single review.</li>
+            <li>
+              Headers:
+              <ul>
+                <li>
+                  Authentication with JWT.
+                </li>
+                <li>
+                  Checks for authorized user or admin.
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Authorized User/Admin Request</h3>
+            <pre>
+              <code class="language-js">
+async function deleteReview(reviewId, token) {
+  const review = await fetch(`${APIURL}/api/reviews/${reviewId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  return review.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+{
+    "name": "DeleteConfirmation",
+    "message": "The review from adminTest has been deleted."
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Unauthorized Response</h3>
+            <pre>
+              <code class="language-js">
+{
+  name: "WrongUserError",
+  message: "You cannot delete a review that is not yours.",
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+      </div>
+
+      <div id="comments">
+        <h2>COMMENTS</h2>
+        <div id="comment-post">
+          <h3>
+           POST /:reviewId
+          </h3>
+          <ul>
+            <li>
+              POST request for a new Comment.
+            </li>
+            <li>Headers: 
+              <ul>
+                <li>
+                  Authentication with JWT.
+                </li>
+                <li>
+                  Only one per user.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>content</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function postComment(reviewId, token, content) {
+  const comment = await fetch(`${APIURL}/api/comments/${reviewId}`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      content
+    })
+  });
+  return comment.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+{
+    "id": 3,
+    "userid": 1,
+    "reviewid": 10,
+    "content": "I agree!!",
+    "user": {
+        "id": 1,
+        "username": "adminTest",
+        "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+        "admin": true,
+        "reviewcount": 1
+    }
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="comment-patch">
+          <h3>
+            PATCH /:commentId
+          </h3>
+          <ul>
+            <li>PATCH request for a single comment.</li>
+            <li>
+              Headers:
+              <ul>
+                <li>
+                  Authentication with JWT.
+                </li>
+                <li>
+                  Checks for authorized user or admin.
+                </li>
+              </ul>
+            </li>
+            <li>
+              Body: (optional)
+              <ul>
+                <li>content</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Authorized User/Admin Request</h3>
+            <pre>
+              <code class="language-js">
+async function patchComment(commentId, token, content) {
+  const comment = await fetch(`${APIURL}/api/comments/${commentId}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    },
+    body: JSON.stringify({
+      content
+    })
+  });
+return comment.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+{
+    "id": 3,
+    "userid": 1,
+    "reviewid": 10,
+    "content": "I agree!",
+    "user": {
+        "id": 1,
+        "username": "adminTest",
+        "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+        "admin": true,
+        "reviewcount": 1
+    }
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Unauthorized Response</h3>
+            <pre>
+              <code class="language-js">
+{
+    "name": "WrongUserError",
+    "message": "You cannot edit a review that is not yours."
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="comment-delete">
+          <h3>
+            DELETE /:commentId
+          </h3>
+          <ul>
+            <li>DELETE request for a single comment.</li>
+            <li>
+              Headers:
+              <ul>
+                <li>
+                  Authentication with JWT.
+                </li>
+                <li>
+                  Checks for authorized user or admin.
+                </li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Authorized User/Admin Request</h3>
+            <pre>
+              <code class="language-js">
+async function deleteComment(commentId, token) {
+  const comment = await fetch(`${APIURL}/api/comments/${commentId}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  return comment.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+{
+    "name": "DeleteConfirmation",
+    "message": "The comment from adminTest has been deleted."
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Unauthorized Response</h3>
+            <pre>
+              <code class="language-js">
+{
+    "name": "WrongUserError",
+    "message": "You cannot delete a comment that is not yours."
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+      </div>
+        
+      <div id="tags">
+        <h2>TAGS</h2>
+        <div id="tags-get-all">
+          <h3>GET /</h3>
+          <ul>
+            <li>
+              GET request for info on all tags.
+            </li>
+            <li>
+              No parameters or authorization required.
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function getAllTags() {
+  const tags = await fetch(`${APIURL}/api/tags`);
+  return tags.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+{
+  "rows": [
+      {
+          "id": 1,
+          "name": "Main"
+      },
+      ...
+      {
+          "id": 53,
+          "name": "Pork"
+      },
+      {
+          "id": 54,
+          "name": "Poultry"
+      }
+  ]
+}
+              </code>
+            </pre>
+          </div>
+        </div>
+        <div id="tags-get-one">
+          <h3>GET /:tagName/recipes</h3>
+          <ul>
+            <li>
+              GET request for info recipes with a given tag.
+            </li>
+            <li>
+              No parameters or authorization required.
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function getRecipesByTag(tagName) {
+  const recipes = await fetch(`${APIURL}/api/tags/${tagName}/recipes`);
+  return recipes.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+[
+    {
+        "id": 10,
+        "userid": 1,
+        "title": "Naan",
+        "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/naan?_a=BAMHUyRg0",
+        "avgRating": 0,
+        "tags": [
+            {
+                "id": 5,
+                "name": "Indian"
+            },
+            {
+                "id": 27,
+                "name": "Yeast"
+            },
+            {
+                "id": 28,
+                "name": "Grain"
+            },
+            {
+                "id": 29,
+                "name": "Bread"
+            },
+            {
+                "id": 33,
+                "name": "Side"
+            }
+        ],
+        "user": {
+            "id": 1,
+            "username": "adminTest",
+            "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png"
+        }
+    }
+]
+              </code>
+            </pre>
+          </div>
+        </div>
+      </div>
+
+    </main>
   </body>
 </html>

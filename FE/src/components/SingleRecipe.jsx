@@ -1,9 +1,9 @@
 import { useState, useEffect, useInsertionEffect } from "react";
 import AverageStars from "./AverageStars";
 import BinderRings from "./BinderRings";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams, useNavigate, Link } from "react-router-dom";
 
-export default function SingleRecipe({ token, admin }) {
+export default function SingleRecipe({ token, admin, currentUser }) {
   const API_URL = `http://localhost:3000/api/`;
   const navigate = useNavigate();
   const { recipeId } = useParams();
@@ -71,7 +71,6 @@ export default function SingleRecipe({ token, admin }) {
             return review.userid === potentialRecipe.userId;
           }
         );
-        console.log(potentiallyAlreadyReviewed);
         if (potentiallyAlreadyReviewed) {
           setAlreadyReviewed(true);
         } else {
@@ -84,6 +83,7 @@ export default function SingleRecipe({ token, admin }) {
         setErrMess(true);
       }
     }
+    console.log("currentUser:",currentUser);
     handleGetRecipeById();
   }, [refreshCounter]);
 
@@ -437,7 +437,11 @@ export default function SingleRecipe({ token, admin }) {
         <div className="singleRecipeCard">
           <div className="top">
             <h1>{recipe.title}</h1>
-            <h5>@{recipe.user.username}</h5>
+            {(recipe.user.username === currentUser) ?
+              <Link className='username' to={`/account`}>@{recipe.user.username}</Link>
+              :
+              <Link className='username' to={`/users/${recipe.user.id}`}>@{recipe.user.username}</Link>
+            }
             <div className="averageRating">
               {recipe.avgRating ? (
                 <AverageStars starAverage={recipe.avgRating} />
@@ -472,7 +476,7 @@ export default function SingleRecipe({ token, admin }) {
                 )}
               </div>
             )}
-            <div>
+            <div className="singleRecipeTags">
               {recipe.tags.map((tag) => {
                 return (
                   <p key={tag.id}>
@@ -538,7 +542,11 @@ export default function SingleRecipe({ token, admin }) {
                   return (
                     <div key={review.id}>
                       <h3>{review.title}</h3>
-                      <h5>By @{review.user.username}</h5>
+                      {(review.user.username === currentUser) ?
+                        <Link to={`/account`}>@{review.user.username}</Link>
+                      :
+                        <Link to={`/users/${review.user.id}`}>@{review.user.username}</Link>
+                      }
                       <p>Rating: {review.rating}</p>
                       <p>{review.content}</p>
                       {token && (
@@ -644,7 +652,11 @@ export default function SingleRecipe({ token, admin }) {
                             return (
                               <div key={comment.id}>
                                 <p>{comment.content}</p>
-                                <h5>By @{comment.user.username}</h5>
+                                {(comment.user.username === currentUser) ?
+                                   <Link to={`/account`}>@{comment.user.username}</Link>
+                                :
+                                   <Link to={`/users/${comment.user.id}`}>@{comment.user.username}</Link>
+                                }
                                 {token && (
                                   <>
                                     {(comment.userid === userId || admin) && (
