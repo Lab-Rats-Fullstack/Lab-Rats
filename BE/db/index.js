@@ -295,8 +295,11 @@ async function getRecipeById(recipeId) {
     );
 
     const reviews = await getReviewsByRecipe(recipeId);
-  
-      const { rows: [user] } = await client.query(`
+
+    const {
+      rows: [user],
+    } = await client.query(
+      `
         SELECT id, email, username, name, imgUrl, admin, reviewCount
         FROM users
         WHERE id=$1;
@@ -343,7 +346,7 @@ async function getUserPageRecipeById(recipeId) {
       rows: [recipeInfo],
     } = await client.query(
       `
-      SELECT id, title, imgUrl
+      SELECT id, title, imgUrl, esttime
       FROM recipes
       WHERE id=$1;
     `,
@@ -378,7 +381,7 @@ async function getOtherPageRecipeById(recipeId) {
       rows: [recipeInfo],
     } = await client.query(
       `
-      SELECT id, userId, title, imgUrl
+      SELECT id, userId, title, imgUrl, esttime
       FROM recipes
       WHERE id=$1;
     `,
@@ -546,17 +549,18 @@ async function createRecipe({
   imgUrl,
   notes = [],
   tags = [],
+  esttime = "",
 }) {
   try {
     const {
       rows: [recipe],
     } = await client.query(
       `
-      INSERT INTO recipes(userId, title, ingredients, procedure, imgUrl, notes) 
-      VALUES($1, $2, $3, $4, $5, $6)
+      INSERT INTO recipes(userId, title, ingredients, procedure, imgUrl, notes, esttime) 
+      VALUES($1, $2, $3, $4, $5, $6, $7)
       RETURNING *;
     `,
-      [userId, title, ingredients, procedure, imgUrl, notes]
+      [userId, title, ingredients, procedure, imgUrl, notes, esttime]
     );
 
     const tagList = await createTags(tags);
@@ -833,7 +837,10 @@ async function getReviewInfoById(reviewId) {
 //GET USER PAGE REVIEW BY ID
 async function getUserPageReviewById(reviewId) {
   try {
-    const {rows: [reviewInfo]} = await client.query(`
+    const {
+      rows: [reviewInfo],
+    } = await client.query(
+      `
       SELECT id, recipeId, title, content, rating
       FROM reviews
       WHERE id=$1;
@@ -845,7 +852,7 @@ async function getUserPageReviewById(reviewId) {
       rows: [recipeInfo],
     } = await client.query(
       `
-      SELECT id, userId, title, imgUrl
+      SELECT id, userId, title, imgUrl, esttime
       FROM recipes
       WHERE id=$1;
     `,
@@ -903,8 +910,10 @@ async function getReviewById(reviewId) {
 
     const comments = await getCommentsByReview(reviewId);
 
-
-        const { rows: [user] } = await client.query(`
+    const {
+      rows: [user],
+    } = await client.query(
+      `
         SELECT id, email, username, name, imgUrl, admin, reviewCount
         FROM users
         WHERE id=$1;
@@ -982,19 +991,18 @@ async function getAllReviews() {
 
 // CREATE REVIEW IN DB
 
-async function createReview({
-  userId,
-  recipeId,
-  title,
-  content,
-  rating
-}) {
+async function createReview({ userId, recipeId, title, content, rating }) {
   try {
-    const { rows: [ review ] } = await client.query(`
+    const {
+      rows: [review],
+    } = await client.query(
+      `
       INSERT INTO reviews(userId, recipeId, title, content, rating) 
       VALUES($1, $2, $3, $4, $5)
       RETURNING *;
-    `, [userId, recipeId, title, content, rating]);
+    `,
+      [userId, recipeId, title, content, rating]
+    );
 
     await client.query(`
       UPDATE users
@@ -1057,13 +1065,17 @@ async function destroyReviewById(reviewId) {
       );
     }
 
-    await client.query(`
+    await client.query(
+      `
       UPDATE users
       SET reviewCount = reviewCount - 1
       WHERE id=$1;
-    `, [destroyedReview.userid]);
+    `,
+      [destroyedReview.userid]
+    );
 
-    await client.query(`
+    await client.query(
+      `
         DELETE FROM reviews
         WHERE id = $1
     `,
@@ -1140,7 +1152,7 @@ async function getUserPageCommentById(commentId) {
       rows: [recipeInfo],
     } = await client.query(
       `
-      SELECT id, userId, title, imgUrl
+      SELECT id, userId, title, imgUrl, esttime
       FROM recipes
       WHERE id=$1;
     `,
@@ -1200,8 +1212,10 @@ async function getCommentById(commentId) {
   try {
     const comment = await getCommentInfoById(commentId);
 
-
-      const { rows: [user] } = await client.query(`
+    const {
+      rows: [user],
+    } = await client.query(
+      `
       SELECT id, email, username, name, imgUrl, admin, reviewCount
       FROM users
       WHERE id=$1;

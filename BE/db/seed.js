@@ -75,7 +75,8 @@ async function createTables() {
           ingredients TEXT[] NOT NULL,
           procedure TEXT[] NOT NULL,
           notes TEXT[],
-          imgUrl varchar(255)
+          imgUrl varchar(255),
+          esttime varchar(255)
         );
   
         CREATE TABLE tags (
@@ -153,7 +154,7 @@ async function createInitialRecipes() {
     await createRecipe({
       userId: adminTest.id,
       title: "Butter Chicken",
-      estimatedTime: "1 hour",
+      esttime: "1 hour",
       ingredients: [
         "1.5 lbs Chicken Thighs",
         "1 cup Full-Fat Yogurt",
@@ -191,7 +192,7 @@ async function createInitialRecipes() {
     await createRecipe({
       userId: adminTest.id,
       title: "Chicken and Sausage Gumbo",
-      estimatedTime: "4-5 hours",
+      esttime: "4-5 hours",
       ingredients: [
         "1 Onion, Finely Diced",
         "1 Bell Pepper, Finely Diced",
@@ -229,7 +230,7 @@ async function createInitialRecipes() {
     await createRecipe({
       userId: adminTest.id,
       title: "Buffalo Chicken Sandwich",
-      estimatedTime: "1 hour",
+      esttime: "1 hour",
       ingredients: [
         "4 Chicken Thighs",
         "1 cup Flour",
@@ -735,7 +736,7 @@ async function testDB() {
     });
     console.log("Result:", updateRecipeResult);*/
 
-   /* console.log("Calling updateRecipe on recipes[1], only updating tags");
+    /* console.log("Calling updateRecipe on recipes[1], only updating tags");
     const updateRecipeTagsResult = await updateRecipe(recipes[1].id, {
       tags: ["Soup/Stews", "Pork", "Poultry", "American"],
     });
@@ -745,7 +746,7 @@ async function testDB() {
     const reviews = await getAllReviews();
     console.log("Result:", reviews);
 
-   /* console.log("Calling updateReview on reviews[0]");
+    /* console.log("Calling updateReview on reviews[0]");
     const updateReviewResult = await updateReview(reviews[0].id, {
       content: "This is cool 2",
     });
