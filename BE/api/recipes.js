@@ -20,10 +20,10 @@ recipesRouter.get("/", async (req, res, next) => {
   }
 });
 
-recipesRouter.post("/", requireAdmin, async (req, res, next) => {
+recipesRouter.post("/", requireUser, async (req, res, next) => {
   const { id: userId } = req.user;
   const { body } = req;
-  // requireAdmin eventually
+
   const recipe = { ...body, userId };
   try {
     const newRecipe = await createRecipe(recipe);
@@ -34,7 +34,6 @@ recipesRouter.post("/", requireAdmin, async (req, res, next) => {
 });
 
 recipesRouter.get("/reviewedRecipes", requireAdmin, async (req, res, next) => {
-  // requireAdmin eventually
   try {
     const reviewedRecipes = await getReviewedRecipesPage();
     res.send(reviewedRecipes);
@@ -46,7 +45,7 @@ recipesRouter.get("/reviewedRecipes", requireAdmin, async (req, res, next) => {
 recipesRouter.get("/:recipeId", async (req, res, next) => {
   const { recipeId } = req.params;
   let userId = null;
-  if (req.user){
+  if (req.user) {
     userId = req.user.id;
   }
 
@@ -54,18 +53,26 @@ recipesRouter.get("/:recipeId", async (req, res, next) => {
     const recipe = await getRecipeById(recipeId);
     const response = {
       userId,
-      recipe
-    }
+      recipe,
+    };
     res.send(response);
   } catch (err) {
     next(err);
   }
 });
 
-recipesRouter.patch("/:recipeId", requireAdmin, async (req, res, next) => {
+recipesRouter.patch("/:recipeId", requireUser, async (req, res, next) => {
   const { recipeId } = req.params;
   const { body: fields } = req;
-  // requireAdmin eventually
+
+  const admin = checkAdmin(req.user);
+  const { userid } = await getRecipeById(recipeId);
+  if (id != userid && !admin) {
+    next({
+      name: "WrongUserError",
+      message: "You cannot edit a recipe that is not yours.",
+    });
+  }
   try {
     const updatedRecipe = await updateRecipe(recipeId, fields);
     res.send(updatedRecipe);
@@ -76,10 +83,22 @@ recipesRouter.patch("/:recipeId", requireAdmin, async (req, res, next) => {
 
 recipesRouter.delete("/:recipeId", requireAdmin, async (req, res, next) => {
   const { recipeId } = req.params;
-  // requireAdmin eventually
+
+  const admin = checkAdmin(req.user);
+  const { userid } = await getRecipeById(recipeId);
+  if (id != userid && !admin) {
+    next({
+      name: "WrongUserError",
+      message: "You cannot delete a recipe that is not yours.",
+    });
+  }
+
   try {
     const destroyedRecipe = await destroyRecipeById(recipeId);
-    res.send({name: "DeleteConfirmation", message: `${destroyedRecipe.title} has been deleted.`});
+    res.send({
+      name: "DeleteConfirmation",
+      message: `${destroyedRecipe.title} has been deleted.`,
+    });
   } catch (err) {
     next(err);
   }
