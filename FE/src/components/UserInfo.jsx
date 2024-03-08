@@ -11,7 +11,7 @@ export default function UserInfo({ token, admin, userData }) {
         alt={`User account image for ${userData.username}`}
       />
       <p className="usersUsername">{userData.username}</p>
-      {token !== null && (
+      {token !== null && admin === true && (
         <div className="userPersonal">
           <p>Name: {userData.name}</p>
           <p>Email: {userData.email}</p>
