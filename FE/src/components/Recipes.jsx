@@ -4,7 +4,7 @@ import RecipeCard from './RecipeCard';
 
 
 export default function Recipes({token, currentUser, admin}) {
-  const API = 'https://culinary-chronicle.onrender.com/api/';
+  const API = 'http://localhost:3000/api/';
   const [recipes, setRecipes] = useState([]);
 
   const [filteredRecipes, setFilteredRecipes] = useState(recipes);
