@@ -392,9 +392,12 @@ async function getUserPageRecipeById(recipeId) {
       [recipeId]
     );
 
+    const avgRating = await getAverageRating(recipeId);
+
     const recipeObject = {
       ...recipeInfo,
       tags: tags,
+      avgRating: avgRating
     };
 
     return recipeObject;
@@ -438,10 +441,13 @@ async function getOtherPageRecipeById(recipeId) {
       [recipeInfo.userid]
     );
 
+    const avgRating = await getAverageRating(recipeId);
+
     const recipeObject = {
       ...recipeInfo,
       tags: tags,
       user: userInfo,
+      avgRating: avgRating
     };
 
     return recipeObject;
