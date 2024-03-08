@@ -248,6 +248,32 @@ async function getUserPageById(userId) {
   }
 }
 
+async function getPublicUserPageById(userId) {
+  try {
+    const {
+      rows: [userInfo],
+    } = await client.query(`
+      SELECT id, username, imgUrl, admin, reviewCount
+      FROM users
+      WHERE id=${userId}
+    `);
+    const recipes = await getUserPageRecipesByUser(userId);
+    const reviews = await getUserPageReviewsByUser(userId);
+    const comments = await getUserPageCommentsByUser(userId);
+
+    const userObject = {
+      ...userInfo,
+      recipes: recipes,
+      reviews: reviews,
+      comments: comments,
+    };
+
+    return userObject;
+  } catch (error) {
+    throw error;
+  }
+}
+
 /**
  * RECIPES Methods
  */
