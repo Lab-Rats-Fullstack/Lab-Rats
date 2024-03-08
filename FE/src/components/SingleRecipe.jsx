@@ -71,6 +71,7 @@ export default function SingleRecipe({ token, admin, currentUser }) {
             return review.userid === potentialRecipe.userId;
           }
         );
+
         if (potentiallyAlreadyReviewed) {
           setAlreadyReviewed(true);
         } else {
@@ -83,7 +84,6 @@ export default function SingleRecipe({ token, admin, currentUser }) {
         setErrMess(true);
       }
     }
-    console.log("currentUser:",currentUser);
     handleGetRecipeById();
   }, [refreshCounter]);
 

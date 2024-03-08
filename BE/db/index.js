@@ -333,11 +333,14 @@ async function getRecipeById(recipeId) {
       [recipe.userid]
     );
 
+    const avgRating = await getAverageRating(recipeId);
+
     const recipeObject = {
       ...recipe,
       tags: tags,
       reviews: reviews,
       user: user,
+      avgRating: avgRating
     };
 
     return recipeObject;
@@ -837,6 +840,35 @@ async function createRecipeTag(recipeId, tagId) {
  * REVIEWS Methods
  */
 
+async function getAverageRating(recipeId){
+  try{
+    const {rows: ratings} = await client.query(`
+      SELECT rating
+      FROM reviews
+      WHERE recipeId=$1;
+    `, [recipeId]);
+
+    let ratingsSum = 0;
+    let avgRating;
+
+    if (!ratings.length || ratings.length == 0){
+      avgRating = 0;
+    } else {
+      ratings.forEach((rating)=>{
+        ratingsSum = ratingsSum + rating.rating;
+      });
+
+      avgRating = Math.round((ratingsSum / ratings.length) * 10) / 10;
+    }
+
+    return avgRating;
+
+  } catch (error){
+    throw (error);
+  }
+}
+
+
 //GET REVIEW INFO BY ID IN DB
 async function getReviewInfoById(reviewId) {
   try {
@@ -984,7 +1016,7 @@ async function getReviewsByRecipe(recipeId) {
     const { rows: reviewIds } = await client.query(`
         SELECT id 
         FROM reviews
-        WHERE userId=${recipeId};
+        WHERE recipeId=${recipeId};
       `);
 
     const reviews = await Promise.all(
