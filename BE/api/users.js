@@ -1,7 +1,7 @@
 const express = require("express");
 const usersRouter = express.Router();
 const bcrypt = require("bcrypt");
-const { requireUser } = require("./utils");
+const { requireUser, requireAdmin } = require("./utils");
 
 const {
   createUser,
@@ -9,7 +9,7 @@ const {
   getAllUsers,
   getUserByUsername,
   getUserPageById,
-  getPublicUserPageById
+  getPublicUserPageById,
 } = require("../db");
 
 const jwt = require("jsonwebtoken");
@@ -48,13 +48,13 @@ usersRouter.post("/register", async (req, res, next) => {
       expiresIn: "1w",
     });
 
-    const {admin} = newUser
+    const { admin } = newUser;
 
     res.send({
       message: "Thank you for signing up!",
       token,
       admin,
-      username
+      username,
     });
   } catch ({ name, message }) {
     next({ name, message });
@@ -72,9 +72,9 @@ usersRouter.post("/login", async (req, res, next) => {
   try {
     const user = await getUserByUsername(username);
     let auth;
-    if (user){
+    if (user) {
       auth = await bcrypt.compare(password, user.password);
-    } 
+    }
     if (user && auth) {
       const token = jwt.sign(
         { id: user.id, username },
@@ -83,12 +83,12 @@ usersRouter.post("/login", async (req, res, next) => {
           expiresIn: "1w",
         }
       );
-      const {admin} = user
+      const { admin } = user;
       res.send({
         message: "Successfully logged in!",
         token,
         admin,
-        username
+        username,
       });
     } else {
       next({
@@ -141,7 +141,20 @@ usersRouter.get("/:userId/", async (req, res, next) => {
     }
 
     res.send(user);
-    
+  } catch (err) {
+    next(err);
+  }
+});
+
+usersRouter.patch("/:userId/", requireAdmin, async (req, res, next) => {
+  const { userId: id } = req.params;
+  const { body: fields } = req;
+  try {
+    if (fields.password) {
+      fields.password = await bcrypt.hash(fields.password, 10);
+    }
+    const updatedUser = await updateUser(id, fields);
+    res.send(updatedUser);
   } catch (err) {
     next(err);
   }
