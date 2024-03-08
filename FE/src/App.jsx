@@ -23,7 +23,7 @@ function App() {
       <NavBar token={token} setToken={setToken} admin={admin} setAdmin={setAdmin} setCurrentUser={setCurrentUser} />
       <main>
         <Routes>
-          <Route path="/" element={<MainPage token={token} />}></Route>
+          <Route path="/" element={<MainPage token={token} currentUser={currentUser} />}></Route>
           <Route
             path="/recipes"
             element={<Recipes token={token} currentUser={currentUser} admin={admin}/>}
