@@ -2,8 +2,10 @@ import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
 import RecipeCard from "./RecipeCard";
 import Tabs from "./Tabs";
+import Loading from "./Loading";
 
 export default function MainPage({ token, currentUser }) {
+  const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState([]);
   const [featRecipe, setFeatRecipe] = useState({});
   const [tags, setTags] = useState([]);
@@ -16,6 +18,7 @@ export default function MainPage({ token, currentUser }) {
       try {
         const response = await fetch(`${API}/recipes/`);
         const result = await response.json();
+        setLoading(false);
         return result;
       } catch (error) {
         console.error(error);
@@ -76,16 +79,26 @@ export default function MainPage({ token, currentUser }) {
   }
 
   return (
-    <div className="mainPageContainer">
-      {" "}
-      <Tabs tagsOutput={tagsOutput} handleTagsClick={handleTagsClick} />
-      {recipes && featRecipe && featRecipe.tags ? (
-        <div className="recipesContainer">
-          <RecipeCard key={featRecipe.id} recipe={featRecipe} currentUser={currentUser} />
-        </div>
+    <>
+      {loading ? (
+        <Loading />
       ) : (
-        <div>error</div>
+        <div className="mainPageContainer">
+          {" "}
+          <Tabs tagsOutput={tagsOutput} handleTagsClick={handleTagsClick} />
+          {recipes && featRecipe && featRecipe.tags ? (
+            <div className="recipesContainer">
+              <RecipeCard
+                key={featRecipe.id}
+                recipe={featRecipe}
+                currentUser={currentUser}
+              />
+            </div>
+          ) : (
+            <div>error</div>
+          )}
+        </div>
       )}
-    </div>
+    </>
   );
 }

@@ -2,8 +2,10 @@ import { useState, useEffect, useInsertionEffect } from "react";
 import AverageStars from "./AverageStars";
 import BinderRings from "./BinderRings";
 import { useParams, useNavigate, Link } from "react-router-dom";
+import Loading from "./Loading";
 
 export default function SingleRecipe({ token, admin, currentUser }) {
+  const [loading, setLoading] = useState(true);
   const API_URL = `http://localhost:3000/api/`;
   const navigate = useNavigate();
   const { recipeId } = useParams();
@@ -58,6 +60,7 @@ export default function SingleRecipe({ token, admin, currentUser }) {
             headers: headers,
           });
           const json = await response.json();
+          setLoading(false);
           return json;
         } catch (error) {
           setErrMess(true);
@@ -431,333 +434,373 @@ export default function SingleRecipe({ token, admin, currentUser }) {
 
   return (
     <>
-      {errMess || !recipe.id ? (
-        <p>There has been an error</p>
+      {" "}
+      {loading ? (
+        <Loading />
       ) : (
-        <div className="singleRecipeCard">
-          <div className="top">
-            <h1>{recipe.title}</h1>
-            {(recipe.user.username === currentUser) ?
-              <Link className='username' to={`/account`}>@{recipe.user.username}</Link>
-              :
-              <Link className='username' to={`/users/${recipe.user.id}`}>@{recipe.user.username}</Link>
-            }
-            <div className="averageRating">
-              {recipe.avgRating ? (
-                <AverageStars starAverage={recipe.avgRating} />
-              ) : (
-                <p>This recipe has not yet been reviewed.</p>
-              )}
-            </div>
-            {admin && (
-              <div className="buttonContainer">
-                <button onClick={() => navigate(`/recipes/${recipe.id}/edit`)}>
-                  Edit Recipe
-                </button>
-                {recipeAreYouSure ? (
-                  <>
-                    <p>Are you are you want to delete this?</p>
-                    <button onClick={() => handleDeleteRecipe(recipe.id)}>
-                      Yes
-                    </button>
-                    <button onClick={() => setRecipeAreYouSure(false)}>
-                      No
-                    </button>
-                  </>
+        <>
+          {errMess || !recipe.id ? (
+            <p>There has been an error</p>
+          ) : (
+            <div className="singleRecipeCard">
+              <div className="top">
+                <h1>{recipe.title}</h1>
+                {recipe.user.username === currentUser ? (
+                  <Link className="username" to={`/account`}>
+                    @{recipe.user.username}
+                  </Link>
                 ) : (
-                  <>
-                    <button onClick={() => setRecipeAreYouSure(true)}>
-                      Delete Recipe
+                  <Link className="username" to={`/users/${recipe.user.id}`}>
+                    @{recipe.user.username}
+                  </Link>
+                )}
+                <div className="averageRating">
+                  {recipe.avgRating ? (
+                    <AverageStars starAverage={recipe.avgRating} />
+                  ) : (
+                    <p>This recipe has not yet been reviewed.</p>
+                  )}
+                </div>
+                {admin && (
+                  <div className="buttonContainer">
+                    <button
+                      onClick={() => navigate(`/recipes/${recipe.id}/edit`)}
+                    >
+                      Edit Recipe
                     </button>
-                  </>
+                    {recipeAreYouSure ? (
+                      <>
+                        <p>Are you are you want to delete this?</p>
+                        <button onClick={() => handleDeleteRecipe(recipe.id)}>
+                          Yes
+                        </button>
+                        <button onClick={() => setRecipeAreYouSure(false)}>
+                          No
+                        </button>
+                      </>
+                    ) : (
+                      <>
+                        <button onClick={() => setRecipeAreYouSure(true)}>
+                          Delete Recipe
+                        </button>
+                      </>
+                    )}
+                    {deleteRecipeErrMess && (
+                      <p>There has been an error deleting the recipe.</p>
+                    )}
+                  </div>
                 )}
-                {deleteRecipeErrMess && (
-                  <p>There has been an error deleting the recipe.</p>
-                )}
+                <div className="singleRecipeTags">
+                  {recipe.tags.map((tag) => {
+                    return (
+                      <p key={tag.id}>
+                        <em>{tag.name}</em>
+                      </p>
+                    );
+                  })}
+                </div>
+                <img className="recipeImg" src={recipe.imgurl} />
+                <div className="ingredientContainer">
+                  <h2 className="ingredientTitle">Ingredients:</h2>
+                  <ul className="ingredients">
+                    {recipe.ingredients.map((ingredient) => {
+                      return <li key={ingredient}>{ingredient}</li>;
+                    })}
+                  </ul>
+                </div>
+                {recipe.esttime && <p>Estimated Time: {recipe.esttime}</p>}
               </div>
-            )}
-            <div className="singleRecipeTags">
-              {recipe.tags.map((tag) => {
-                return (
-                  <p key={tag.id}>
-                    <em>{tag.name}</em>
-                  </p>
-                );
-              })}
-            </div>
-            <img className="recipeImg" src={recipe.imgurl} />
-            <div className="ingredientContainer">
-              <h2 className="ingredientTitle">Ingredients:</h2>
-              <ul className="ingredients">
-                {recipe.ingredients.map((ingredient) => {
-                  return <li key={ingredient}>{ingredient}</li>;
-                })}
-              </ul>
-            </div>
-            {recipe.esttime &&
-            <p>Estimated Time: {recipe.esttime}</p>
-            }
-          </div>
-          <BinderRings />
-          <div className="bottom">
-            <h2>Instructions:</h2>
-            <ol>
-              {recipe.procedure.map((item) => {
-                return <li key={item}>{item}</li>;
-              })}
-            </ol>
-            {recipe.notes.length > 0 &&
-            <>
-              <h2>Notes:</h2>
-            <ol>
-              {recipe.notes.map((item) => {
-                return <li key={item}>{item}</li>;
-              })}
-            </ol>
-            </>
-            }
-            {token && alreadyReviewed ? (
-              <p>You have already left a review on this recipe.</p>
-            ) : token ? (
-              <>
-                {!leavingAReview ? (
-                  <button
-                    onClick={() => {
-                      setLeavingAReview(true);
-                      setReviewTitle("");
-                      setReviewRating(1);
-                      setReviewContent("");
-                    }}
-                  >
-                    Leave a review
-                  </button>
+              <BinderRings />
+              <div className="bottom">
+                <h2>Instructions:</h2>
+                <ol>
+                  {recipe.procedure.map((item) => {
+                    return <li key={item}>{item}</li>;
+                  })}
+                </ol>
+                {recipe.notes.length > 0 && (
+                  <>
+                    <h2>Notes:</h2>
+                    <ol>
+                      {recipe.notes.map((item) => {
+                        return <li key={item}>{item}</li>;
+                      })}
+                    </ol>
+                  </>
+                )}
+                {token && alreadyReviewed ? (
+                  <p>You have already left a review on this recipe.</p>
+                ) : token ? (
+                  <>
+                    {!leavingAReview ? (
+                      <button
+                        onClick={() => {
+                          setLeavingAReview(true);
+                          setReviewTitle("");
+                          setReviewRating(1);
+                          setReviewContent("");
+                        }}
+                      >
+                        Leave a review
+                      </button>
+                    ) : (
+                      <button onClick={() => setLeavingAReview(false)}>
+                        Close review form{" "}
+                      </button>
+                    )}
+                    {leavingAReviewForm()}
+                  </>
                 ) : (
-                  <button onClick={() => setLeavingAReview(false)}>
-                    Close review form{" "}
+                  <button onClick={() => navigate("/login")}>
+                    Sign in to leave a review
                   </button>
                 )}
-                {leavingAReviewForm()}
-              </>
-            ) : (
-              <button onClick={() => navigate("/login")}>
-                Sign in to leave a review
-              </button>
-            )}
-            {reviewErrMess && (
-              <p>There has been an error submitting the review.</p>
-            )}
-            <h2>Reviews:</h2>
-            {!recipe.reviews.length ? (
-              <p>No reviews to show.</p>
-            ) : (
-              <>
-                {recipe.reviews.map((review) => {
-                  return (
-                    <div key={review.id}>
-                      <h3>{review.title}</h3>
-                      {(review.user.username === currentUser) ?
-                        <Link to={`/account`}>@{review.user.username}</Link>
-                      :
-                        <Link to={`/users/${review.user.id}`}>@{review.user.username}</Link>
-                      }
-                      <p>Rating: {review.rating}</p>
-                      <p>{review.content}</p>
-                      {token && (
-                        <>
-                          {(review.userid === userId || admin) && (
-                            <div className="reviewButtons">
-                              {editingAReview === review.id ? (
-                                <>
-                                  <button
-                                    onClick={() => setEditingAReview(null)}
-                                  >
-                                    Close edit review form
-                                  </button>
-                                  {editingAReviewForm(review.id)}
-                                </>
-                              ) : (
-                                <>
-                                  <button
-                                    onClick={() => {
-                                      setEditingAReview(review.id);
-                                      setEditReviewTitle(review.title);
-                                      setEditReviewRating(review.rating);
-                                      setEditReviewContent(review.content);
-                                    }}
-                                  >
-                                    Edit Review
-                                  </button>
-                                </>
+                {reviewErrMess && (
+                  <p>There has been an error submitting the review.</p>
+                )}
+                <h2>Reviews:</h2>
+                {!recipe.reviews.length ? (
+                  <p>No reviews to show.</p>
+                ) : (
+                  <>
+                    {recipe.reviews.map((review) => {
+                      return (
+                        <div key={review.id}>
+                          <h3>{review.title}</h3>
+                          {review.user.username === currentUser ? (
+                            <Link to={`/account`}>@{review.user.username}</Link>
+                          ) : (
+                            <Link to={`/users/${review.user.id}`}>
+                              @{review.user.username}
+                            </Link>
+                          )}
+                          <p>Rating: {review.rating}</p>
+                          <p>{review.content}</p>
+                          {token && (
+                            <>
+                              {(review.userid === userId || admin) && (
+                                <div className="reviewButtons">
+                                  {editingAReview === review.id ? (
+                                    <>
+                                      <button
+                                        onClick={() => setEditingAReview(null)}
+                                      >
+                                        Close edit review form
+                                      </button>
+                                      {editingAReviewForm(review.id)}
+                                    </>
+                                  ) : (
+                                    <>
+                                      <button
+                                        onClick={() => {
+                                          setEditingAReview(review.id);
+                                          setEditReviewTitle(review.title);
+                                          setEditReviewRating(review.rating);
+                                          setEditReviewContent(review.content);
+                                        }}
+                                      >
+                                        Edit Review
+                                      </button>
+                                    </>
+                                  )}
+                                  {editReviewErrMess === review.id && (
+                                    <p>
+                                      There has been an error submitting the
+                                      edited review.
+                                    </p>
+                                  )}
+                                  {!(reviewAreYouSure === review.id) ? (
+                                    <button
+                                      onClick={() =>
+                                        setReviewAreYouSure(review.id)
+                                      }
+                                    >
+                                      Delete Review
+                                    </button>
+                                  ) : (
+                                    <>
+                                      <p>
+                                        Are you sure you want to delete this?
+                                      </p>
+                                      <button
+                                        onClick={() =>
+                                          handleDeleteReview(review.id)
+                                        }
+                                      >
+                                        Yes
+                                      </button>
+                                      <button
+                                        onClick={() =>
+                                          setReviewAreYouSure(null)
+                                        }
+                                      >
+                                        No
+                                      </button>
+                                    </>
+                                  )}
+
+                                  {deleteReviewErrMess === review.id && (
+                                    <p>
+                                      There has been an error deleting the
+                                      review.
+                                    </p>
+                                  )}
+                                </div>
                               )}
-                              {editReviewErrMess === review.id && (
-                                <p>
-                                  There has been an error submitting the edited
-                                  review.
-                                </p>
-                              )}
-                              {!(reviewAreYouSure === review.id) ? (
+                            </>
+                          )}
+
+                          {token ? (
+                            <>
+                              {!(leavingAComment === review.id) ? (
                                 <button
-                                  onClick={() => setReviewAreYouSure(review.id)}
+                                  className="commentButton"
+                                  onClick={() => {
+                                    setLeavingAComment(review.id);
+                                    setCommentContent("");
+                                  }}
                                 >
-                                  Delete Review
+                                  Leave a comment
                                 </button>
                               ) : (
-                                <>
-                                  <p>Are you sure you want to delete this?</p>
-                                  <button
-                                    onClick={() =>
-                                      handleDeleteReview(review.id)
-                                    }
-                                  >
-                                    Yes
-                                  </button>
-                                  <button
-                                    onClick={() => setReviewAreYouSure(null)}
-                                  >
-                                    No
-                                  </button>
-                                </>
+                                <button
+                                  onClick={() => setLeavingAComment(null)}
+                                >
+                                  Close comment form{" "}
+                                </button>
                               )}
-
-                              {deleteReviewErrMess === review.id && (
-                                <p>
-                                  There has been an error deleting the review.
-                                </p>
-                              )}
-                            </div>
-                          )}
-                        </>
-                      )}
-
-                      {token ? (
-                        <>
-                          {!(leavingAComment === review.id) ? (
-                            <button
-                              className="commentButton"
-                              onClick={() => {
-                                setLeavingAComment(review.id);
-                                setCommentContent("");
-                              }}
-                            >
-                              Leave a comment
-                            </button>
+                              {leavingACommentForm(review.id)}
+                            </>
                           ) : (
-                            <button onClick={() => setLeavingAComment(null)}>
-                              Close comment form{" "}
+                            <button onClick={() => navigate("/login")}>
+                              Sign in to leave a comment
                             </button>
                           )}
-                          {leavingACommentForm(review.id)}
-                        </>
-                      ) : (
-                        <button onClick={() => navigate("/login")}>
-                          Sign in to leave a comment
-                        </button>
-                      )}
-                      {commentErrMess === review.id && (
-                        <p>There has been an error submitting the comment.</p>
-                      )}
-                      <h5>Comments:</h5>
-                      {!review.comments.length ? (
-                        <p>No comments to show.</p>
-                      ) : (
-                        <>
-                          {review.comments.map((comment) => {
-                            return (
-                              <div key={comment.id}>
-                                <p>{comment.content}</p>
-                                {(comment.user.username === currentUser) ?
-                                   <Link to={`/account`}>@{comment.user.username}</Link>
-                                :
-                                   <Link to={`/users/${comment.user.id}`}>@{comment.user.username}</Link>
-                                }
-                                {token && (
-                                  <>
-                                    {(comment.userid === userId || admin) && (
+                          {commentErrMess === review.id && (
+                            <p>
+                              There has been an error submitting the comment.
+                            </p>
+                          )}
+                          <h5>Comments:</h5>
+                          {!review.comments.length ? (
+                            <p>No comments to show.</p>
+                          ) : (
+                            <>
+                              {review.comments.map((comment) => {
+                                return (
+                                  <div key={comment.id}>
+                                    <p>{comment.content}</p>
+                                    {comment.user.username === currentUser ? (
+                                      <Link to={`/account`}>
+                                        @{comment.user.username}
+                                      </Link>
+                                    ) : (
+                                      <Link to={`/users/${comment.user.id}`}>
+                                        @{comment.user.username}
+                                      </Link>
+                                    )}
+                                    {token && (
                                       <>
-                                        {editingAComment === comment.id ? (
+                                        {(comment.userid === userId ||
+                                          admin) && (
                                           <>
-                                            <button
-                                              onClick={() =>
-                                                setEditingAComment(null)
-                                              }
-                                            >
-                                              Close edit comment form
-                                            </button>
-                                            {editingACommentForm(comment.id)}
+                                            {editingAComment === comment.id ? (
+                                              <>
+                                                <button
+                                                  onClick={() =>
+                                                    setEditingAComment(null)
+                                                  }
+                                                >
+                                                  Close edit comment form
+                                                </button>
+                                                {editingACommentForm(
+                                                  comment.id
+                                                )}
+                                              </>
+                                            ) : (
+                                              <>
+                                                <button
+                                                  onClick={() => {
+                                                    setEditingAComment(
+                                                      comment.id
+                                                    );
+                                                    setEditCommentContent(
+                                                      comment.content
+                                                    );
+                                                  }}
+                                                >
+                                                  Edit Comment
+                                                </button>
+                                              </>
+                                            )}
+                                            {editCommentErrMess ===
+                                              comment.id && (
+                                              <p>
+                                                There has been an error
+                                                submitting the edited comment.
+                                              </p>
+                                            )}
+                                            {!(
+                                              commentAreYouSure === comment.id
+                                            ) ? (
+                                              <button
+                                                onClick={() =>
+                                                  setCommentAreYouSure(
+                                                    comment.id
+                                                  )
+                                                }
+                                              >
+                                                Delete Comment
+                                              </button>
+                                            ) : (
+                                              <>
+                                                <p>
+                                                  Are you sure you want to
+                                                  delete this?
+                                                </p>
+                                                <button
+                                                  onClick={() =>
+                                                    handleDeleteComment(
+                                                      comment.id
+                                                    )
+                                                  }
+                                                >
+                                                  Yes
+                                                </button>
+                                                <button
+                                                  onClick={() =>
+                                                    setCommentAreYouSure(null)
+                                                  }
+                                                >
+                                                  No
+                                                </button>
+                                              </>
+                                            )}
+                                            {deleteCommentErrMess ===
+                                              comment.id && (
+                                              <p>
+                                                There has been an error deleting
+                                                the comment.
+                                              </p>
+                                            )}
                                           </>
-                                        ) : (
-                                          <>
-                                            <button
-                                              onClick={() => {
-                                                setEditingAComment(comment.id);
-                                                setEditCommentContent(
-                                                  comment.content
-                                                );
-                                              }}
-                                            >
-                                              Edit Comment
-                                            </button>
-                                          </>
-                                        )}
-                                        {editCommentErrMess === comment.id && (
-                                          <p>
-                                            There has been an error submitting
-                                            the edited comment.
-                                          </p>
-                                        )}
-                                        {!(commentAreYouSure === comment.id) ? (
-                                          <button
-                                            onClick={() =>
-                                              setCommentAreYouSure(comment.id)
-                                            }
-                                          >
-                                            Delete Comment
-                                          </button>
-                                        ) : (
-                                          <>
-                                            <p>
-                                              Are you sure you want to delete
-                                              this?
-                                            </p>
-                                            <button
-                                              onClick={() =>
-                                                handleDeleteComment(comment.id)
-                                              }
-                                            >
-                                              Yes
-                                            </button>
-                                            <button
-                                              onClick={() =>
-                                                setCommentAreYouSure(null)
-                                              }
-                                            >
-                                              No
-                                            </button>
-                                          </>
-                                        )}
-                                        {deleteCommentErrMess ===
-                                          comment.id && (
-                                          <p>
-                                            There has been an error deleting the
-                                            comment.
-                                          </p>
                                         )}
                                       </>
                                     )}
-                                  </>
-                                )}
-                              </div>
-                            );
-                          })}
-                        </>
-                      )}
-                    </div>
-                  );
-                })}
-              </>
-            )}
-          </div>
-        </div>
+                                  </div>
+                                );
+                              })}
+                            </>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </>
+                )}
+              </div>
+            </div>
+          )}
+        </>
       )}
     </>
   );

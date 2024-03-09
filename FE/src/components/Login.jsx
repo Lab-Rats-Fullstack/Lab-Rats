@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import Loading from "./Loading";
 
 const API = "http://localhost:3000/api/";
 
 export default function Login({ token, setToken, setAdmin, setCurrentUser }) {
+  const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
   const [loginPassword, setLoginPassword] = useState("");
   const [registerPassword, setRegisterPassword] = useState("");
@@ -17,6 +19,7 @@ export default function Login({ token, setToken, setAdmin, setCurrentUser }) {
   const [buttonStatus, setButtonStatus] = useState(true);
 
   async function loginUser(event) {
+    setLoading(true);
     event.preventDefault();
     try {
       const response = await fetch(`${API}users/login`, {
@@ -34,6 +37,7 @@ export default function Login({ token, setToken, setAdmin, setCurrentUser }) {
         setToken(userAuth.token);
         setAdmin(userAuth.admin);
         setCurrentUser(userAuth.username);
+        setLoading(false);
         alert(userAuth.message);
         navigate("/account");
       } else {
@@ -45,6 +49,7 @@ export default function Login({ token, setToken, setAdmin, setCurrentUser }) {
   }
 
   async function registerUser(event) {
+    setLoading(true);
     event.preventDefault();
     try {
       const response = await fetch(`${API}users/register`, {
@@ -64,6 +69,7 @@ export default function Login({ token, setToken, setAdmin, setCurrentUser }) {
         setToken(userAuth.token);
         setAdmin(userAuth.admin);
         setCurrentUser(userAuth.username);
+        setLoading(false);
         alert(userAuth.message);
         navigate("/account");
       } else {
@@ -177,6 +183,7 @@ export default function Login({ token, setToken, setAdmin, setCurrentUser }) {
             </button>
           </form>
         </div>
+        {loading && <Loading />}
       </div>
     </>
   );

@@ -1,13 +1,16 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import altImg from "../assets/Default_pfp.jpeg";
-import RecipeInfo from "./RecipeCard";
+import Pagination from "./Pagination";
+import Loading from "./Loading";
 
 const API = "http://localhost:3000/api/";
 
 export default function Admin({ token, admin, currentUser }) {
+  const [loading, setLoading] = useState(true);
   const [allUsers, setAllUsers] = useState(true);
   const [reviewedRecipes, setReviewedRecipes] = useState(false);
+  const [currentRecipes, setCurrentRecipes] = useState([]);
   const [recipeTags, setrecipeTags] = useState(false);
   const [usersList, setUsersList] = useState([]);
   const [reviewedRecipesList, setReviewedRecipesList] = useState([]);
@@ -101,6 +104,7 @@ export default function Admin({ token, admin, currentUser }) {
       const potentialAllUsers = await allUsersCheck();
       if (potentialAllUsers.users.length > 0) {
         setUsersList(potentialAllUsers.users);
+        setLoading(false);
       } else {
         setError("No Users.");
       }
@@ -110,115 +114,120 @@ export default function Admin({ token, admin, currentUser }) {
 
   return (
     <>
-      {!token ? (
-        <div className="fail">
-          <h2>Please Sign In</h2>
-          <br />{" "}
-          <button type="login" onClick={signIn}>
-            Log In
-          </button>
-        </div>
+      {loading ? (
+        <Loading />
       ) : (
         <>
-          {!admin ? (
-            <p>Only admin are granted access to this page.</p>
+          {" "}
+          {!token ? (
+            <div className="fail">
+              <h2>Please Sign In</h2>
+              <br />{" "}
+              <button type="login" onClick={signIn}>
+                Log In
+              </button>
+            </div>
           ) : (
             <>
-              <p>This is the Admin page for admin specific tasks.</p>
-              <div className="wrapper">
-                <div className="adminNav">
-                  <button
-                    onClick={() => {
-                      setAllUsers(true);
-                      setReviewedRecipes(false);
-                      setrecipeTags(false);
-                    }}
-                  >
-                    All Users
-                  </button>
-                  <button
-                    onClick={() => {
-                      setAllUsers(false);
-                      setReviewedRecipes(true);
-                      setrecipeTags(false);
-                    }}
-                  >
-                    Reviewed Recipes
-                  </button>
-                  <button
-                    onClick={() => {
-                      setAllUsers(false);
-                      setReviewedRecipes(false);
-                      setrecipeTags(true);
-                    }}
-                  >
-                    Recipe Tags
-                  </button>
-                </div>
-                {error ? (
-                  <p>{error}</p>
-                ) : (
-                  <div>
-                    {allUsers && (
-                      <div className="allUsers">
-                        <h2>All Users</h2>
-                        {usersList.map((user) => {
-                          return (
-                            <div className="userCard" key={user.id}>
-                              <img
-                                src={user.imgurl || altImg}
-                                alt={`User account image for ${user.username}`}
-                              />
-                              <h3>Username:</h3>
-                              {user.username === currentUser ? (
-                                <Link className="username" to={`/account`}>
-                                  @{user.username}
-                                </Link>
-                              ) : (
-                                <Link
-                                  className="username"
-                                  to={`/users/${user.id}`}
-                                >
-                                  @{user.username}
-                                </Link>
-                              )}
-                              <p>Name: {user.name}</p>
-                              <p>Email: {user.email}</p>
-                              <p>Review count: {user.reviewcount}</p>
-                            </div>
-                          );
-                        })}
-                      </div>
-                    )}
-                    {reviewedRecipes && (
-                      <div className="reviewedRecipes">
-                        <h2>All Reviewed Recipes</h2>
-                        {reviewedRecipesList.map((reviewedRecipe) => {
-                          return (
-                            <RecipeInfo
-                              key={reviewedRecipe.id}
-                              recipe={reviewedRecipe}
+              {!admin ? (
+                <p>Only admin are granted access to this page.</p>
+              ) : (
+                <>
+                  <div className="wrapper">
+                    <div className="adminNav">
+                      <button
+                        onClick={() => {
+                          setAllUsers(true);
+                          setReviewedRecipes(false);
+                          setrecipeTags(false);
+                        }}
+                      >
+                        All Users
+                      </button>
+                      <button
+                        onClick={() => {
+                          setAllUsers(false);
+                          setReviewedRecipes(true);
+                          setrecipeTags(false);
+                        }}
+                      >
+                        Reviewed Recipes
+                      </button>
+                      <button
+                        onClick={() => {
+                          setAllUsers(false);
+                          setReviewedRecipes(false);
+                          setrecipeTags(true);
+                        }}
+                      >
+                        Recipe Tags
+                      </button>
+                    </div>
+                    {error ? (
+                      <p>{error}</p>
+                    ) : (
+                      <div>
+                        {allUsers && (
+                          <div className="allUsers">
+                            <h2>All Users</h2>
+                            {usersList.map((user) => {
+                              return (
+                                <div className="userCard" key={user.id}>
+                                  <img
+                                    src={user.imgurl || altImg}
+                                    alt={`User account image for ${user.username}`}
+                                  />
+                                  <h3>Username:</h3>
+                                  {user.username === currentUser ? (
+                                    <Link className="username" to={`/account`}>
+                                      @{user.username}
+                                    </Link>
+                                  ) : (
+                                    <Link
+                                      className="username"
+                                      to={`/users/${user.id}`}
+                                    >
+                                      @{user.username}
+                                    </Link>
+                                  )}
+                                  <p>Name: {user.name}</p>
+                                  <p>Email: {user.email}</p>
+                                  <p>Review count: {user.reviewcount}</p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
+                        {reviewedRecipes && (
+                          <div className="reviewedRecipes">
+                            <h2>All Reviewed Recipes</h2>
+                            <Pagination
+                              recipeList={reviewedRecipesList}
+                              currentRecipes={currentRecipes}
+                              setCurrentRecipes={setCurrentRecipes}
+                              numberPerPage={3}
                               admin={admin}
                               currentUser={currentUser}
+                              token={token}
                             />
-                          );
-                        })}
-                      </div>
-                    )}
-                    {recipeTags && (
-                      <div className="allTags">
-                        {tagsList.map((tag) => {
-                          return (
-                            <div className="tag" key={tag.id}>
-                              <p>{tag.name}</p>
-                            </div>
-                          );
-                        })}
+                          </div>
+                        )}
+                        {recipeTags && (
+                          <div className="allTags">
+                            {tagsList.map((tag) => {
+                              return (
+                                <div className="tag" key={tag.id}>
+                                  <p>{tag.name}</p>
+                                </div>
+                              );
+                            })}
+                          </div>
+                        )}
                       </div>
                     )}
                   </div>
-                )}
-              </div>
+                </>
+              )}
             </>
           )}
         </>
