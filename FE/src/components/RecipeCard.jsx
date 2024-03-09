@@ -5,6 +5,7 @@ import defaultImg from "../assets/default food.jpeg";
 import {Link} from "react-router-dom";
 import AverageStars from "./AverageStars";
 
+
 export default function RecipeInfo({ recipe, admin, currentUser}) {
 
   return (
@@ -37,7 +38,6 @@ export default function RecipeInfo({ recipe, admin, currentUser}) {
         location={`/recipes/${recipe.id}/edit`}
         buttonText={"Edit Recipe"}
       />) : (<></>)}
-      {/* need to make this conditional on being admin and tier 2 currentUser if username matches */}
     </div>
   );
 }

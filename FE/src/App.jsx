@@ -33,6 +33,7 @@ function App() {
             path="/"
             element={<MainPage token={token} currentUser={currentUser} />}
           ></Route>
+
           <Route
             path="/recipes"
             element={
