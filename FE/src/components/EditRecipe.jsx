@@ -10,6 +10,7 @@ export default function EditRecipe ({token}) {
   const navigate = useNavigate();
 
   const [recipeObj, setRecipeObj] = useState({})
+  const [responseVar, setResponseVar] = useState('')
   const [title, setTitle] = useState("");
   const [estTime, setEstTime] = useState("");
   const [image, setImage] = useState("");
@@ -27,6 +28,7 @@ export default function EditRecipe ({token}) {
                header: `Bearer ${token}`,
            });
            const result = await response.json();
+           setResponseVar(response.ok);
            const recipe = result.recipe;
            setRecipeObj(recipe);
            console.log(recipe.title);
@@ -111,7 +113,7 @@ export default function EditRecipe ({token}) {
        }
    }
    getRecipeById();
-  }, [title]);
+  }, [responseVar]);
 
 
  function handleIngredientAdd() {
