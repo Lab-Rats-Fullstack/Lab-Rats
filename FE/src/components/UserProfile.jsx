@@ -16,52 +16,184 @@ export default function NewRecipe ({token, admin, currentUser}) {
     const [error, setError] = useState(null);
     const navigate = useNavigate();
     const { userId } = useParams();
+    const [update, setUpdate] =useState(0);
+
+    const [userForm, setUserForm] = useState(false);
+    const [userBio, setUserBio] = useState(true);
+
+    const [updatedUser, setUpdatedUser] =useState({});
 
     useEffect(()=>{
         async function userCheck () {
             try {
-                const response = await fetch(`${API}users/${userId}`, {
-                    method: "GET",
-                    headers: {
-                        "Content-Type":"application/json",
-                        // "Authorization": `Bearer ${token}`,
-                    },
-                });
-                const result = await response.json();
-                console.log(result);
-                setUserData(result);
-
+                if (admin === true){
+                    const response = await fetch(`${API}users/${userId}`, {
+                        method: "GET",
+                        headers: {
+                            "Content-Type":"application/json",
+                            "Authorization": `Bearer ${token}`,
+                        },
+                    });
+                    const result = await response.json();
+                    console.log(result);
+                    setUserData(result);
+                    setUpdatedUser({
+                        imgurl:result.imgurl,
+                        username:result.username,
+                        email:result.email,
+                        name:result.name,
+                        admin:result.admin
+                    });
+                }else {
+                    const response = await fetch(`${API}users/${userId}`);
+                    const result = await response.json();
+                    console.log(result);
+                    setUserData(result);
+                    setUpdatedUser({
+                        imgurl:result.imgurl,
+                        username:result.username,
+                        email:result.email,
+                        name:result.name,
+                        admin:result.admin
+                    });
+                }
+                
             } catch (error) {
                 setError(error.message);
                 console.log( error );
             }
         }userCheck();
-    }, [])
+    }, [update])
+
+    async function userUpdate(event) {
+        event.preventDefault();
+        try {
+            if (updatedUser.imgurl == userData.imgurl
+                && updatedUser.username == userData.username 
+                && updatedUser.admin == userData.admin){
+                setUserBio(true);
+                setUserForm(false);
+                return;
+            }else {
+                const response = await fetch(`${API}users/${userId}`, {
+                    method: "PATCH",
+                    headers: {
+                        "Content-Type":"application/json",
+                        "Authorization": `Bearer ${token}`,
+                    },
+                        body: JSON.stringify({
+                            ...updatedUser,
+                        })
+                });
+                const result = await response.json()
+                console.log(result);          
+                setUserData(result);
+                setUpdate((version) => version +1);
+                setUserForm(false);
+                setUserBio(true);
+            }
+            
+        } catch (error) {
+            setError(error.message);
+            console.log( error );
+        }
+    }
 
     return (
         <div className = 'wrapper'>
-            {/* {error && <p>{error}</p>} */}
             {error ? <div className="error"><p>{error}</p></div> :
-            <div>
-                <div>
-                    <UserInfo
-                        key ={userData.id}
-                        token={token}
-                        userData={userData}
-                        admin={admin}/>
+            <div className="userInfoContainer">
+                {userBio && 
+                    <div className="userInfo">
+                        <UserInfo
+                            key ={userData.id}
+                            token={token}
+                            userData={userData}
+                            admin={admin}
+                            currentUser={currentUser}/>
+                        {admin === true && <button onClick={() => {setUserBio(false); setUserForm(true);}}>Update Profile</button>}
+                    </div>
+                }
+                {userForm &&
+                <div className = 'userUpdateForm'>
+                    <form onSubmit = {userUpdate}>
+                        <label>
+                            Profile Image:
+                            <input
+                                defaultValue = {userData.imgurl}
+                                onChange = {(e)=> setUpdatedUser((prev)=>{
+                                    return {
+                                    ...prev,
+                                        imgurl: e.target.value
+                                    }
+                                })}
+                            />
+                        </label>
+                        <label>
+                            Username:
+                            <input
+                                defaultValue = {userData.username}
+                                onChange = {(e)=> setUpdatedUser((prev)=>{
+                                    return {
+                                    ...prev,
+                                        username: e.target.value
+                                    }
+                                })}
+                            />
+                        </label>
+                        <label>
+                            Email:
+                            <input
+                                defaultValue = {userData.email}
+                                onChange = {(e)=> setUpdatedUser((prev)=>{
+                                    return {
+                                    ...prev,
+                                        email: e.target.value
+                                    }
+                                })}
+                            />
+                        </label>
+                        <label>
+                            Name:
+                            <input
+                                defaultValue = {userData.name}
+                                onChange = {(e)=> setUpdatedUser((prev)=>{
+                                    return {
+                                    ...prev,
+                                        name: e.target.value
+                                }})}
+                            />
+                        </label>
+                        <label>
+                            Admin Status:
+                            <select value={userData.admin} onChange = {(e)=> setUpdatedUser((prev)=>{
+                                    return {
+                                    ...prev,
+                                        admin: e.target.value
+                                    }
+                                })}>
+                                <option value="false">False</option>
+                                <option value="true">True</option>
+                            </select>
+                        </label>
+                        <button type='submit'>Submit</button>
+                        <button onClick={() => {setUserBio(true); setUserForm(false);}} >Cancel</button>
+                    </form>
                 </div>
+                }
+
                 <div className = 'userItems'>
                     <div className='userItemsNav'>
-                        <NavButton location ={`/users/${userId}/recipes`} buttonText={"My Recipes"}/>
-                        <NavButton location ={`/users/${userId}/reviews`} buttonText={"My Reviews"}/>
-                        <NavButton location ={`/users/${userId}/comments`} buttonText={"My Comments"}/>
+                        <NavButton location ={`/users/${userId}/recipes`} buttonText={"Recipes"}/>
+                        <NavButton location ={`/users/${userId}/reviews`} buttonText={"Reviews"}/>
+                        <NavButton location ={`/users/${userId}/comments`} buttonText={"Comments"}/>
                     </div>
                     <div className='itemContent'>
                         <Routes>
-                            <Route async path="/" element={<UserRecipes userData={userData} admin={admin}/>}/>
-                            <Route path="/recipes" element={<UserRecipes userData={userData} admin={admin} />}/>
-                            <Route path="/reviews" element={<UserReviews userData={userData} admin={admin} />}/>
-                            <Route path="/comments" element={<UserComments userData={userData} admin={admin} />}/>
+                            <Route async path="/" element={<UserRecipes userData={userData} admin={admin} currentUser={currentUser}/>}/>
+                            <Route path="/recipes" element={<UserRecipes userData={userData} admin={admin} currentUser={currentUser}/>}/>
+                            <Route path="/reviews" element={<UserReviews userData={userData} admin={admin} currentUser={currentUser}/>}/>
+                            <Route path="/comments" element={<UserComments userData={userData} admin={admin} currentUser={currentUser}/>}/>
                         </Routes>
                     </div>
                 </div>

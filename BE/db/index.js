@@ -58,7 +58,7 @@ async function updateUser(id, fields = {}) {
       UPDATE users
       SET ${setString}
       WHERE id=${id}
-      RETURNING *;
+      RETURNING id, email, username, name, imgUrl, admin, reviewCount;
     `,
       Object.values(fields)
     );
@@ -211,23 +211,6 @@ async function getUserInfoById(userId) {
   }
 }
 
-// GET USER PUBLIC INFO BY ID IN DB
-async function getPublicUserInfoById(userId) {
-  try {
-    const {
-      rows: [user],
-    } = await client.query(`
-      SELECT id, username, imgUrl, admin, reviewCount
-      FROM users
-      WHERE id=${userId}
-    `);
-
-    return user;
-  } catch (error) {
-    throw error;
-  }
-}
-
 // GET USER INFO WITH PASSWORD BY ID IN DB
 async function getUserInfoWithPasswordById(userId) {
   try {
@@ -267,7 +250,13 @@ async function getUserPageById(userId) {
 
 async function getPublicUserPageById(userId) {
   try {
-    const userInfo = await getPublicUserInfoById(userId);
+    const {
+      rows: [userInfo],
+    } = await client.query(`
+      SELECT id, username, imgUrl, admin, reviewCount
+      FROM users
+      WHERE id=${userId}
+    `);
     const recipes = await getUserPageRecipesByUser(userId);
     const reviews = await getUserPageReviewsByUser(userId);
     const comments = await getUserPageCommentsByUser(userId);
@@ -316,41 +305,10 @@ async function getRecipeInfoById(recipeId) {
   }
 }
 
-// GET AVG RATING BY ID IN DB
-async function getAverageRating(recipeId){
-  try{
-    const {rows: ratings} = await client.query(`
-      SELECT rating
-      FROM reviews
-      WHERE recipeId=$1;
-    `, [recipeId]);
-
-    let ratingsSum = 0;
-    let avgRating;
-
-    if (ratings.length == 0){
-      avgRating = 0;
-    } else {
-      ratings.forEach((rating)=>{
-        ratingsSum = ratingsSum + rating.rating;
-      });
-
-      avgRating = Math.round((ratingsSum / ratings.length) * 10) / 10;
-    }
-
-    return avgRating;
-
-  } catch (error){
-    throw (error);
-  }
-}
-
 // GET RECIPE BY ID IN DB
 async function getRecipeById(recipeId) {
   try {
     const recipe = await getRecipeInfoById(recipeId);
-
-    const avgRating = await getAverageRating(recipeId);
 
     const { rows: tags } = await client.query(
       `
@@ -363,8 +321,11 @@ async function getRecipeById(recipeId) {
     );
 
     const reviews = await getReviewsByRecipe(recipeId);
-  
-      const { rows: [user] } = await client.query(`
+
+    const {
+      rows: [user],
+    } = await client.query(
+      `
         SELECT id, username, imgUrl, admin, reviewCount
         FROM users
         WHERE id=$1;
@@ -372,12 +333,14 @@ async function getRecipeById(recipeId) {
       [recipe.userid]
     );
 
+    const avgRating = await getAverageRating(recipeId);
+
     const recipeObject = {
       ...recipe,
-      avgRating: avgRating,
       tags: tags,
       reviews: reviews,
       user: user,
+      avgRating: avgRating
     };
 
     return recipeObject;
@@ -412,14 +375,12 @@ async function getUserPageRecipeById(recipeId) {
       rows: [recipeInfo],
     } = await client.query(
       `
-      SELECT id, title, imgUrl
+      SELECT id, title, imgUrl, esttime
       FROM recipes
       WHERE id=$1;
     `,
       [recipeId]
     );
-
-    const avgRating = await getAverageRating(recipeId);
 
     const { rows: tags } = await client.query(
       `
@@ -431,10 +392,12 @@ async function getUserPageRecipeById(recipeId) {
       [recipeId]
     );
 
+    const avgRating = await getAverageRating(recipeId);
+
     const recipeObject = {
       ...recipeInfo,
-      avgRating: avgRating,
       tags: tags,
+      avgRating: avgRating
     };
 
     return recipeObject;
@@ -450,14 +413,12 @@ async function getOtherPageRecipeById(recipeId) {
       rows: [recipeInfo],
     } = await client.query(
       `
-      SELECT id, userId, title, imgUrl
+      SELECT id, userId, title, imgUrl, esttime
       FROM recipes
       WHERE id=$1;
     `,
       [recipeId]
     );
-
-    const avgRating = await getAverageRating(recipeId);
 
     const { rows: tags } = await client.query(
       `
@@ -480,11 +441,13 @@ async function getOtherPageRecipeById(recipeId) {
       [recipeInfo.userid]
     );
 
+    const avgRating = await getAverageRating(recipeId);
+
     const recipeObject = {
       ...recipeInfo,
-      avgRating: avgRating,
       tags: tags,
       user: userInfo,
+      avgRating: avgRating
     };
 
     return recipeObject;
@@ -621,17 +584,18 @@ async function createRecipe({
   imgUrl,
   notes = [],
   tags = [],
+  esttime = "",
 }) {
   try {
     const {
       rows: [recipe],
     } = await client.query(
       `
-      INSERT INTO recipes(userId, title, ingredients, procedure, imgUrl, notes) 
-      VALUES($1, $2, $3, $4, $5, $6)
+      INSERT INTO recipes(userId, title, ingredients, procedure, imgUrl, notes, esttime) 
+      VALUES($1, $2, $3, $4, $5, $6, $7)
       RETURNING *;
     `,
-      [userId, title, ingredients, procedure, imgUrl, notes]
+      [userId, title, ingredients, procedure, imgUrl, notes, esttime]
     );
 
     const tagList = await createTags(tags);
@@ -882,6 +846,35 @@ async function createRecipeTag(recipeId, tagId) {
  * REVIEWS Methods
  */
 
+async function getAverageRating(recipeId){
+  try{
+    const {rows: ratings} = await client.query(`
+      SELECT rating
+      FROM reviews
+      WHERE recipeId=$1;
+    `, [recipeId]);
+
+    let ratingsSum = 0;
+    let avgRating;
+
+    if (!ratings.length || ratings.length == 0){
+      avgRating = 0;
+    } else {
+      ratings.forEach((rating)=>{
+        ratingsSum = ratingsSum + rating.rating;
+      });
+
+      avgRating = Math.round((ratingsSum / ratings.length) * 10) / 10;
+    }
+
+    return avgRating;
+
+  } catch (error){
+    throw (error);
+  }
+}
+
+
 //GET REVIEW INFO BY ID IN DB
 async function getReviewInfoById(reviewId) {
   try {
@@ -908,7 +901,10 @@ async function getReviewInfoById(reviewId) {
 //GET USER PAGE REVIEW BY ID
 async function getUserPageReviewById(reviewId) {
   try {
-    const {rows: [reviewInfo]} = await client.query(`
+    const {
+      rows: [reviewInfo],
+    } = await client.query(
+      `
       SELECT id, recipeId, title, content, rating
       FROM reviews
       WHERE id=$1;
@@ -920,22 +916,10 @@ async function getUserPageReviewById(reviewId) {
       rows: [recipeInfo],
     } = await client.query(
       `
-      SELECT id, userId, title, imgUrl
+      SELECT id, userId, title, imgUrl, esttime
       FROM recipes
       WHERE id=$1;
     `,
-      [reviewInfo.recipeid]
-    );
-
-    const avgRating = await getAverageRating(reviewInfo.recipeid);
-
-    const { rows: tags } = await client.query(
-      `
-    SELECT tags.*
-    FROM tags
-    JOIN recipe_tags ON tags.id=recipe_tags.tagId
-    WHERE recipe_tags.recipeId=$1;
-  `,
       [reviewInfo.recipeid]
     );
 
@@ -954,8 +938,6 @@ async function getUserPageReviewById(reviewId) {
       ...reviewInfo,
       recipe: {
         ...recipeInfo,
-        avgRating: avgRating,
-        tags: tags,
         user: recipeUserInfo,
       },
     };
@@ -992,8 +974,10 @@ async function getReviewById(reviewId) {
 
     const comments = await getCommentsByReview(reviewId);
 
-
-        const { rows: [user] } = await client.query(`
+    const {
+      rows: [user],
+    } = await client.query(
+      `
         SELECT id, username, imgUrl, admin, reviewCount
         FROM users
         WHERE id=$1;
@@ -1071,19 +1055,18 @@ async function getAllReviews() {
 
 // CREATE REVIEW IN DB
 
-async function createReview({
-  userId,
-  recipeId,
-  title,
-  content,
-  rating
-}) {
+async function createReview({ userId, recipeId, title, content, rating }) {
   try {
-    const { rows: [ review ] } = await client.query(`
+    const {
+      rows: [review],
+    } = await client.query(
+      `
       INSERT INTO reviews(userId, recipeId, title, content, rating) 
       VALUES($1, $2, $3, $4, $5)
       RETURNING *;
-    `, [userId, recipeId, title, content, rating]);
+    `,
+      [userId, recipeId, title, content, rating]
+    );
 
     await client.query(`
       UPDATE users
@@ -1146,13 +1129,17 @@ async function destroyReviewById(reviewId) {
       );
     }
 
-    await client.query(`
+    await client.query(
+      `
       UPDATE users
       SET reviewCount = reviewCount - 1
       WHERE id=$1;
-    `, [destroyedReview.userid]);
+    `,
+      [destroyedReview.userid]
+    );
 
-    await client.query(`
+    await client.query(
+      `
         DELETE FROM reviews
         WHERE id = $1
     `,
@@ -1229,22 +1216,10 @@ async function getUserPageCommentById(commentId) {
       rows: [recipeInfo],
     } = await client.query(
       `
-      SELECT id, userId, title, imgUrl
+      SELECT id, userId, title, imgUrl, esttime
       FROM recipes
       WHERE id=$1;
     `,
-      [reviewInfo.recipeid]
-    );
-
-    const avgRating = await getAverageRating(reviewInfo.recipeid);
-
-    const { rows: tags } = await client.query(
-      `
-    SELECT tags.*
-    FROM tags
-    JOIN recipe_tags ON tags.id=recipe_tags.tagId
-    WHERE recipe_tags.recipeId=$1;
-  `,
       [reviewInfo.recipeid]
     );
 
@@ -1266,8 +1241,6 @@ async function getUserPageCommentById(commentId) {
         user: reviewUserInfo,
         recipe: {
           ...recipeInfo,
-          avgRating: avgRating,
-          tags: tags,
           user: recipeUserInfo,
         },
       },
@@ -1303,8 +1276,10 @@ async function getCommentById(commentId) {
   try {
     const comment = await getCommentInfoById(commentId);
 
-
-      const { rows: [user] } = await client.query(`
+    const {
+      rows: [user],
+    } = await client.query(
+      `
       SELECT id, username, imgUrl, admin, reviewCount
       FROM users
       WHERE id=$1;

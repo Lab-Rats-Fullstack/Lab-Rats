@@ -4,6 +4,7 @@ const bcrypt = require("bcrypt");
 const { requireUser } = require("./utils");
 const { returnImageUrl } = require("./uploadImage");
 
+
 const {
   createUser,
   updateUser,
@@ -151,6 +152,20 @@ usersRouter.get("/:userId/", async (req, res, next) => {
     }
 
     res.send(user);
+  } catch (err) {
+    next(err);
+  }
+});
+
+usersRouter.patch("/:userId/", requireAdmin, async (req, res, next) => {
+  const { userId: id } = req.params;
+  const { body: fields } = req;
+  try {
+    if (fields.password) {
+      fields.password = await bcrypt.hash(fields.password, 10);
+    }
+    const updatedUser = await updateUser(id, fields);
+    res.send(updatedUser);
   } catch (err) {
     next(err);
   }

@@ -71,7 +71,7 @@ export default function SingleRecipe({ token, admin, currentUser }) {
             return review.userid === potentialRecipe.userId;
           }
         );
-        console.log(potentiallyAlreadyReviewed);
+
         if (potentiallyAlreadyReviewed) {
           setAlreadyReviewed(true);
         } else {
@@ -438,9 +438,9 @@ export default function SingleRecipe({ token, admin, currentUser }) {
           <div className="top">
             <h1>{recipe.title}</h1>
             {(recipe.user.username === currentUser) ?
-              <Link to={`/account`}>@{recipe.user.username}</Link>
+              <Link className='username' to={`/account`}>@{recipe.user.username}</Link>
               :
-              <Link to={`/users/${recipe.user.id}`}>@{recipe.user.username}</Link>
+              <Link className='username' to={`/users/${recipe.user.id}`}>@{recipe.user.username}</Link>
             }
             <div className="averageRating">
               {recipe.avgRating ? (
@@ -494,6 +494,9 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                 })}
               </ul>
             </div>
+            {recipe.esttime &&
+            <p>Estimated Time: {recipe.esttime}</p>
+            }
           </div>
           <BinderRings />
           <div className="bottom">
@@ -503,6 +506,16 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                 return <li key={item}>{item}</li>;
               })}
             </ol>
+            {recipe.notes.length > 0 &&
+            <>
+              <h2>Notes:</h2>
+            <ol>
+              {recipe.notes.map((item) => {
+                return <li key={item}>{item}</li>;
+              })}
+            </ol>
+            </>
+            }
             {token && alreadyReviewed ? (
               <p>You have already left a review on this recipe.</p>
             ) : token ? (
