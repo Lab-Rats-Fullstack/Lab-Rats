@@ -28,16 +28,9 @@ export default function NewRecipe ({token, admin, currentUser}) {
                     },
                 });
                 const result = await response.json();
-                console.log("userpage ", result);
-                if (result.username){
-                    if (result.username === currentUser){
-                        navigate('/account');
-                    } else {
-                        setUserData(result);
-                    }
-                } else {
-                    setError("Fetch failed.");
-                }
+                console.log(result);
+                setUserData(result);
+
             } catch (error) {
                 setError(error.message);
                 console.log( error );
