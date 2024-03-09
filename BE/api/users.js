@@ -1,9 +1,8 @@
 const express = require("express");
 const usersRouter = express.Router();
 const bcrypt = require("bcrypt");
-const { requireUser } = require("./utils");
+const { requireUser, requireAdmin } = require("./utils");
 const { returnImageUrl } = require("./uploadImage");
-
 
 const {
   createUser,
