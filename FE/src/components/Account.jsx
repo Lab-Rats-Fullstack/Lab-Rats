@@ -130,7 +130,8 @@ export default function Account ({token, admin, currentUser}) {
                         key ={userData.id}
                         token={token}
                         userData={userData}
-                        admin={admin}/>
+                        admin={admin}
+                        currentUser={currentUser}/>
                     <button onClick={() => {setUserBio(false); setUserForm(true); setPassword(''); setConfirmPassword('');}}>Update Profile</button>
                 </div>
             }

@@ -63,7 +63,7 @@ export default function NewRecipe ({token, admin, currentUser}) {
                 console.log( error );
             }
         }userCheck();
-    }, [])
+    }, [update])
 
     async function userUpdate(event) {
         event.preventDefault();
@@ -166,24 +166,15 @@ export default function NewRecipe ({token, admin, currentUser}) {
                         </label>
                         <label>
                             Admin Status:
-                            <select>
-                                <option value="False">False</option>
-                                <option value="True">True</option>
-                                onChange = {(e)=> setUpdatedUser((prev)=>{
+                            <select value={userData.admin} onChange = {(e)=> setUpdatedUser((prev)=>{
                                     return {
                                     ...prev,
                                         admin: e.target.value
                                     }
-                                })}
+                                })}>
+                                <option value="false">False</option>
+                                <option value="true">True</option>
                             </select>
-                            <input 
-                                defaultValue = {userData.admin}
-                                onChange = {(e)=> setUpdatedUser((prev)=>{
-                                    return {
-                                    ...prev,
-                                        admin: e.target.value
-                                    }
-                            })}/>
                         </label>
                         <button type='submit'>Submit</button>
                         <button onClick={() => {setUserBio(true); setUserForm(false);}} >Cancel</button>
