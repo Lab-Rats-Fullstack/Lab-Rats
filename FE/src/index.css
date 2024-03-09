@@ -182,8 +182,34 @@ a:focus {
   width: 100%;
 }
 
+.searchContainer {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  place-items: center;
+}
+
 .searchBar {
   margin-inline: 0.5rem;
+}
+
+.tagBox {
+  display: grid;
+  place-items: center;
+  margin-inline: 0.5rem;
+}
+
+.tagBox div {
+  border: 1px solid var(--clr-accent-two);
+  padding: 1rem;
+  border-radius: 10px;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  max-height: 2rem;
+  overflow-y: scroll;
+}
+
+.tagBox div label input {
+  margin-inline: .5rem;
 }
 
 .recipeCard {
