@@ -2,6 +2,7 @@ import {useEffect, useState } from 'react'
 import { useNavigate, Link } from 'react-router-dom'
 import AverageStars from './AverageStars'
 import altImg from "../assets/Default_pfp.jpeg"
+import RecipeInfo from './RecipeCard';
 
 const API = "http://localhost:3000/api/";
 
@@ -171,32 +172,7 @@ export default function Admin ({token, admin, currentUser}) {
                             <h2>All Reviewed Recipes</h2>
                             {reviewedRecipesList.map((reviewedRecipe)=> {
                                 return (
-                                    <div className ="reviewedRecipeCard" key = {reviewedRecipe.id}>
-                                        <h3>{reviewedRecipe.title}</h3>
-                                        {(reviewedRecipe.user.username === currentUser) ?
-                                             <Link className="username"to={`/account`}>@{reviewedRecipe.user.username}</Link>
-                                             :
-                                             <Link className="username"to={`/users/${reviewedRecipe.user.id}`}>@{reviewedRecipe.user.username}</Link>
-                                         }
-                                        <div className="averageRating">
-                                           {reviewedRecipe.avgRating ? (
-                                                <AverageStars starAverage={reviewedRecipe.avgRating} />
-                                             ) : (
-                                             <p>This recipe has not yet been reviewed.</p>
-                                             )}
-                                        </div>
-                                        <img src={reviewedRecipe.imgurl} alt={`A picture of ${reviewedRecipe.title}`} />
-                                        {reviewedRecipe.tags.map((tag)=> {
-                                            return (
-                                                <div className ='cardTag' key = {tag.id}>
-                                                    <p><em>{tag.name}</em></p>
-                                                </div>
-                                            )
-                                        })}
-                                        <button onClick={() => {
-                                            navigate(`/recipes/${reviewedRecipe.id}`)
-                                        }}>See Recipe</button>
-                                    </div>
+                                        <RecipeInfo key={reviewedRecipe.id} recipe={reviewedRecipe} admin={admin} currentUser={currentUser}/>
                                 )
                             })}
                         </div>}

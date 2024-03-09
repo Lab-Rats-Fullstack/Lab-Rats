@@ -3,8 +3,9 @@ import TagInfo from "./TagInfo";
 import NavButton from "./NavButton";
 import defaultImg from "../assets/default food.jpeg";
 import {Link} from "react-router-dom";
+import AverageStars from "./AverageStars";
 
-export default function RecipeInfo({ recipe, admin, currentUser, token}) {
+export default function RecipeInfo({ recipe, admin, currentUser}) {
 
   return (
     <div className="recipeCard">
@@ -25,7 +26,12 @@ export default function RecipeInfo({ recipe, admin, currentUser, token}) {
       {recipe.tags.map((tag) => {
         return <TagInfo key={tag.id} tag={tag} />;
       })}
-      <p>Est. Time: {recipe.estimatedtime}</p>
+      {recipe.esttime &&  <p>Est. Time: {recipe.esttime}</p>}
+      {recipe.avgRating ?
+        <AverageStars starAverage={recipe.avgRating}/>
+        :
+        <p>This recipe has not yet been reviewed.</p>
+      }
       <NavButton location={`/recipes/${recipe.id}`} buttonText={"See Recipe"} />
       {admin ? (<NavButton
         location={`/recipes/${recipe.id}/edit`}
