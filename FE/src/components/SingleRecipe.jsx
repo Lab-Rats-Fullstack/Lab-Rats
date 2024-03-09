@@ -71,6 +71,7 @@ export default function SingleRecipe({ token, admin, currentUser }) {
             return review.userid === potentialRecipe.userId;
           }
         );
+
         if (potentiallyAlreadyReviewed) {
           setAlreadyReviewed(true);
         } else {
@@ -83,7 +84,6 @@ export default function SingleRecipe({ token, admin, currentUser }) {
         setErrMess(true);
       }
     }
-    console.log("currentUser:",currentUser);
     handleGetRecipeById();
   }, [refreshCounter]);
 
@@ -494,6 +494,9 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                 })}
               </ul>
             </div>
+            {recipe.esttime &&
+            <p>Estimated Time: {recipe.esttime}</p>
+            }
           </div>
           <BinderRings />
           <div className="bottom">
@@ -503,6 +506,16 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                 return <li key={item}>{item}</li>;
               })}
             </ol>
+            {recipe.notes.length > 0 &&
+            <>
+              <h2>Notes:</h2>
+            <ol>
+              {recipe.notes.map((item) => {
+                return <li key={item}>{item}</li>;
+              })}
+            </ol>
+            </>
+            }
             {token && alreadyReviewed ? (
               <p>You have already left a review on this recipe.</p>
             ) : token ? (
