@@ -20,17 +20,35 @@ function App() {
   return (
     <>
       <h1>Culinary Chronicle</h1>
-      <NavBar token={token} setToken={setToken} admin={admin} setAdmin={setAdmin} setCurrentUser={setCurrentUser} />
+      <NavBar
+        token={token}
+        setToken={setToken}
+        admin={admin}
+        setAdmin={setAdmin}
+        setCurrentUser={setCurrentUser}
+      />
       <main>
         <Routes>
-          <Route path="/" element={<MainPage token={token} currentUser={currentUser} />}></Route>
+          <Route
+            path="/"
+            element={<MainPage token={token} currentUser={currentUser} />}
+          ></Route>
+
           <Route
             path="/recipes"
-            element={<Recipes token={token} currentUser={currentUser} admin={admin}/>}
+            element={
+              <Recipes token={token} currentUser={currentUser} admin={admin} />
+            }
           ></Route>
           <Route
             path="/recipes/:recipeId"
-            element={<SingleRecipe token={token} admin={admin} currentUser={currentUser} />}
+            element={
+              <SingleRecipe
+                token={token}
+                admin={admin}
+                currentUser={currentUser}
+              />
+            }
           ></Route>
           <Route
             path="/recipes/:recipeId/edit"
@@ -42,7 +60,7 @@ function App() {
           ></Route>
           <Route
             path="/recipes/new"
-            element={<NewRecipe token={token} />}
+            element={<NewRecipe token={token} admin={admin} />}
           ></Route>
           <Route
             path="/login"
@@ -71,7 +89,12 @@ function App() {
               />
             }
           ></Route>
-          <Route path="/admin" element={<Admin token={token} admin={admin} currentUser={currentUser}/>}></Route>
+          <Route
+            path="/admin"
+            element={
+              <Admin token={token} admin={admin} currentUser={currentUser} />
+            }
+          ></Route>
         </Routes>
       </main>
     </>
