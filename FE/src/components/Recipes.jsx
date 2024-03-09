@@ -1,10 +1,9 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import RecipeCard from './RecipeCard';
+import RecipeCard from "./RecipeCard";
 
-
-export default function Recipes({token, currentUser, admin}) {
-  const API = 'http://localhost:3000/api/';
+export default function Recipes({ token, currentUser, admin }) {
+  const API = "http://localhost:3000/api/";
 
   const [recipes, setRecipes] = useState([]);
 
@@ -13,11 +12,11 @@ export default function Recipes({token, currentUser, admin}) {
 
   useEffect(() => {
     async function getAllRecipes() {
-      try{
-        const response = await fetch(`${testAPI}recipes`);
+      try {
+        const response = await fetch(`${API}recipes`);
         const result = await response.json();
         setRecipes(result);
-      } catch(error) {
+      } catch (error) {
         console.error(error);
       }
     }
@@ -59,18 +58,32 @@ export default function Recipes({token, currentUser, admin}) {
           filteredRecipes.map((recipe) => {
             return (
               <div key={recipe.id}>
-                <RecipeCard key={recipe.id} recipe={recipe} token={token} currentUser={currentUser} admin={admin}/>
+                <RecipeCard
+                  key={recipe.id}
+                  recipe={recipe}
+                  token={token}
+                  currentUser={currentUser}
+                  admin={admin}
+                />
               </div>
             );
           })
-        ) : (<p>No recipes match your search</p>)
+        ) : (
+          <p>No recipes match your search</p>
+        )
       ) : (
         recipes.map((recipe) => {
           return (
             <div key={recipe.id}>
-              <RecipeCard key={recipe.id} recipe={recipe} token={token} currentUser={currentUser} admin={admin}/>
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                token={token}
+                currentUser={currentUser}
+                admin={admin}
+              />
             </div>
-          )
+          );
         })
       )}
     </div>
