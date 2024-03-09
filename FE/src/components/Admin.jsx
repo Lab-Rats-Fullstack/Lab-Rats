@@ -1,9 +1,8 @@
-import {useEffect, useState } from 'react'
-import { useNavigate, Link } from 'react-router-dom'
-import AverageStars from './AverageStars'
-import altImg from "../assets/Default_pfp.jpeg"
-import RecipeInfo from './RecipeCard';
-import NavButton from "./NavButton";
+import { useEffect, useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import altImg from "../assets/Default_pfp.jpeg";
+import RecipeInfo from "./RecipeCard";
+
 const API = "http://localhost:3000/api/";
 
 export default function Admin({ token, admin, currentUser }) {
@@ -125,11 +124,8 @@ export default function Admin({ token, admin, currentUser }) {
             <p>Only admin are granted access to this page.</p>
           ) : (
             <>
+              <p>This is the Admin page for admin specific tasks.</p>
               <div className="wrapper">
-                <NavButton
-                  location={"/recipes/new"}
-                  buttonText={"Create New Recipe"}
-                />
                 <div className="adminNav">
                   <button
                     onClick={() => {
@@ -199,59 +195,32 @@ export default function Admin({ token, admin, currentUser }) {
                         <h2>All Reviewed Recipes</h2>
                         {reviewedRecipesList.map((reviewedRecipe) => {
                           return (
-                            <div
-                              className="reviewedRecipeCard"
+                            <RecipeInfo
                               key={reviewedRecipe.id}
-                            >
-                              <h3>{reviewedRecipe.title}</h3>
-                              {reviewedRecipe.user.username === currentUser ? (
-                                <Link className="username" to={`/account`}>
-                                  @{reviewedRecipe.user.username}
-                                </Link>
-                              ) : (
-                                <Link
-                                  className="username"
-                                  to={`/users/${reviewedRecipe.user.id}`}
-                                >
-                                  @{reviewedRecipe.user.username}
-                                </Link>
-                              )}
-                              <div className="averageRating">
-                                {reviewedRecipe.avgRating ? (
-                                  <AverageStars
-                                    starAverage={reviewedRecipe.avgRating}
-                                  />
-                                ) : (
-                                  <p>This recipe has not yet been reviewed.</p>
-                                )}
-                              </div>
-                              <img
-                                src={reviewedRecipe.imgurl}
-                                alt={`A picture of ${reviewedRecipe.title}`}
-                              />
-                              {reviewedRecipe.tags.map((tag) => {
-                                return (
-                                        <RecipeInfo key={reviewedRecipe.id} recipe={reviewedRecipe} admin={admin} currentUser={currentUser}/>
-                                )
-                            })}
-                        </div>}
-                        {recipeTags &&
-                                <div className ="allTags">
-                                    {tagsList.map((tag)=>{
-                                        return(
-                                            <div className='tag' key ={tag.id}>
-                                                <p>{tag.name}</p>
-                                            </div>
-                                        )
-                                    })}
-                                </div>
-                            }
-                    </div>
-                        }
-                        
-                    </div>
-                </>
-            }
+                              recipe={reviewedRecipe}
+                              admin={admin}
+                              currentUser={currentUser}
+                            />
+                          );
+                        })}
+                      </div>
+                    )}
+                    {recipeTags && (
+                      <div className="allTags">
+                        {tagsList.map((tag) => {
+                          return (
+                            <div className="tag" key={tag.id}>
+                              <p>{tag.name}</p>
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            </>
+          )}
         </>
       )}
     </>
