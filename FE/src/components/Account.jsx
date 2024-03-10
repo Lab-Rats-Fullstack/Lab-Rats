@@ -175,7 +175,17 @@ export default function Account({ token, admin, currentUser }) {
               <form onSubmit={userUpdate}>
                 <label>
                   Profile Image:
-                  {encoded && (
+                  {userData.imgurl && !encoded.base64 && (
+                    <img
+                      src={userData.imgurl}
+                      alt={
+                        userData.username
+                          ? `${userData.username}'s profile picture.`
+                          : "Profile picture"
+                      }
+                    />
+                  )}
+                  {encoded.base64 && (
                     <img
                       src={encoded.base64 || defaultImg}
                       alt={
