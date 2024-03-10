@@ -26,6 +26,7 @@ export default function NewRecipe({ token, admin, currentUser }) {
   const [userForm, setUserForm] = useState(false);
   const [userBio, setUserBio] = useState(true);
   const [encoded, setEncoded] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const [updatedUser, setUpdatedUser] = useState({});
   useEffect(() => {
@@ -113,193 +114,193 @@ export default function NewRecipe({ token, admin, currentUser }) {
   }
 
   return (
-       <>
+    <>
       {" "}
       {loading ? (
         <Loading />
       ) : (
-    <div className="wrapper">
-      {error ? (
-        <div className="error">
-          <p>{error}</p>
-        </div>
-      ) : (
-        <div className="userInfoContainer">
-          {userBio && (
-            <div className="userInfo">
-              <UserInfo
-                key={userData.id}
-                token={token}
-                userData={userData}
-                admin={admin}
-                currentUser={currentUser}
-              />
-              {admin === true && (
-                <button
-                  onClick={() => {
-                    setUserBio(false);
-                    setUserForm(true);
-                  }}
-                >
-                  Update Profile
-                </button>
-              )}
+        <div className="wrapper">
+          {error ? (
+            <div className="error">
+              <p>{error}</p>
             </div>
-          )}
-          {userForm && (
-            <div className="userUpdateForm">
-              <form onSubmit={userUpdate}>
-                <label>
-                  Profile Image:
-                  {encoded && (
-                    <img
-                      src={encoded.base64 || defaultImg}
-                      alt={
-                        userData.username
-                          ? `${userData.username}'s profile picture.`
-                          : "Profile picture"
+          ) : (
+            <div className="userInfoContainer">
+              {userBio && (
+                <div className="userInfo">
+                  <UserInfo
+                    key={userData.id}
+                    token={token}
+                    userData={userData}
+                    admin={admin}
+                    currentUser={currentUser}
+                  />
+                  {admin === true && (
+                    <button
+                      onClick={() => {
+                        setUserBio(false);
+                        setUserForm(true);
+                      }}
+                    >
+                      Update Profile
+                    </button>
+                  )}
+                </div>
+              )}
+              {userForm && (
+                <div className="userUpdateForm">
+                  <form onSubmit={userUpdate}>
+                    <label>
+                      Profile Image:
+                      {encoded && (
+                        <img
+                          src={encoded.base64 || defaultImg}
+                          alt={
+                            userData.username
+                              ? `${userData.username}'s profile picture.`
+                              : "Profile picture"
+                          }
+                        />
+                      )}
+                      <p>Upload new Profile Image?</p>
+                      <UploadImage setEncoded={setEncoded} />
+                    </label>
+                    <label>
+                      Username:
+                      <input
+                        defaultValue={userData.username}
+                        onChange={(e) =>
+                          setUpdatedUser((prev) => {
+                            return {
+                              ...prev,
+                              username: e.target.value,
+                            };
+                          })
+                        }
+                      />
+                    </label>
+                    <label>
+                      Email:
+                      <input
+                        defaultValue={userData.email}
+                        onChange={(e) =>
+                          setUpdatedUser((prev) => {
+                            return {
+                              ...prev,
+                              email: e.target.value,
+                            };
+                          })
+                        }
+                      />
+                    </label>
+                    <label>
+                      Name:
+                      <input
+                        defaultValue={userData.name}
+                        onChange={(e) =>
+                          setUpdatedUser((prev) => {
+                            return {
+                              ...prev,
+                              name: e.target.value,
+                            };
+                          })
+                        }
+                      />
+                    </label>
+                    <label>
+                      Admin Status:
+                      <select
+                        defaultValue={userData.admin}
+                        onChange={(e) =>
+                          setUpdatedUser((prev) => {
+                            return {
+                              ...prev,
+                              admin: e.target.value,
+                            };
+                          })
+                        }
+                      >
+                        <option value="false">False</option>
+                        <option value="true">True</option>
+                      </select>
+                    </label>
+                    <button type="submit">Submit</button>
+                    <button
+                      onClick={() => {
+                        setUserBio(true);
+                        setUserForm(false);
+                      }}
+                    >
+                      Cancel
+                    </button>
+                  </form>
+                </div>
+              )}
+
+              <div className="userItems">
+                <div className="userItemsNav">
+                  <NavButton
+                    location={`/users/${userId}/recipes`}
+                    buttonText={"Recipes"}
+                  />
+                  <NavButton
+                    location={`/users/${userId}/reviews`}
+                    buttonText={"Reviews"}
+                  />
+                  <NavButton
+                    location={`/users/${userId}/comments`}
+                    buttonText={"Comments"}
+                  />
+                </div>
+                <div className="itemContent">
+                  <Routes>
+                    <Route
+                      async
+                      path="/"
+                      element={
+                        <UserRecipes
+                          userData={userData}
+                          admin={admin}
+                          currentUser={currentUser}
+                        />
                       }
                     />
-                  )}
-                  <p>Upload new Profile Image?</p>
-                  <UploadImage setEncoded={setEncoded} />
-                </label>
-                <label>
-                  Username:
-                  <input
-                    defaultValue={userData.username}
-                    onChange={(e) =>
-                      setUpdatedUser((prev) => {
-                        return {
-                          ...prev,
-                          username: e.target.value,
-                        };
-                      })
-                    }
-                  />
-                </label>
-                <label>
-                  Email:
-                  <input
-                    defaultValue={userData.email}
-                    onChange={(e) =>
-                      setUpdatedUser((prev) => {
-                        return {
-                          ...prev,
-                          email: e.target.value,
-                        };
-                      })
-                    }
-                  />
-                </label>
-                <label>
-                  Name:
-                  <input
-                    defaultValue={userData.name}
-                    onChange={(e) =>
-                      setUpdatedUser((prev) => {
-                        return {
-                          ...prev,
-                          name: e.target.value,
-                        };
-                      })
-                    }
-                  />
-                </label>
-                <label>
-                  Admin Status:
-                  <select
-                    defaultValue={userData.admin}
-                    onChange={(e) =>
-                      setUpdatedUser((prev) => {
-                        return {
-                          ...prev,
-                          admin: e.target.value,
-                        };
-                      })
-                    }
-                  >
-                    <option value="false">False</option>
-                    <option value="true">True</option>
-                  </select>
-                </label>
-                <button type="submit">Submit</button>
-                <button
-                  onClick={() => {
-                    setUserBio(true);
-                    setUserForm(false);
-                  }}
-                >
-                  Cancel
-                </button>
-              </form>
+                    <Route
+                      path="/recipes"
+                      element={
+                        <UserRecipes
+                          userData={userData}
+                          admin={admin}
+                          currentUser={currentUser}
+                        />
+                      }
+                    />
+                    <Route
+                      path="/reviews"
+                      element={
+                        <UserReviews
+                          userData={userData}
+                          admin={admin}
+                          currentUser={currentUser}
+                        />
+                      }
+                    />
+                    <Route
+                      path="/comments"
+                      element={
+                        <UserComments
+                          userData={userData}
+                          admin={admin}
+                          currentUser={currentUser}
+                        />
+                      }
+                    />
+                  </Routes>
+                </div>
+              </div>
             </div>
           )}
-
-          <div className="userItems">
-            <div className="userItemsNav">
-              <NavButton
-                location={`/users/${userId}/recipes`}
-                buttonText={"Recipes"}
-              />
-              <NavButton
-                location={`/users/${userId}/reviews`}
-                buttonText={"Reviews"}
-              />
-              <NavButton
-                location={`/users/${userId}/comments`}
-                buttonText={"Comments"}
-              />
-            </div>
-            <div className="itemContent">
-              <Routes>
-                <Route
-                  async
-                  path="/"
-                  element={
-                    <UserRecipes
-                      userData={userData}
-                      admin={admin}
-                      currentUser={currentUser}
-                    />
-                  }
-                />
-                <Route
-                  path="/recipes"
-                  element={
-                    <UserRecipes
-                      userData={userData}
-                      admin={admin}
-                      currentUser={currentUser}
-                    />
-                  }
-                />
-                <Route
-                  path="/reviews"
-                  element={
-                    <UserReviews
-                      userData={userData}
-                      admin={admin}
-                      currentUser={currentUser}
-                    />
-                  }
-                />
-                <Route
-                  path="/comments"
-                  element={
-                    <UserComments
-                      userData={userData}
-                      admin={admin}
-                      currentUser={currentUser}
-                    />
-                  }
-                />
-              </Routes>
-            </div>
-          </div>
         </div>
-      )}
-    </div>
       )}
     </>
   );
