@@ -29,7 +29,6 @@ async function returnImageUrl(imagePath) {
   // Upload the image
 
   const publicId = await uploadImage(imagePath);
-  console.log(publicId);
   const url = cloudinary.url(publicId);
   return url;
 }
