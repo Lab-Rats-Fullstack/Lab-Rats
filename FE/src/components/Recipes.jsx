@@ -11,11 +11,11 @@ export default function Recipes({ token, currentUser, admin }) {
   const [recipes, setRecipes] = useState([]);
   const [currentRecipes, setCurrentRecipes] = useState([]);
 
-  const [filteredRecipes, setFilteredRecipes] = useState(recipes);
+  const [filteredRecipes, setFilteredRecipes] = useState([]);
+  const [searchFilter, setSearchFilter] = useState(recipes);
   const [searchTerm, setSearchTerm] = useState("");
   const [tags, setTags] = useState([]);
   const [selectedTags, setSelectedTags] = useState([]);
-  useEffect(() => console.log(selectedTags), [selectedTags]);
 
   useEffect(() => {
     async function getAllRecipes() {
@@ -28,7 +28,6 @@ export default function Recipes({ token, currentUser, admin }) {
       }
     }
     getAllRecipes();
-    console.log(recipes);
   }, []);
 
   function changeSearch(e) {
@@ -48,15 +47,26 @@ export default function Recipes({ token, currentUser, admin }) {
         tagsList.toLowerCase().includes(search)
       );
     });
-    setFilteredRecipes(filter);
+    setSearchFilter(filter);
   }, [searchTerm, recipes]);
 
   useEffect(() => {
-    const filter = recipes.filter((recipe) => {
-      const { tags } = recipe;
-      const name = tags.map((tag) => {
-        return tag.name;
+    if (selectedTags.length == 0){
+      setFilteredRecipes(searchFilter);
+    }else{
+      const tagNames = selectedTags.map((tag) => {
+        return tag.toLowerCase();
+      })
+      let tagFilter = searchFilter;
+      tagNames.forEach((tagName) => {
+        tagFilter = tagFilter.filter((recipe) => {
+          const foundRecipe = recipe.tags.find((tag) => {
+            return (tag.name.toLowerCase() === tagName);
+          })
+          return foundRecipe;
+        });
       });
+      
       const tagsList = name.join("");
       const search = selectedTags.join("").toLowerCase();
       return tagsList.toLowerCase().includes(search);
