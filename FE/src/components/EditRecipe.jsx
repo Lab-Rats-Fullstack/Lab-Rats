@@ -191,7 +191,7 @@ export default function EditRecipe({ token, admin }) {
       tags: tagsArray,
     };
 
-    console.log(data.title);
+    console.log(data);
     try {
       const response = await fetch(`${testAPI}recipes/${recipeId}`, {
         method: "PATCH",

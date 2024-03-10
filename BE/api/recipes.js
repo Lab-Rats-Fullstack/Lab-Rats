@@ -76,15 +76,17 @@ recipesRouter.patch("/:recipeId", requireAdmin, async (req, res, next) => {
   const { body: fields } = req;
 
   if (fields.base64) {
-    const { base64: imagePath } = fields.base64;
+    const { base64: imagePath } = fields;
     const imgUrl = await returnImageUrl(imagePath);
     fields.imgUrl = imgUrl;
+    console.log(imgUrl);
   }
 
   delete fields.base64;
 
   try {
     const updatedRecipe = await updateRecipe(recipeId, fields);
+    console.log(updatedRecipe);
     res.send(updatedRecipe);
   } catch (err) {
     next(err);
