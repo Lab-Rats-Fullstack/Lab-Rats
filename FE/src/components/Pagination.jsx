@@ -51,8 +51,8 @@ export default function Pagination({
 
   useEffect(() => {
     splitRecipesIntoPages();
-  }, [numberOfPages, currentPage]);
-  useEffect(() => sliceRecipes(recipeList), [currentPage]);
+  }, [numberOfPages, currentPage, recipeList]);
+  useEffect(() => sliceRecipes(recipeList), [currentPage, recipeList]);
 
   return (
     <div>
