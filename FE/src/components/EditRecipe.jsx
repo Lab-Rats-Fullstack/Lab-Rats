@@ -3,10 +3,10 @@ import { useParams, useNavigate } from "react-router-dom";
 import FormTags from "./FormTags.jsx";
 import UploadImage from "./UploadImage.jsx";
 import defaultImg from "../assets/Default_pfp.jpeg";
-
+import Loading from "./Loading.jsx";
 export default function EditRecipe({ token, admin }) {
-  const testAPI = "http://localhost:3000/api/";
-  const API = "https://culinary-chronicle.onrender.com/api/";
+  const [loading, setLoading] = useState(true);
+  const API = "http://localhost:3000/api/";
   const { recipeId } = useParams();
   const navigate = useNavigate();
 
@@ -24,7 +24,7 @@ export default function EditRecipe({ token, admin }) {
   useEffect(() => {
     async function getRecipeById() {
       try {
-        const response = await fetch(`${testAPI}recipes/${recipeId}`, {
+        const response = await fetch(`${API}recipes/${recipeId}`, {
           method: "GET",
           header: `Bearer ${token}`,
         });
@@ -32,10 +32,7 @@ export default function EditRecipe({ token, admin }) {
         setResponseVar(response.ok);
         const recipe = result.recipe;
         setRecipeObj(recipe);
-        console.log(recipe.title);
         setTitle(recipe.title);
-        console.log(title);
-        //setImage(recipe.imgurl); for larry to change later
         setEstTime(recipe.esttime);
 
         function setInitialIngred(array) {
@@ -100,6 +97,7 @@ export default function EditRecipe({ token, admin }) {
           setInitialInstruct(recipeObj.procedure);
           setInitialNotes(recipeObj.notes);
         }
+        setLoading(false);
       } catch (error) {
         console.error(error);
       }
@@ -168,7 +166,6 @@ export default function EditRecipe({ token, admin }) {
     }
     return output;
   }
-
   useEffect(() => {
     !admin && navigate("/");
   }, []);
@@ -190,10 +187,9 @@ export default function EditRecipe({ token, admin }) {
       notes: noteArray,
       tags: tagsArray,
     };
-
-    console.log(data);
+    console.log(data.title);
     try {
-      const response = await fetch(`${testAPI}recipes/${recipeId}`, {
+      const response = await fetch(`${API}recipes/${recipeId}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -212,6 +208,10 @@ export default function EditRecipe({ token, admin }) {
   }
 
   return (
+  <>
+      {loading ? (
+        <Loading />
+      ) : (
     <div>
       <h3>Editing " {recipeObj.title} "</h3>
       <form onSubmit={handleSubmit}>
@@ -350,5 +350,7 @@ export default function EditRecipe({ token, admin }) {
         <input type="submit" id="submit" value="Submit Changes" />
       </form>
     </div>
+      )}
+    </>
   );
 }

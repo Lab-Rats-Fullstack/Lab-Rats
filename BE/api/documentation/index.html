@@ -104,27 +104,29 @@ async function getAllUsers() {
             <h3>Sample Response</h3>
             <pre>
               <code class="language-js">
-  {
-    "users": [
-        {
-            "id": 1,
-            "email": "adminTest@gmail.com",
-            "username": "adminTest",
-            "name": "Admin Test",
-            "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
-            "admin": true,
-            "reviewcount": 0
-        },
-        {
-            "id": 2,
-            "email": "userTest@gmail.com",
-            "username": "userTest",
-            "name": "User Test",
-            "imgurl": "https://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg",
-            "admin": false,
-            "reviewcount": 1
-        }
-    ]
+{
+  users: [
+    {
+      id: 1,
+      email: "adminTest@gmail.com",
+      username: "adminTest",
+      name: "Admin Test",
+      imgurl:
+        "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+      admin: true,
+      reviewcount: 0,
+    },
+    {
+      id: 2,
+      email: "userTest@gmail.com",
+      username: "userTest",
+      name: "User Test",
+      imgurl:
+        "https://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg",
+      admin: false,
+      reviewcount: 1,
+    },
+  ],
 }
               </code>
             </pre>
@@ -158,17 +160,17 @@ async function getAllUsers() {
               <code class="language-js">
 async function registerUser(username, name, email, password) {
   const newUser = await fetch(`${APIURL}/api/users`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       username,
       name,
       email,
-      password
-    })
-  })
+      password,
+    }),
+  });
   return newUser.json();
 }
               </code>
@@ -179,10 +181,10 @@ async function registerUser(username, name, email, password) {
             <pre>
               <code class="language-js">
 {
-    "message": "Thank you for signing up!",
-    "token": "token string here",
-    "admin": false,
-    "username": "ljreaux"
+  message: "Thank you for signing up!",
+  token: "token string here",
+  admin: false,
+  username: "ljreaux",
 }
               </code>
             </pre>
@@ -214,14 +216,14 @@ async function registerUser(username, name, email, password) {
               <code class="language-js">
 async function loginUser(username, password) {
   const me = await fetch(`${APIURL}/api/users/login`, {
-    method: 'POST',
+    method: "POST",
     headers: {
-      'Content-Type': 'application/json'
+      "Content-Type": "application/json",
     },
     body: JSON.stringify({
       username,
-      password
-    })
+      password,
+    }),
   });
   return me.json();
 }
@@ -232,12 +234,12 @@ async function loginUser(username, password) {
             <h3>Sample Response</h3>
             <pre>
               <code class="language-js">
-                {
-                  "message": "Successfully logged in!",
-                  "token": "token string here",
-                  "admin": false,
-                  "username": "ljreaux"
-              }
+{
+  message: "Successfully logged in!",
+  token: "token string here",
+  admin: false,
+  username: "ljreaux",
+}
               </code>
             </pre>
           </div>
@@ -283,16 +285,16 @@ async function getMyAccount(token) {
             <pre>
               <code class="language-js">
 {
-  "id": 3,
-  "email": "larryreaux@gmail.com",
-  "username": "ljreaux",
-  "name": "Larry Reaux",
-  "imgurl": null,
-  "admin": false,
-  "reviewcount": 0,
-  "recipes": [],
-  "reviews": [],
-  "comments": []
+  id: 3,
+  email: "larryreaux@gmail.com",
+  username: "ljreaux",
+  name: "Larry Reaux",
+  imgurl: null,
+  admin: false,
+  reviewcount: 0,
+  recipes: [],
+  reviews: [],
+  comments: [],
 }
               </code>
             </pre>
@@ -326,19 +328,19 @@ async function getMyAccount(token) {
             <pre>
               <code class="language-js">
 async function updateMyAccount(token, username, name, email, password, imgurl) {
-  const me = await fetch(`${APIURL}/api/me`, {
-    method: 'PATCH',
+  const me = await fetch(`${APIURL}/api/users/me`, {
+    method: "PATCH",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({
       username,
       name,
       email,
       password,
-      imgurl
-    })
+      imgurl,
+    }),
   });
   return me.json();
 }
@@ -350,13 +352,13 @@ async function updateMyAccount(token, username, name, email, password, imgurl) {
             <pre>
               <code class="language-js">
 {
-    "id": 3,
-    "email": "larryreaux@gmail.com",
-    "username": "ljreaux",
-    "name": "Larry R",
-    "imgurl": null,
-    "admin": false,
-    "reviewcount": 0
+  id: 3,
+  email: "larryreaux@gmail.com",
+  username: "ljreaux",
+  name: "Larry R",
+  imgurl: null,
+  admin: true,
+  reviewcount: 0,
 }
               </code>
             </pre>
@@ -396,201 +398,161 @@ async function getUser(userId) {
             <h3>Sample Response for user</h3>
             <pre>
               <code class="language-js">
-  {
-    "id": 1,
-    "username": "adminTest",
-    "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
-    "admin": true,
-    "reviewcount": 0,
-    "recipes": [
-        {
-            "id": 1,
-            "title": "Butter Chicken",
-            "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
-            "avgRating": 4,
-            "tags": [
                 {
-                    "id": 1,
-                    "name": "Main"
-                },
-                ...
-            ]
-        },
-        ...
-        {
-            "id": 13,
-            "title": "Fish and Chips",
-            "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/fish_and_chips?_a=BAMHUyRg0",
-            "avgRating": 0,
-            "tags": [
-                {
-                    "id": 1,
-                    "name": "Main"
-                },
-                {
-                    "id": 49,
-                    "name": "British"
-                },
-                {
-                    "id": 50,
-                    "name": "Seafood"
-                }
-            ]
-        }
-    ],
-    "reviews": [],
-    "comments": [
-        {
-            "id": 1,
-            "userid": 1,
-            "reviewid": 1,
-            "content": "thanks bruh",
-            "review": {
-                "id": 1,
-                "userid": 2,
-                "recipeid": 1,
-                "title": "wow",
-                "content": "this is cool",
-                "rating": 4,
-                "user": {
-                    "id": 2,
-                    "username": "userTest",
-                    "imgurl": "https://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg"
-                },
-                "recipe": {
-                    "id": 1,
-                    "userid": 1,
-                    "title": "Butter Chicken",
-                    "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
-                    "avgRating": 4,
-                    "tags": [
+                  id: 1,
+                  username: "adminTest",
+                  imgurl:
+                    "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+                  admin: true,
+                  reviewcount: 0,
+                  recipes: [
+                    {
+                      id: 1,
+                      title: "Butter Chicken",
+                      imgurl:
+                        "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
+                      esttime: "15 minutes",
+                      avgRating: 4,
+                      tags: [
                         {
-                            "id": 1,
-                            "name": "Main"
+                          id: 1,
+                          name: "Main",
+                          ...
                         },
-                        ...
-                    ],
-                    "user": {
-                        "id": 1,
-                        "username": "adminTest",
-                        "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png"
-                    }
-                }
-            }
-        }
-    ]
-}
+                      ],
+                    },
+                ...
+                    {
+                      id: 13,
+                      title: "Fish and Chips",
+                      imgurl:
+                        "https://res.cloudinary.com/dbwbh7oxd/image/upload/fish_and_chips?_a=BAMHUyRg0",
+                      esttime: "15 minutes",
+                      avgRating: 0,
+                      tags: [
+                        {
+                          id: 1,
+                          name: "Main",
+                        },
+                        {
+                          id: 49,
+                          name: "British",
+                        },
+                        {
+                          id: 50,
+                          name: "Seafood",
+                        },
+                      ],
+                    },
+                  ],
+                  reviews: [],
+                  comments: [
+                    {
+                      id: 1,
+                      userid: 1,
+                      reviewid: 1,
+                      content: "thanks bruh",
+                      review: {
+                        id: 1,
+                        userid: 2,
+                        recipeid: 1,
+                        title: "wow",
+                        content: "this is cool",
+                        rating: 4,
+                        user: {
+                          id: 2,
+                          username: "userTest",
+                          imgurl:
+                            "https://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg",
+                        },
+                        recipe: {
+                          id: 1,
+                          userid: 1,
+                          title: "Butter Chicken",
+                          imgurl:
+                            "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
+                          avgRating: 4,
+                          tags: [
+                            {
+                              id: 1,
+                              name: "Main",
+                            },
+                          ],
+                          user: {
+                            id: 1,
+                            username: "adminTest",
+                            imgurl:
+                              "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
+                          },
+                        },
+                      },
+                    },
+                  ],
+                };
               </code>
             </pre>
           </div>
+        </div>
+        <div id="users-userId-patch">
+          <h3>PATCH /me</h3>
+          <ul>
+            <li>
+              PATCH request for user account info.
+            </li>
+            <li>
+              Headers: 
+              <ul>
+                <li>Authentication with JWT and Admin status required.</li>
+              </ul>
+            </li>
+            <li>
+              Body: (all optional)
+              <ul>
+                <li>username</li>
+                <li>name</li>
+                <li>email</li>
+                <li>password</li>
+                <li>imgurl</li>
+                <li>admin</li>
+              </ul>
+            </li>
+          </ul>
           <div class="request">
-            <h3>Sample Request for admin</h3>
+            <h3>Sample Request</h3>
             <pre>
               <code class="language-js">
-async function adminUserRequest(userId, token){
-  const user = await fetch(`${APIURL}/api/users/${userId}`,
-  {
-    method: 'GET',
+async function updateUserAccount(token, username, name, email, password, imgurl) {
+  const me = await fetch(`${APIURL}/api/users/:userId`, {
+    method: "PATCH",
     headers: {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${token}`
-    }
-  }
-  );
-  return user.json();
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify({
+      username,
+      name,
+      email,
+      password,
+      imgurl,
+    }),
+  });
+  return me.json();
 }
               </code>
             </pre>
           </div>
           <div class="response">
-            <h3>Sample Response for admin</h3>
+            <h3>Sample Response</h3>
             <pre>
               <code class="language-js">
-  {
-    "id": 1,
-    "email": "adminTest@gmail.com",
-    "username": "adminTest",
-    "name": "Admin Test",
-    "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png",
-    "admin": true,
-    "reviewcount": 0,
-    "recipes": [
-        {
-            "id": 1,
-            "title": "Butter Chicken",
-            "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
-            "avgRating": 4,
-            "tags": [
-                {
-                    "id": 1,
-                    "name": "Main"
-                },
-                ...
-            ]
-        },
-        ...
-        {
-            "id": 13,
-            "title": "Fish and Chips",
-            "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/fish_and_chips?_a=BAMHUyRg0",
-            "avgRating": 0,
-            "tags": [
-                {
-                    "id": 1,
-                    "name": "Main"
-                },
-                {
-                    "id": 49,
-                    "name": "British"
-                },
-                {
-                    "id": 50,
-                    "name": "Seafood"
-                }
-            ]
-        }
-    ],
-    "reviews": [],
-    "comments": [
-        {
-            "id": 1,
-            "userid": 1,
-            "reviewid": 1,
-            "content": "thanks bruh",
-            "review": {
-                "id": 1,
-                "userid": 2,
-                "recipeid": 1,
-                "title": "wow",
-                "content": "this is cool",
-                "rating": 4,
-                "user": {
-                    "id": 2,
-                    "username": "userTest",
-                    "imgurl": "https://www.shelbystar.com/gcdn/authoring/authoring-images/2023/10/24/NGAG/71300969007-sauce-1.jpg"
-                },
-                "recipe": {
-                    "id": 1,
-                    "userid": 1,
-                    "title": "Butter Chicken",
-                    "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
-                    "avgRating": 4,
-                    "tags": [
-                        {
-                            "id": 1,
-                            "name": "Main"
-                        },
-                        ...
-                    ],
-                    "user": {
-                        "id": 1,
-                        "username": "adminTest",
-                        "imgurl": "https://www.icb.org.za/wp-content/uploads/2023/08/2023-Blog-header-images-10-1030x579.png"
-                    }
-                }
-            }
-        }
-    ]
+{
+  id: 3,
+  email: "larryreaux@gmail.com",
+  username: "ljreaux",
+  name: "Larry R",
+  imgurl: null,
+  admin: false,
+  reviewcount: 0,
 }
               </code>
             </pre>
@@ -633,6 +595,7 @@ async function getRecipes() {
         "userid": 1,
         "title": "Butter Chicken",
         "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
+        esttime: "15 minutes",
         "avgRating": 4,
         "tags": [
             {
@@ -668,6 +631,7 @@ async function getRecipes() {
       "userid": 1,
       "title": "Fish and Chips",
       "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/fish_and_chips?_a=BAMHUyRg0",
+      esttime: "15 minutes",
       "avgRating": 0,
       "tags": [
           {
@@ -764,6 +728,7 @@ async function createRecipe(token, title, ingredients, procedure, imgUrl, notes,
         "please don't try this."
     ],
     "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/v1709766661/eol9jztzwxxha6g5rezm.png",
+    esttime: "15 minutes",
     "avgRating": 0,
     "tags": [],
     "reviews": [],
@@ -829,6 +794,7 @@ async function getReviewedRecipes(token) {
         "userid": 1,
         "title": "Butter Chicken",
         "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/butter_chicken?_a=BAMHUyRg0",
+        esttime: "15 minutes",
         "avgRating": 4,
         "tags": [
             {
@@ -922,6 +888,7 @@ async function getRecipe(recipeId) {
         ],
         "notes": [],
         "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/buffalo_chicken_sandwhich?_a=BAMHUyRg0",
+        esttime: "15 minutes",
         "avgRating": 0,
         "tags": [
             {
@@ -1031,6 +998,7 @@ async function patchRecipe(recipeId, token, title, ingredients, procedure, imgUr
         "please don't try this."
     ],
     "imgurl": "https://res.cloudinary.com/dbwbh7oxd/image/upload/v1709766661/eol9jztzwxxha6g5rezm.png",
+    "esttime": "15 minutes",
     "avgRating": 0,
     "tags": [],
     "reviews": [],
@@ -1089,8 +1057,8 @@ async function deleteRecipe(recipeId, token) {
             <pre>
               <code class="language-js">
 {
-    "name": "DeleteConfirmation",
-    "message": "Test Recipe has been deleted."
+  "name": "DeleteConfirmation",
+  "message": "Test Recipe has been deleted."
 }
                 </code>
             </pre>

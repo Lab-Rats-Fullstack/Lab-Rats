@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+
 import { Routes, Route, useNavigate, useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 import UserInfo from "./UserInfo";
@@ -8,10 +9,12 @@ import UserComments from "./UserComments";
 import NavButton from "./NavButton";
 import UploadImage from "./UploadImage";
 import defaultImg from "../assets/Default_pfp.jpeg";
+import Loading from "./Loading";
 
 const API = "http://localhost:3000/api/";
 
 export default function Account({ token, admin, currentUser }) {
+  const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState({});
   const {
     recipes: recipeList = [],
@@ -20,7 +23,7 @@ export default function Account({ token, admin, currentUser }) {
   } = userData;
 
   const [error, setError] = useState(null);
-  const [fail, setFail] = useState(true);
+  const [fail, setFail] = useState(false);
   const navigate = useNavigate();
   const [update, setUpdate] = useState(0);
 
@@ -79,6 +82,13 @@ export default function Account({ token, admin, currentUser }) {
     navigate("/login");
   }
 
+  useEffect(() => {
+    if (token == null) {
+      setLoading(false);
+      setFail(true);
+    }
+  }, [userData]);
+
   async function userUpdate(event) {
     event.preventDefault();
     try {
@@ -135,7 +145,11 @@ export default function Account({ token, admin, currentUser }) {
     enableButton();
   }, [password, confirmPassword]);
 
-  return (
+  return (        <>
+      {" "}
+      {loading ? (
+        <Loading />
+      ) : (
     <div className="wrapper">
       {error && <p>{error}</p>}
       {fail ? (
@@ -345,6 +359,7 @@ export default function Account({ token, admin, currentUser }) {
           </div>
         </div>
       )}
-    </div>
+    </div>      )}
+    </>
   );
 }

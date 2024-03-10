@@ -7,7 +7,7 @@ import UserComments from "./UserComments";
 import NavButton from "./NavButton";
 import UploadImage from "./UploadImage";
 import defaultImg from "../assets/Default_pfp.jpeg";
-
+import Loading from "./Loading";
 const API = "http://localhost:3000/api/";
 
 export default function NewRecipe({ token, admin, currentUser }) {
@@ -33,7 +33,6 @@ export default function NewRecipe({ token, admin, currentUser }) {
       return { ...prev, ...encoded };
     });
   }, [encoded]);
-
   useEffect(() => {
     async function userCheck() {
       try {
@@ -48,6 +47,7 @@ export default function NewRecipe({ token, admin, currentUser }) {
           const result = await response.json();
           console.log(result);
           setUserData(result);
+          setLoading(false);
           setUpdatedUser({
             imgurl: result.imgurl,
             username: result.username,
@@ -60,6 +60,7 @@ export default function NewRecipe({ token, admin, currentUser }) {
           const result = await response.json();
           console.log(result);
           setUserData(result);
+          setLoading(false);
           setUpdatedUser({
             imgurl: result.imgurl,
             username: result.username,
@@ -112,6 +113,11 @@ export default function NewRecipe({ token, admin, currentUser }) {
   }
 
   return (
+       <>
+      {" "}
+      {loading ? (
+        <Loading />
+      ) : (
     <div className="wrapper">
       {error ? (
         <div className="error">
@@ -294,5 +300,7 @@ export default function NewRecipe({ token, admin, currentUser }) {
         </div>
       )}
     </div>
+      )}
+    </>
   );
 }
