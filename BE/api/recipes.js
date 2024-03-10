@@ -1,6 +1,7 @@
 const express = require("express");
 const recipesRouter = express.Router();
 const { requireUser, requireAdmin } = require("./utils");
+const { returnImageUrl } = require("./uploadImage");
 
 const {
   getAllRecipesPage,
@@ -23,7 +24,14 @@ recipesRouter.get("/", async (req, res, next) => {
 recipesRouter.post("/", requireAdmin, async (req, res, next) => {
   const { id: userId } = req.user;
   const { body } = req;
-  // requireAdmin eventually
+  if (body.base64) {
+    const { base64: imagePath } = body;
+    const imgUrl = await returnImageUrl(imagePath);
+    body.imgUrl = imgUrl;
+  }
+
+  delete body.base64;
+
   const recipe = { ...body, userId };
   try {
     const newRecipe = await createRecipe(recipe);
@@ -46,7 +54,7 @@ recipesRouter.get("/reviewedRecipes", requireAdmin, async (req, res, next) => {
 recipesRouter.get("/:recipeId", async (req, res, next) => {
   const { recipeId } = req.params;
   let userId = null;
-  if (req.user){
+  if (req.user) {
     userId = req.user.id;
   }
 
@@ -54,8 +62,8 @@ recipesRouter.get("/:recipeId", async (req, res, next) => {
     const recipe = await getRecipeById(recipeId);
     const response = {
       userId,
-      recipe
-    }
+      recipe,
+    };
     res.send(response);
   } catch (err) {
     next(err);
@@ -65,8 +73,14 @@ recipesRouter.get("/:recipeId", async (req, res, next) => {
 recipesRouter.patch("/:recipeId", requireAdmin, async (req, res, next) => {
   const { recipeId } = req.params;
   const { body: fields } = req;
-  // requireAdmin eventually
   try {
+    if (fields.base64) {
+      const { base64: imagePath } = fields;
+      const imgUrl = await returnImageUrl(imagePath);
+      fields.imgurl = imgUrl;
+    }
+    delete fields.base64;
+
     const updatedRecipe = await updateRecipe(recipeId, fields);
     res.send(updatedRecipe);
   } catch (err) {
@@ -79,7 +93,10 @@ recipesRouter.delete("/:recipeId", requireAdmin, async (req, res, next) => {
   // requireAdmin eventually
   try {
     const destroyedRecipe = await destroyRecipeById(recipeId);
-    res.send({name: "DeleteConfirmation", message: `${destroyedRecipe.title} has been deleted.`});
+    res.send({
+      name: "DeleteConfirmation",
+      message: `${destroyedRecipe.title} has been deleted.`,
+    });
   } catch (err) {
     next(err);
   }

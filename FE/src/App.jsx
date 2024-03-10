@@ -52,7 +52,7 @@ function App() {
           ></Route>
           <Route
             path="/recipes/:recipeId/edit"
-            element={<EditRecipe token={token} />}
+            element={<EditRecipe token={token} admin={admin} />}
           ></Route>
           <Route
             path="/tags/:tagname/recipes"

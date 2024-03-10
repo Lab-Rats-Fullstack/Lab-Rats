@@ -2,6 +2,7 @@ const express = require("express");
 const usersRouter = express.Router();
 const bcrypt = require("bcrypt");
 const { requireUser, requireAdmin } = require("./utils");
+const { returnImageUrl } = require("./uploadImage");
 
 const {
   createUser,
@@ -122,6 +123,15 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
     if (fields.password) {
       fields.password = await bcrypt.hash(fields.password, 10);
     }
+
+    if (fields.base64) {
+      const { base64: imagePath } = fields;
+      const imgUrl = await returnImageUrl(imagePath);
+      fields.imgurl = imgUrl;
+    }
+
+    delete fields.base64;
+
     const updatedUser = await updateUser(id, fields);
     res.send(updatedUser);
   } catch (err) {
@@ -147,12 +157,21 @@ usersRouter.get("/:userId/", async (req, res, next) => {
 });
 
 usersRouter.patch("/:userId/", requireAdmin, async (req, res, next) => {
-  const { userId: id } = req.params;
-  const { body: fields } = req;
   try {
+    const { userId: id } = req.params;
+    const { body: fields } = req;
     if (fields.password) {
       fields.password = await bcrypt.hash(fields.password, 10);
     }
+
+    if (fields.base64) {
+      const { base64: imagePath } = fields;
+      const imgUrl = await returnImageUrl(imagePath);
+      fields.imgurl = imgUrl;
+    }
+
+    delete fields.base64;
+    console.log(fields);
     const updatedUser = await updateUser(id, fields);
     res.send(updatedUser);
   } catch (err) {

@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import { Routes, Route, useNavigate } from "react-router-dom";
+
+import { Routes, Route, useNavigate, useParams } from "react-router-dom";
+import { Link } from "react-router-dom";
 import UserInfo from "./UserInfo";
 import UserRecipes from "./UserRecipes";
 import UserReviews from "./UserReviews";
 import UserComments from "./UserComments";
 import NavButton from "./NavButton";
+import UploadImage from "./UploadImage";
+import defaultImg from "../assets/Default_pfp.jpeg";
 import Loading from "./Loading";
 
 const API = "http://localhost:3000/api/";
@@ -34,6 +38,13 @@ export default function Account({ token, admin, currentUser }) {
   const [buttonStatus, setButtonStatus] = useState(true);
   const [userForm, setUserForm] = useState(false);
   const [userBio, setUserBio] = useState(true);
+  const [encoded, setEncoded] = useState({});
+
+  useEffect(() => {
+    setUpdatedUser((prev) => {
+      return { ...prev, ...encoded };
+    });
+  }, [encoded]);
 
   useEffect(() => {
     async function userCheck() {
@@ -56,7 +67,6 @@ export default function Account({ token, admin, currentUser }) {
             admin: result.admin,
           });
           setLoading(false);
-          //   setFail(false);
         } else {
           setFail(true);
         }
@@ -83,7 +93,7 @@ export default function Account({ token, admin, currentUser }) {
     event.preventDefault();
     try {
       if (
-        updatedUser.imgurl == userData.imgurl &&
+        updatedUser.base64 &&
         updatedUser.username == userData.username &&
         updatedUser.email == userData.email &&
         updatedUser.name == userData.name &&
@@ -180,17 +190,28 @@ export default function Account({ token, admin, currentUser }) {
                   <form onSubmit={userUpdate}>
                     <label>
                       Profile Image:
-                      <input
-                        defaultValue={userData.imgurl}
-                        onChange={(e) =>
-                          setUpdatedUser((prev) => {
-                            return {
-                              ...prev,
-                              imgurl: e.target.value,
-                            };
-                          })
-                        }
-                      />
+                      {userData.imgurl && !encoded.base64 && (
+                        <img
+                          src={userData.imgurl}
+                          alt={
+                            userData.username
+                              ? `${userData.username}'s profile picture.`
+                              : "Profile picture"
+                          }
+                        />
+                      )}
+                      {encoded.base64 && (
+                        <img
+                          src={encoded.base64 || defaultImg}
+                          alt={
+                            userData.username
+                              ? `${userData.username}'s profile picture.`
+                              : "Profile picture"
+                          }
+                        />
+                      )}
+                      <p>Upload new Profile Image?</p>
+                      <UploadImage setEncoded={setEncoded} />
                     </label>
                     <label>
                       Username:

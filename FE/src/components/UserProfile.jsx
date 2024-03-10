@@ -5,11 +5,12 @@ import UserRecipes from "./UserRecipes";
 import UserReviews from "./UserReviews";
 import UserComments from "./UserComments";
 import NavButton from "./NavButton";
+import UploadImage from "./UploadImage";
+import defaultImg from "../assets/Default_pfp.jpeg";
 import Loading from "./Loading";
 const API = "http://localhost:3000/api/";
 
 export default function NewRecipe({ token, admin, currentUser }) {
-  const [loading, setLoading] = useState(true);
   const [userData, setUserData] = useState({});
   const {
     recipes: recipeList = [],
@@ -24,9 +25,15 @@ export default function NewRecipe({ token, admin, currentUser }) {
 
   const [userForm, setUserForm] = useState(false);
   const [userBio, setUserBio] = useState(true);
+  const [encoded, setEncoded] = useState({});
+  const [loading, setLoading] = useState(true);
 
   const [updatedUser, setUpdatedUser] = useState({});
-
+  useEffect(() => {
+    setUpdatedUser((prev) => {
+      return { ...prev, ...encoded };
+    });
+  }, [encoded]);
   useEffect(() => {
     async function userCheck() {
       try {
@@ -75,7 +82,7 @@ export default function NewRecipe({ token, admin, currentUser }) {
     event.preventDefault();
     try {
       if (
-        updatedUser.imgurl == userData.imgurl &&
+        updatedUser.base64 &&
         updatedUser.username == userData.username &&
         updatedUser.admin == userData.admin
       ) {
@@ -145,17 +152,18 @@ export default function NewRecipe({ token, admin, currentUser }) {
                   <form onSubmit={userUpdate}>
                     <label>
                       Profile Image:
-                      <input
-                        defaultValue={userData.imgurl}
-                        onChange={(e) =>
-                          setUpdatedUser((prev) => {
-                            return {
-                              ...prev,
-                              imgurl: e.target.value,
-                            };
-                          })
-                        }
-                      />
+                      {encoded && (
+                        <img
+                          src={encoded.base64 || defaultImg}
+                          alt={
+                            userData.username
+                              ? `${userData.username}'s profile picture.`
+                              : "Profile picture"
+                          }
+                        />
+                      )}
+                      <p>Upload new Profile Image?</p>
+                      <UploadImage setEncoded={setEncoded} />
                     </label>
                     <label>
                       Username:
@@ -202,7 +210,7 @@ export default function NewRecipe({ token, admin, currentUser }) {
                     <label>
                       Admin Status:
                       <select
-                        value={userData.admin}
+                        defaultValue={userData.admin}
                         onChange={(e) =>
                           setUpdatedUser((prev) => {
                             return {

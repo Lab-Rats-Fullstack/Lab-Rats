@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormTags from "./FormTags.jsx";
+import UploadImage from "./UploadImage.jsx";
+import defaultImg from "../assets/Default_pfp.jpeg";
 
 export default function NewRecipe({ token, admin }) {
   const nav = useNavigate();
@@ -75,6 +77,7 @@ export default function NewRecipe({ token, admin }) {
     return output;
   }
 
+
   useEffect(() => {
     !admin && nav("/");
   }, []);
@@ -92,7 +95,7 @@ export default function NewRecipe({ token, admin }) {
       esttime: estTime,
       ingredients: ingredArray,
       procedure: instructArray,
-      imgurl: image,
+      ...image,
       notes: noteArray,
       tags: tagsArray,
     };
@@ -202,15 +205,13 @@ export default function NewRecipe({ token, admin }) {
         })}
 
         <label>Image: </label>
-        <input
-          type="text"
-          id="image"
-          name="image"
-          value={image}
-          onChange={(e) => {
-            setImage(e.target.value);
-          }}
-        />
+        <UploadImage setEncoded={setImage} />
+        {image.base64 && (
+          <img
+            src={image.base64 || defaultImg}
+            alt={title ? `${title} image.` : "New Recipe Image."}
+          />
+        )}
 
         <label>Notes: </label>
         {notesList.map((singleNote, index) => {

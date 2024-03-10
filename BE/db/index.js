@@ -58,7 +58,7 @@ async function updateUser(id, fields = {}) {
       UPDATE users
       SET ${setString}
       WHERE id=${id}
-      RETURNING id, email, username, name, imgUrl, admin, reviewCount;
+      RETURNING id, email, username, name, imgurl, admin, reviewCount;
     `,
       Object.values(fields)
     );
@@ -340,7 +340,7 @@ async function getRecipeById(recipeId) {
       tags: tags,
       reviews: reviews,
       user: user,
-      avgRating: avgRating
+      avgRating: avgRating,
     };
 
     return recipeObject;
@@ -397,7 +397,7 @@ async function getUserPageRecipeById(recipeId) {
     const recipeObject = {
       ...recipeInfo,
       tags: tags,
-      avgRating: avgRating
+      avgRating: avgRating,
     };
 
     return recipeObject;
@@ -447,7 +447,7 @@ async function getOtherPageRecipeById(recipeId) {
       ...recipeInfo,
       tags: tags,
       user: userInfo,
-      avgRating: avgRating
+      avgRating: avgRating,
     };
 
     return recipeObject;
@@ -846,21 +846,24 @@ async function createRecipeTag(recipeId, tagId) {
  * REVIEWS Methods
  */
 
-async function getAverageRating(recipeId){
-  try{
-    const {rows: ratings} = await client.query(`
+async function getAverageRating(recipeId) {
+  try {
+    const { rows: ratings } = await client.query(
+      `
       SELECT rating
       FROM reviews
       WHERE recipeId=$1;
-    `, [recipeId]);
+    `,
+      [recipeId]
+    );
 
     let ratingsSum = 0;
     let avgRating;
 
-    if (!ratings.length || ratings.length == 0){
+    if (!ratings.length || ratings.length == 0) {
       avgRating = 0;
     } else {
-      ratings.forEach((rating)=>{
+      ratings.forEach((rating) => {
         ratingsSum = ratingsSum + rating.rating;
       });
 
@@ -868,12 +871,10 @@ async function getAverageRating(recipeId){
     }
 
     return avgRating;
-
-  } catch (error){
-    throw (error);
+  } catch (error) {
+    throw error;
   }
 }
-
 
 //GET REVIEW INFO BY ID IN DB
 async function getReviewInfoById(reviewId) {
@@ -1462,5 +1463,5 @@ module.exports = {
   getRecipeById,
   getReviewById,
   getCommentById,
-  getPublicUserPageById
+  getPublicUserPageById,
 };
