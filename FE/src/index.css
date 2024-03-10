@@ -18,6 +18,8 @@ body {
 
 main {
   width: 100vw;
+  display: grid;
+  place-items: center;
 }
 #root {
   font-family: "Fira Sans Condensed", sans-serif;
@@ -58,7 +60,7 @@ input[type="text"],
 input,
 select {
   border-radius: 0.5rem;
-  border: 1px solid var(--clr-accent-two);
+  border: 1.5px solid var(--clr-accent-two);
 }
 
 button:hover,
@@ -113,12 +115,13 @@ a:focus {
 .account a:hover .logout {
   display: block;
 }
+
 .userInfoContainer {
   width: 100%;
   display: grid;
   gap: 2rem;
   padding: 2rem;
-  grid-template-columns: 25%, 75%;
+  grid-template-columns: 25% 75%;
 }
 
 .userInfo,
@@ -146,11 +149,12 @@ a:focus {
 }
 
 .userItems {
-  grid-column-start: 2;
-  grid-row-start: 1;
-  border: 1px solid var(--clr-accent-two);
+  border: 1.5px solid var(--clr-accent-two);
   border-radius: 0.5rem;
   padding: 2rem;
+  width: 80%;
+  display: grid;
+  place-items: center;
 }
 
 .userItemsNav {
@@ -160,14 +164,25 @@ a:focus {
   gap: 0.5rem;
 }
 
+.itemContent {
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
 .allUsers,
 .userCard,
 .reviewedRecipes,
-.reviewedRecipeCard {
+.reviewedRecipeCard,
+.userRecipes,
+.userInfo,
+.userReviews,
+.userComments {
   width: 100%;
   display: grid;
   place-items: center;
   margin-block: 1rem;
+  text-align: center;
 }
 
 .userCard img,
@@ -199,7 +214,7 @@ a:focus {
 }
 
 .tagBox div {
-  border: 1px solid var(--clr-accent-two);
+  border: 1.5px solid var(--clr-accent-two);
   padding: 1rem;
   border-radius: 10px;
   display: grid;
@@ -209,52 +224,74 @@ a:focus {
 }
 
 .tagBox div label input {
-  margin-inline: .5rem;
+  margin-inline: 0.5rem;
 }
 
 .recipeCard {
-  border: 1px solid var(--clr-accent-two);
+  border: 1.5px solid var(--clr-accent-two);
   background-color: var(--clr-accent-four);
   border-radius: 10px;
   padding: 1rem;
   margin: 1rem;
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-template-columns: 30% 70%;
   place-items: center;
   width: 80%;
+  text-align: center;
+  font-size: 1.25rem;
 }
-
-.recipeCard h2 {
-  grid-column-start: 2;
-  grid-column-end: 4;
+.cardContent {
+  display: grid;
+  width: 100%;
+  place-items: center;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
 .recipeCard img {
   max-width: 80%;
   aspect-ratio: 1;
   grid-column-start: 1;
-  grid-row-start: 1;
-  grid-row-end: 3;
   border-radius: 50%;
   object-fit: cover;
 }
 
-.recipeCard p:first-of-type {
-  grid-column-start: 2;
-  grid-column-end: 4;
-}
-
-.recipeCard p:last-of-type {
+.recipeTitle {
   grid-column-start: 1;
+  grid-column-end: 3;
+  font-family: "Homemade Apple", cursive;
+  font-size: 1.5rem;
 }
 
-.recipeCard button {
-  grid-column-end: 4;
+.username {
+  grid-column: 1/3;
+}
+
+.esttime {
+  grid-column: 3/-1;
+}
+.starContainer,
+.notReviewed {
+  grid-column: 3/-1;
+  width: 100%;
+}
+
+.recipeCardTags {
+  grid-column: 1/-1;
+  display: flex;
+  gap: 1rem;
+}
+
+.recipeButtons {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  grid-column: 3/-1;
+  gap: 1rem;
 }
 
 .top,
 .bottom {
-  border: 1px solid var(--clr-accent-two);
+  border: 1.5px solid var(--clr-accent-two);
   background-color: var(--clr-accent-four);
   border-radius: 10px;
   padding: 2rem;
@@ -344,7 +381,7 @@ a:focus {
 }
 
 .newRecipeForm {
-  border: 1px solid var(--clr-accent-two);
+  border: 1.5px solid var(--clr-accent-two);
   background-color: var(--clr-accent-four);
   border-radius: 10px;
   display: grid;
@@ -375,17 +412,15 @@ a:focus {
 }
 
 .wrapper {
-  width: 100%;
+  width: 80%;
   display: grid;
-  place-items: start;
-  grid-template-columns: 1fr 1fr;
   gap: 4rem;
   margin-block: 2rem;
 }
 
 .login,
 .register {
-  border: 1px solid var(--clr-accent-two);
+  border: 1.5px solid var(--clr-accent-two);
   background-color: var(--clr-accent-four);
   border-radius: 10px;
   width: 80%;
@@ -438,7 +473,7 @@ a:focus {
   display: flex;
   align-items: center;
   justify-content: center;
-  border: 1px solid var(--clr-accent-two);
+  border: 1.5px solid var(--clr-accent-two);
   border-radius: 10px;
   width: fit-content;
   padding: 1em;
@@ -458,12 +493,12 @@ a:focus {
     39% 35%
   );
   display: inline-block;
-  height: 4em;
-  width: 4em;
+  height: 8em;
+  width: 8em;
 }
 
 .average {
-  font-size: 4em;
+  font-size: 8em;
   margin-left: 0.25em;
   color: var(--clr-accent-two);
 }
@@ -505,6 +540,12 @@ a:focus {
   background-color: var(--clr-secondary);
   border-radius: 10px;
   width: 90%;
+}
+
+.mainPageTitle {
+  font-size: 2rem;
+  color: var(--clr-primary);
+  margin: 0;
 }
 
 /* tabs styles */
@@ -576,7 +617,7 @@ a:focus {
 .loading::after {
   position: absolute;
   right: -3rem;
-  top: -.75rem;
+  top: -0.75rem;
   content: "";
   margin: auto;
   border: 5px solid var(--clr-accent-four);
@@ -587,6 +628,10 @@ a:focus {
   animation: spinner 2s ease-in-out infinite;
 }
 @keyframes spinner {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }

@@ -25,7 +25,6 @@ export default function renderRecipesByTag() {
       {recipeList.map((recipe) => {
         return <RecipeCard key={recipe.id} recipe={recipe} />;
       })}
-      ;
     </div>
   );
 }

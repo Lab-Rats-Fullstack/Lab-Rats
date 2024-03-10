@@ -136,7 +136,7 @@ export default function Account({ token, admin, currentUser }) {
   }, [password, confirmPassword]);
 
   return (
-    <div className="wrapper">
+    <div>
       {error && <p>{error}</p>}
       {fail ? (
         <div className="fail">

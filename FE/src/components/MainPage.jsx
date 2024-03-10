@@ -77,11 +77,15 @@ export default function MainPage({ token, currentUser }) {
 
   return (
     <div className="mainPageContainer">
-      {" "}
       <Tabs tagsOutput={tagsOutput} handleTagsClick={handleTagsClick} />
       {recipes && featRecipe && featRecipe.tags ? (
         <div className="recipesContainer">
-          <RecipeCard key={featRecipe.id} recipe={featRecipe} currentUser={currentUser} />
+          <h2 className="mainPageTitle">Featured Recipe</h2>
+          <RecipeCard
+            key={featRecipe.id}
+            recipe={featRecipe}
+            currentUser={currentUser}
+          />
         </div>
       ) : (
         <div>error</div>

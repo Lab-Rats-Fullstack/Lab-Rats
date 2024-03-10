@@ -10,8 +10,8 @@ export default function Recipes({ token, currentUser, admin }) {
   const [filteredRecipes, setFilteredRecipes] = useState(recipes);
   const [searchTerm, setSearchTerm] = useState("");
   const [tags, setTags] = useState([]);
-  const [selectedTags, setSelectedTags] = useState([])
-  useEffect(()=>console.log(selectedTags), [selectedTags])
+  const [selectedTags, setSelectedTags] = useState([]);
+  useEffect(() => console.log(selectedTags), [selectedTags]);
 
   useEffect(() => {
     async function getAllRecipes() {
@@ -54,10 +54,8 @@ export default function Recipes({ token, currentUser, admin }) {
         return tag.name;
       });
       const tagsList = name.join("");
-      const search = selectedTags.join('').toLowerCase();
-      return (
-        tagsList.toLowerCase().includes(search)
-      );
+      const search = selectedTags.join("").toLowerCase();
+      return tagsList.toLowerCase().includes(search);
     });
     setFilteredRecipes(filter);
   }, [selectedTags, recipes]);
@@ -78,30 +76,28 @@ export default function Recipes({ token, currentUser, admin }) {
   return (
     <div className="recipesContainer">
       <div className="searchContainer">
-      <label htmlFor="search-bar">
-        Search Recipes:
-        <input
-          className="searchBar"
-          type="text"
-          value={searchTerm}
-          onChange={changeSearch}
-        />
-      </label>
-      <RecipesPageTabs tags={tags} setSelectedTags={setSelectedTags}/>
+        <label htmlFor="search-bar">
+          Search Recipes:
+          <input
+            className="searchBar"
+            type="text"
+            value={searchTerm}
+            onChange={changeSearch}
+          />
+        </label>
+        <RecipesPageTabs tags={tags} setSelectedTags={setSelectedTags} />
       </div>
       {filteredRecipes ? (
         filteredRecipes.length >= 1 ? (
           filteredRecipes.map((recipe) => {
             return (
-              <div key={recipe.id}>
-                <RecipeCard
-                  key={recipe.id}
-                  recipe={recipe}
-                  token={token}
-                  currentUser={currentUser}
-                  admin={admin}
-                />
-              </div>
+              <RecipeCard
+                key={recipe.id}
+                recipe={recipe}
+                token={token}
+                currentUser={currentUser}
+                admin={admin}
+              />
             );
           })
         ) : (
