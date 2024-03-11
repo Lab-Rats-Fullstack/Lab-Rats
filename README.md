@@ -179,11 +179,11 @@ Admin accessing the website will be able to:
 
 # Potential Functionality
 Users in the future may:
-    - gain the ability to create, edit, delete their own recipes
+- gain the ability to create, edit, delete their own recipes
 
 Admin in the future may:
-    - gain the ability to create new category tags
-    - gain the ability to edit category tags
+- gain the ability to create new category tags
+- gain the ability to edit category tags
 
 Tags on recipe cards will be links similar to the tabs on main page.
 
