@@ -233,9 +233,6 @@ export default function EditRecipe({ token, admin }) {
               <FormTags tagsList={tagsList} setTagsList={setTagsList} />
             </div>
 
-            {/* <label>Current Image: </label>
-            <img src={image}/> */}
-
             <label>Image: </label>
               <UploadImage setEncoded={setImage} />
               {recipeObj.imgurl && !image.base64 && (
