@@ -832,3 +832,32 @@ a:focus {
   gap: 1rem;
   margin: 1rem;
 }
+
+@media only screen and (max-width: 500px) {
+  body {
+    font-size: 0.75rem;
+  }
+  .userInfoContainer {
+    grid-template-columns: 1fr;
+    display: grid;
+    place-items: center;
+  }
+  .userInfo,
+  .userUpdateForm {
+    position: static;
+  }
+  .userItems {
+    grid-column: 1/-1;
+    width: 70%;
+  }
+  .allUsers {
+    grid-template-columns: 1fr;
+  }
+  .recipeCard {
+    grid-template-columns: 1fr;
+    padding: 1em;
+  }
+  .tagBox div {
+    grid-template-columns: 1fr;
+  }
+}
