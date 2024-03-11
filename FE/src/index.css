@@ -109,7 +109,7 @@ a:focus {
 
 .navbar a,
 .navbar div {
-  padding-block: 1.5rem;
+  padding-block: 2rem;
   margin-inline: 1rem;
 }
 
@@ -122,7 +122,7 @@ a:focus {
 .logout {
   position: absolute;
   width: 100%;
-  top: 65%;
+  top: 60%;
   border: none;
   display: none;
 }
@@ -134,8 +134,8 @@ a:focus {
   width: 100%;
   display: grid;
   gap: 2rem;
-  padding: 2rem;
-  grid-template-columns: 25%, 75%;
+  padding-block: 2rem;
+  grid-template-columns: 25% 75%;
 }
 
 .userInfo,
@@ -149,8 +149,16 @@ a:focus {
   margin: 2rem;
   border: 1.5px solid var(--clr-accent-two);
   border-radius: 0.5rem;
-  padding: 0.5rem;
-  max-width: 60%;
+  padding: 1rem;
+  max-width: 80%;
+}
+
+.userUpdateForm {
+  width: 100%;
+}
+
+#image {
+  width: 90%;
 }
 
 .userUpdateForm form {
@@ -162,11 +170,10 @@ a:focus {
   margin-left: 0.5rem;
 }
 
-.userInfo img {
-  width: 200px;
-  height: 200px;
-  border-radius: 50%;
-  object-fit: cover;
+.userInfo img,
+.userUpdateForm img {
+  max-width: 80%;
+  padding-block: 1rem;
 }
 
 .usersUsername {
@@ -182,7 +189,7 @@ a:focus {
   display: grid;
   place-items: center;
   grid-column-start: 2;
-  min-width: 60rem;
+  /* min-width: 60rem; */
 }
 
 .userItemsNav {
@@ -255,15 +262,16 @@ a:focus {
 }
 
 .searchContainer {
+  width: 100%;
   display: grid;
   grid-template-columns: 1fr 1fr;
   place-items: center;
-
+  margin-inline: 1rem;
 }
 
+.search-bar,
 .searchBar {
-  margin-inline: 0.5rem;
-  min-width: 25rem;
+  width: 100%;
 }
 
 .tagBox {
@@ -280,7 +288,6 @@ a:focus {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
   max-height: 2rem;
-  min-width: 100%;
   overflow-y: scroll;
   font-size: medium;
 }
@@ -307,7 +314,7 @@ a:focus {
 .cardContent {
   display: grid;
   width: 100%;
-  place-items: right;
+  place-items: center;
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
@@ -330,7 +337,6 @@ a:focus {
 .username {
   grid-column: 1/3;
   font-size: large;
-
 }
 
 .esttime {
@@ -340,7 +346,6 @@ a:focus {
 .notReviewed {
   grid-column: 3/-1;
   width: 100%;
-  max-height: 50%;
 }
 
 .recipeCardTags {
