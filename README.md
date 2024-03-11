@@ -10,29 +10,29 @@ Larry Reaux  - links here-
 
 # Current Functionality
 Main page:
-    -contains tabs of the recipe category tags for quick navigation
-    -features a random recipe each time Main page is accessed so that more recipes are seen
+-contains tabs of the recipe category tags for quick navigation
+-features a random recipe each time Main page is accessed so that more recipes are seen
 
 Recipes page:
-    -contains all recipes in pagination for easier viewing
-    -has a search bar that will search for recipes via Title and category tags
-    -has a category tag filter for faster searches
+-contains all recipes in pagination for easier viewing
+-has a search bar that will search for recipes via Title and category tags
+-has a category tag filter for faster searches
 
 Login page:
-    -contains both User Login and User Registration
-    -login requires:
-        -username
-        -password
-        -submit button
-    -registration requires:
-        -username
-        -email
-        -name
-        -password
-        -confirm password
-        -submit button
-            -new password must match itself on a confirm password section or submit button will disable
-    -upon successful login/registration an Alert informs the user they are logged in and user is redirected to their account page
+-contains both User Login and User Registration
+-login requires:
+-username
+-password
+-submit button
+-registration requires:
+    -username
+    -email
+    -name
+    -password
+    -confirm password
+    -submit button
+        -new password must match itself on a confirm password section or submit button will disable
+        -upon successful login/registration an Alert informs the user they are logged in and user is redirected to their account page
 
 Account page:
     -contains a section for user personal information
