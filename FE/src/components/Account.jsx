@@ -285,7 +285,7 @@ export default function Account({ token, admin, currentUser }) {
                     <button type="submit" disabled={buttonStatus}>
                       Submit
                     </button>
-                    <button
+                    <button className="cancel"
                       onClick={() => {
                         setUserBio(true);
                         setUserForm(false);

@@ -225,7 +225,7 @@ export default function NewRecipe({ token, admin, currentUser }) {
                       </select>
                     </label>
                     <button type="submit">Submit</button>
-                    <button
+                    <button className="cancel"
                       onClick={() => {
                         setUserBio(true);
                         setUserForm(false);
