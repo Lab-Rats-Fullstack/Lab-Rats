@@ -91,28 +91,28 @@ Viewer/User sees:
         - if there are comments, each will display in the format of the comment card minus the username
 
 Admin additionally sees:
-    - contains a section for user personal information
-        - profile image
-        - username
-        - email
-        - name
-        - admin status
-            - either user or Admin
-    - contains an update button that is a form
-    - update form contains:
-        - Image preview for updating profile image
-        - username- prefilled in with current username
-        - email- prefilled in with current email address
-        - name- prefilled in with current name
-        - admin status - true/false drop down selector
-            - status is pre-set to user's current admin status
-        - password
-            - old password is not provided for security
-            - if no new password is added, password will not be updated
-        - confirm password
-        - submit button
-            - new password must match itself on a confirm password section or submit button will disable
-        - cancel button
+- contains a section for user personal information
+    - profile image
+    - username
+    - email
+    - name
+    - admin status
+        - either user or Admin
+- contains an update button that is a form
+- update form contains:
+    - Image preview for updating profile image
+    - username- prefilled in with current username
+    - email- prefilled in with current email address
+    - name- prefilled in with current name
+    - admin status - true/false drop down selector
+        - status is pre-set to user's current admin status
+    - password
+        - old password is not provided for security
+        - if no new password is added, password will not be updated
+    - confirm password
+    - submit button
+        - new password must match itself on a confirm password section or submit button will disable
+    - cancel button
 
 Recipe card:
     - recipe Title
