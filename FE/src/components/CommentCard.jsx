@@ -13,7 +13,7 @@ export default function CommentInfo ({comment, currentUser}) {
                      :
                     <Link className="username"to={`/users/${comment.review.user.id}`}>@{comment.review.user.username}</Link>
                     }</p>
-            <p>for recipe {comment.review.recipe.title}</p>
+            <p>for recipe <Link className="recipeTitle" to={`/recipes/${comment.review.recipe.id}`}>{comment.review.recipe.title}</Link></p>
             <p>by {(comment.review.recipe.user.username === currentUser) ?
                     <Link className="username"to={`/account`}>@{comment.review.recipe.user.username}</Link>
                      :

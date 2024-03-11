@@ -1,5 +1,4 @@
 import { useState } from "react";
-import RecipeCard from "./RecipeCard";
 import NavButton from "./NavButton";
 import Pagination from "./Pagination";
 

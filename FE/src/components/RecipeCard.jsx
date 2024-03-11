@@ -14,7 +14,7 @@ export default function RecipeInfo({ recipe, admin, currentUser}) {
         src={recipe.imgurl || defaultImg}
         alt={`A picture of ${recipe.title}`}
       />
-      <p className="recipeTitle">{recipe.title}</p>
+      <Link className="recipeTitle" to={`/recipes/${recipe.id}`}>{recipe.title}</Link>
       {recipe.user && 
         <>
           {(recipe.user.username === currentUser) ?

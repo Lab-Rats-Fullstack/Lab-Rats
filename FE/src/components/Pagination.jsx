@@ -56,7 +56,7 @@ export default function Pagination({
 
   return (
     <div>
-      {currentRecipes.map((recipe) => {
+      {currentRecipes == "" ? <p className="noContent">There are currently no recipes.</p> : currentRecipes.map((recipe) => {
         return (
           <RecipeCard
             recipe={recipe}
