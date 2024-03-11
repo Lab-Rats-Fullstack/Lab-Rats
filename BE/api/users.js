@@ -119,21 +119,26 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
     const { body: fields } = req;
     if (fields.admin) {
       delete fields.admin;
+      next({
+        name: "SelfAdminChangeError",
+        message: "You cannot change your own admin status.",
+      });
+    }else {
+      if (fields.password) {
+        fields.password = await bcrypt.hash(fields.password, 10);
+      }
+  
+      if (fields.base64) {
+        const { base64: imagePath } = fields;
+        const imgUrl = await returnImageUrl(imagePath);
+        fields.imgurl = imgUrl;
+      }
+  
+      delete fields.base64;
+  
+      const updatedUser = await updateUser(id, fields);
+      res.send(updatedUser);
     }
-    if (fields.password) {
-      fields.password = await bcrypt.hash(fields.password, 10);
-    }
-
-    if (fields.base64) {
-      const { base64: imagePath } = fields;
-      const imgUrl = await returnImageUrl(imagePath);
-      fields.imgurl = imgUrl;
-    }
-
-    delete fields.base64;
-
-    const updatedUser = await updateUser(id, fields);
-    res.send(updatedUser);
   } catch (err) {
     next(err);
   }
@@ -159,6 +164,7 @@ usersRouter.get("/:userId/", async (req, res, next) => {
 usersRouter.patch("/:userId/", requireAdmin, async (req, res, next) => {
   try {
     const { userId: id } = req.params;
+    const tokenId = req.user.id;
     const { body: fields } = req;
     if (fields.password) {
       fields.password = await bcrypt.hash(fields.password, 10);
@@ -171,9 +177,22 @@ usersRouter.patch("/:userId/", requireAdmin, async (req, res, next) => {
     }
 
     delete fields.base64;
-    console.log(fields);
-    const updatedUser = await updateUser(id, fields);
-    res.send(updatedUser);
+
+    console.log("admin field:", fields.admin);
+    console.log("id of token:", tokenId);
+    console.log("id of param", id);
+
+    if(fields.admin && (tokenId == id)){
+      delete fields.admin;
+      next({
+        name: "SelfAdminChangeError",
+        message: "You cannot change your own admin status, even as an admin.",
+      });
+    } else {
+      console.log(fields);
+      const updatedUser = await updateUser(id, fields);
+      res.send(updatedUser);
+    }
   } catch (err) {
     next(err);
   }
