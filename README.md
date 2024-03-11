@@ -3,10 +3,10 @@ Culinary Chronicle is a PERN stack recipe review website. It allows users to reg
 Due to the nature of the free tier on Render, loading times when the website has been inactive can be long. If loading takes longer than a minute, refreshing the page should ensure the server is up and running properly.
 
 ### Authored by:   
-Lisa Barry  -links here-
-Jared May  -links here-
-Allison Meadors  -links here-
-Larry Reaux  -links here-
+Lisa Barry  -links here-  
+Jared May  -links here-  
+Allison Meadors  -links here-  
+[Larry Reaux](https://www.linkedin.com/in/ljreaux/)  
 
 # Current Functionality
 Main page:
