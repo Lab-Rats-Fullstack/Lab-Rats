@@ -397,6 +397,9 @@ a:focus {
   width: 80%;
 }
 
+.reviewTitle {
+}
+
 .bottom {
   grid-template-columns: 100%;
 }
@@ -535,6 +538,9 @@ a:focus {
 
 .reviewContent {
   grid-column: 1/-1;
+}
+.reviewContent .username {
+  grid-column: 3 span 2;
 }
 
 .noComments {
@@ -896,5 +902,9 @@ a:focus {
   }
   .buttonContainer {
     grid-row-start: 8;
+  }
+  .reviewCard,
+  .commentCard {
+    grid-template-columns: 1fr;
   }
 }
