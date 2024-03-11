@@ -5,7 +5,6 @@ Due to the nature of the free tier on Render, loading times when the website has
 ### Authored by:   
 Lisa Barry  -links here-  
 [Jared May](https://www.linkedin.com/in/jaredmaycoding/)
-
 Allison Meadors  -links here-    
 [Larry Reaux](https://www.linkedin.com/in/ljreaux/)
 
