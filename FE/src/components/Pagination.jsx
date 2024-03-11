@@ -33,7 +33,7 @@ export default function Pagination({
   function CreatePageButtons() {
     const arr = new Array(numberOfPages).fill(0);
     return (
-      <div>
+      <div className="pageButtons">
         {arr.length > 1 ? (
           arr.map((item, idx) => {
             return (
@@ -55,7 +55,7 @@ export default function Pagination({
   useEffect(() => sliceRecipes(recipeList), [currentPage, recipeList]);
 
   return (
-    <div>
+    <>
       {currentRecipes.map((recipe) => {
         return (
           <RecipeCard
@@ -68,6 +68,6 @@ export default function Pagination({
         );
       })}
       <CreatePageButtons />
-    </div>
+    </>
   );
 }

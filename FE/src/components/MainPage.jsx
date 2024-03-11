@@ -88,6 +88,7 @@ export default function MainPage({ token, currentUser }) {
           <Tabs tagsOutput={tagsOutput} handleTagsClick={handleTagsClick} />
           {recipes && featRecipe && featRecipe.tags ? (
             <div className="recipesContainer">
+              <h2 className="featured">Featured Recipe</h2>
               <RecipeCard
                 key={featRecipe.id}
                 recipe={featRecipe}
