@@ -860,4 +860,24 @@ a:focus {
   .tagBox div {
     grid-template-columns: 1fr;
   }
+  .top {
+    text-align: center;
+  }
+  .singleRecipeCard img,
+  .singleRecipeTitle,
+  .ingredientTitle,
+  .ingredients,
+  .averageRating {
+    grid-column: 1/-1;
+    grid-row: auto;
+  }
+  .singleRecipeCard img {
+    width: 60%;
+  }
+  .singleRecipeUsername {
+    grid-column: span 2;
+  }
+  .buttonContainer {
+    grid-row-start: 8;
+  }
 }
