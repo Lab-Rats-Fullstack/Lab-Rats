@@ -55,8 +55,8 @@ export default function Pagination({
   useEffect(() => sliceRecipes(recipeList), [currentPage, recipeList]);
 
   return (
-    <>
-      {currentRecipes.map((recipe) => {
+    <div>
+      {currentRecipes == "" ? <p className="noContent">There are currently no recipes.</p> : currentRecipes.map((recipe) => {
         return (
           <RecipeCard
             recipe={recipe}

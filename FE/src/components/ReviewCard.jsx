@@ -8,7 +8,7 @@ export default function ReviewInfo ({review, currentUser}) {
         <div className="reviewCard" key={review.id}>
             <p className="reviewTitle">Review: {review.title}</p>
             <p className="reviewContent">{review.content}</p>
-            <p>for recipe {review.recipe.title}</p>
+            <p>for recipe <Link className="recipeTitle" to={`/recipes/${review.recipe.id}`}>{review.recipe.title}</Link></p>
             <p>by {(review.recipe.user.username === currentUser) ?
                     <Link className="username"to={`/account`}>@{review.recipe.user.username}</Link>
                      :
