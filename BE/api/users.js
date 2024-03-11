@@ -178,10 +178,6 @@ usersRouter.patch("/:userId/", requireAdmin, async (req, res, next) => {
 
     delete fields.base64;
 
-    console.log("admin field:", fields.admin);
-    console.log("id of token:", tokenId);
-    console.log("id of param", id);
-
     if(fields.admin && (tokenId == id)){
       delete fields.admin;
       next({
@@ -189,7 +185,6 @@ usersRouter.patch("/:userId/", requireAdmin, async (req, res, next) => {
         message: "You cannot change your own admin status, even as an admin.",
       });
     } else {
-      console.log(fields);
       const updatedUser = await updateUser(id, fields);
       res.send(updatedUser);
     }
