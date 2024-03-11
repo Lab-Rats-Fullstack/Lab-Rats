@@ -256,7 +256,7 @@ export default function Account({ token, admin, currentUser }) {
                       />
                     </label>
                     <label>
-                      Password:
+                      New Password:
                       <input
                         type="password"
                         value={password}
