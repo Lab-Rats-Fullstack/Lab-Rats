@@ -118,7 +118,7 @@ export default function NewRecipe({ token, admin }) {
   }
 
   return (
-    <div>
+    <>
       <form onSubmit={handleSubmit}>
         <div className="newFormContainer">
             <div className="formTitleWrapper">
@@ -256,6 +256,6 @@ export default function NewRecipe({ token, admin }) {
             <input type="submit" id="newSubmit" value="submit" />
           </div>
       </form>
-    </div>
+    </>
   );
 }
