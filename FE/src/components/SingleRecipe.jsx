@@ -444,22 +444,36 @@ export default function SingleRecipe({ token, admin, currentUser }) {
           ) : (
             <div className="singleRecipeCard">
               <div className="top">
-                <h1>{recipe.title}</h1>
+                <h1 className="singleRecipeTitle">{recipe.title}</h1>
+                <img className="recipeImg" src={recipe.imgurl} />
                 {recipe.user.username === currentUser ? (
-                  <Link className="username" to={`/account`}>
+                  <Link className="singleRecipeUsername" to={`/account`}>
                     @{recipe.user.username}
                   </Link>
                 ) : (
-                  <Link className="username" to={`/users/${recipe.user.id}`}>
+                  <Link
+                    className="singleRecipeUsername"
+                    to={`/users/${recipe.user.id}`}
+                  >
                     @{recipe.user.username}
                   </Link>
                 )}
+                {recipe.esttime && <p>Estimated Time: {recipe.esttime}</p>}
                 <div className="averageRating">
                   {recipe.avgRating ? (
                     <AverageStars starAverage={recipe.avgRating} />
                   ) : (
                     <p>This recipe has not yet been reviewed.</p>
                   )}
+                </div>
+                <div className="singleRecipeTags">
+                  {recipe.tags.map((tag) => {
+                    return (
+                      <p key={tag.id}>
+                        <em>{tag.name}</em>
+                      </p>
+                    );
+                  })}
                 </div>
                 {admin && (
                   <div className="buttonContainer">
@@ -490,25 +504,12 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                     )}
                   </div>
                 )}
-                <div className="singleRecipeTags">
-                  {recipe.tags.map((tag) => {
-                    return (
-                      <p key={tag.id}>
-                        <em>{tag.name}</em>
-                      </p>
-                    );
+                <h2 className="ingredientTitle">Ingredients:</h2>
+                <ul className="ingredients">
+                  {recipe.ingredients.map((ingredient) => {
+                    return <li key={ingredient}>{ingredient}</li>;
                   })}
-                </div>
-                <img className="recipeImg" src={recipe.imgurl} />
-                <div className="ingredientContainer">
-                  <h2 className="ingredientTitle">Ingredients:</h2>
-                  <ul className="ingredients">
-                    {recipe.ingredients.map((ingredient) => {
-                      return <li key={ingredient}>{ingredient}</li>;
-                    })}
-                  </ul>
-                </div>
-                {recipe.esttime && <p>Estimated Time: {recipe.esttime}</p>}
+                </ul>
               </div>
               <BinderRings />
               <div className="bottom">
@@ -528,12 +529,17 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                     </ol>
                   </>
                 )}
+              </div>
+              <div className="reviewContainer">
                 {token && alreadyReviewed ? (
-                  <p>You have already left a review on this recipe.</p>
+                  <p className="leaveAReview">
+                    You have already left a review on this recipe.
+                  </p>
                 ) : token ? (
                   <>
                     {!leavingAReview ? (
                       <button
+                        className="leaveAReview"
                         onClick={() => {
                           setLeavingAReview(true);
                           setReviewTitle("");
@@ -544,38 +550,51 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                         Leave a review
                       </button>
                     ) : (
-                      <button onClick={() => setLeavingAReview(false)}>
+                      <button
+                        className="leaveAReview"
+                        onClick={() => setLeavingAReview(false)}
+                      >
                         Close review form{" "}
                       </button>
                     )}
                     {leavingAReviewForm()}
                   </>
                 ) : (
-                  <button onClick={() => navigate("/login")}>
+                  <button
+                    className="leaveAReview"
+                    onClick={() => navigate("/login")}
+                  >
                     Sign in to leave a review
                   </button>
                 )}
                 {reviewErrMess && (
                   <p>There has been an error submitting the review.</p>
                 )}
-                <h2>Reviews:</h2>
+                <h2 className="reviewTitle">Reviews:</h2>
                 {!recipe.reviews.length ? (
-                  <p>No reviews to show.</p>
+                  <p className="noComments">No reviews to show.</p>
                 ) : (
                   <>
                     {recipe.reviews.map((review) => {
                       return (
-                        <div key={review.id}>
-                          <h3>{review.title}</h3>
+                        <div key={review.id} className="review">
+                          <h3 className="titleForReview">{review.title}</h3>
                           {review.user.username === currentUser ? (
-                            <Link to={`/account`}>@{review.user.username}</Link>
+                            <Link className="reviewUser" to={`/account`}>
+                              @{review.user.username}
+                            </Link>
                           ) : (
-                            <Link to={`/users/${review.user.id}`}>
+                            <Link
+                              className="reviewUser"
+                              to={`/users/${review.user.id}`}
+                            >
                               @{review.user.username}
                             </Link>
                           )}
-                          <p>Rating: {review.rating}</p>
-                          <p>{review.content}</p>
+                          <span className="reviewStars">
+                            <AverageStars starAverage={review.rating} />
+                          </span>
+                          <p className="reviewContent">{review.content}</p>
                           {token && (
                             <>
                               {(review.userid === userId || admin) && (
@@ -681,21 +700,27 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                               There has been an error submitting the comment.
                             </p>
                           )}
-                          <h5>Comments:</h5>
+                          <h5 className="commentsTitle">Comments:</h5>
                           {!review.comments.length ? (
-                            <p>No comments to show.</p>
+                            <p className="noComments">No comments to show.</p>
                           ) : (
                             <>
                               {review.comments.map((comment) => {
                                 return (
-                                  <div key={comment.id}>
+                                  <div key={comment.id} className="comment">
                                     <p>{comment.content}</p>
                                     {comment.user.username === currentUser ? (
-                                      <Link to={`/account`}>
+                                      <Link
+                                        className="commentUser"
+                                        to={`/account`}
+                                      >
                                         @{comment.user.username}
                                       </Link>
                                     ) : (
-                                      <Link to={`/users/${comment.user.id}`}>
+                                      <Link
+                                        className="commentUser"
+                                        to={`/users/${comment.user.id}`}
+                                      >
                                         @{comment.user.username}
                                       </Link>
                                     )}
@@ -707,6 +732,7 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                                             {editingAComment === comment.id ? (
                                               <>
                                                 <button
+                                                  className="commentFormButton"
                                                   onClick={() =>
                                                     setEditingAComment(null)
                                                   }
@@ -720,6 +746,7 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                                             ) : (
                                               <>
                                                 <button
+                                                  className="editComment"
                                                   onClick={() => {
                                                     setEditingAComment(
                                                       comment.id
@@ -758,22 +785,24 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                                                   Are you sure you want to
                                                   delete this?
                                                 </p>
-                                                <button
-                                                  onClick={() =>
-                                                    handleDeleteComment(
-                                                      comment.id
-                                                    )
-                                                  }
-                                                >
-                                                  Yes
-                                                </button>
-                                                <button
-                                                  onClick={() =>
-                                                    setCommentAreYouSure(null)
-                                                  }
-                                                >
-                                                  No
-                                                </button>
+                                                <div className="areYouSure">
+                                                  <button
+                                                    onClick={() =>
+                                                      handleDeleteComment(
+                                                        comment.id
+                                                      )
+                                                    }
+                                                  >
+                                                    Yes
+                                                  </button>
+                                                  <button
+                                                    onClick={() =>
+                                                      setCommentAreYouSure(null)
+                                                    }
+                                                  >
+                                                    No
+                                                  </button>
+                                                </div>
                                               </>
                                             )}
                                             {deleteCommentErrMess ===

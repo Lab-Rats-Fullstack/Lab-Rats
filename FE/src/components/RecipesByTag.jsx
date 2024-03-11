@@ -40,7 +40,6 @@ export default function RenderRecipesByTag() {
             currentUser={{}}
             token={null}
           />
-          ;
         </div>
       )}
     </>

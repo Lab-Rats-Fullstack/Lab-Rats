@@ -151,7 +151,7 @@ export default function Account({ token, admin, currentUser }) {
       {loading ? (
         <Loading />
       ) : (
-        <div className="wrapper">
+        <div>
           {error && <p>{error}</p>}
           {fail ? (
             <div className="fail">
@@ -256,7 +256,7 @@ export default function Account({ token, admin, currentUser }) {
                       />
                     </label>
                     <label>
-                      Password:
+                      New Password:
                       <input
                         type="password"
                         value={password}
@@ -285,7 +285,7 @@ export default function Account({ token, admin, currentUser }) {
                     <button type="submit" disabled={buttonStatus}>
                       Submit
                     </button>
-                    <button
+                    <button className="cancel"
                       onClick={() => {
                         setUserBio(true);
                         setUserForm(false);

@@ -4,7 +4,7 @@ import ReviewCard from './ReviewCard';
 export default function UserReviews ({userData, currentUser}) {
     const {reviews: reviewList=[]} = userData;
     return (
-        <div className="reviewContainer">
+        <div className="userReviewContainer">
             <div className = 'userReviews'>
                 <h2>Reviews</h2>
                 {reviewList == "" ? <p className="noContent">There are currently no reviews.</p> : reviewList.map((review)=>{
