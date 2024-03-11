@@ -56,18 +56,22 @@ export default function Pagination({
 
   return (
     <div>
-      {currentRecipes == "" ? <p className="noContent">There are currently no recipes.</p> : currentRecipes.map((recipe) => {
-        return (
-          <RecipeCard
-            recipe={recipe}
-            admin={admin}
-            currentUser={currentUser}
-            token={token}
-            key={recipe.id}
-          />
-        );
-      })}
+      {currentRecipes == "" ? (
+        <p className="noContent">There are currently no recipes.</p>
+      ) : (
+        currentRecipes.map((recipe) => {
+          return (
+            <RecipeCard
+              recipe={recipe}
+              admin={admin}
+              currentUser={currentUser}
+              token={token}
+              key={recipe.id}
+            />
+          );
+        })
+      )}
       <CreatePageButtons />
-    </>
+    </div>
   );
 }
