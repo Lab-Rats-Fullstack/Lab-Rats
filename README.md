@@ -19,20 +19,20 @@ Recipes page:
 -has a category tag filter for faster searches
 
 Login page:
--contains both User Login and User Registration
--login requires:
--username
--password
--submit button
--registration requires:
+    -contains both User Login and User Registration
+    -login requires:
     -username
-    -email
-    -name
     -password
-    -confirm password
     -submit button
-        -new password must match itself on a confirm password section or submit button will disable
-        -upon successful login/registration an Alert informs the user they are logged in and user is redirected to their account page
+    -registration requires:
+        -username
+        -email
+        -name
+        -password
+        -confirm password
+        -submit button
+            -new password must match itself on a confirm password section or submit button will disable
+            -upon successful login/registration an Alert informs the user they are logged in and user is redirected to their account page
 
 Account page:
     -contains a section for user personal information
