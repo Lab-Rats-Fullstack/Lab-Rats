@@ -115,67 +115,67 @@ Admin additionally sees:
     - cancel button
 
 Recipe card:
-    - recipe Title
-        - links to specific recipe
-    - recipe creator's username
-        - links to specific user profile page
-    - uploaded image
-    - estimated time (est. time)
-    - up to 5 category tags
-    - current review score, or a message it has not yet been reviewed
-    - navigation button to see the specific recipe
+- recipe Title
+    - links to specific recipe
+- recipe creator's username
+    - links to specific user profile page
+- uploaded image
+- estimated time (est. time)
+- up to 5 category tags
+- current review score, or a message it has not yet been reviewed
+- navigation button to see the specific recipe
 
 Review card:
-    - review title
-    - review content
-    - recipe Title
-        - links to specific recipe
-    - recipe creator's username
-        - links to specific user profile page
-    - reviewer's rating of recipe
-    - navigation button to see the specific recipe
+- review title
+- review content
+- recipe Title
+    - links to specific recipe
+- recipe creator's username
+    - links to specific user profile page
+- reviewer's rating of recipe
+- navigation button to see the specific recipe
 
 Comment card:
-    - comment content
-    - review title
-    - review creator's username
-        - links to specific user profile page
-    - recipe Title
-        - links to specific recipe
-    - recipe creator's username
-        - links to specific user profile page
-    - navigation button to see the specific recipe
+- comment content
+- review title
+- review creator's username
+    - links to specific user profile page
+- recipe Title
+    - links to specific recipe
+- recipe creator's username
+    - links to specific user profile page
+- navigation button to see the specific recipe
 
 Viewers (anyone) accessing the website will be able to: 
-    - view all recipes
-    - search through the recipes via titles and category tags
-    - view recipes by user via the user's profile page
-    - view reviews on recipes
-    - view comments on recipes
-    - be able to register a new account to become a user
+- view all recipes
+- search through the recipes via titles and category tags
+- view recipes by user via the user's profile page
+- view reviews on recipes
+- view comments on recipes
+- be able to register a new account to become a user
 
 Users accessing the website will be able to:
-    - have all the functionality of all viewers
-    - be able to leave a review on each recipe
-    - be able to edit or delete their review on each recipe
-    - be able to leave comments on reviews
-    - be able to edit or delete their comments on reviews
-    - be ale to update their own user information, this includes:
-        - uploading a profile picture
-        - updating their username
-        - updating their email
-        - updating their name
-        - updating their password
+- have all the functionality of all viewers
+- be able to leave a review on each recipe
+- be able to edit or delete their review on each recipe
+- be able to leave comments on reviews
+- be able to edit or delete their comments on reviews
+- be ale to update their own user information, this includes:
+    - uploading a profile picture
+    - updating their username
+    - updating their email
+    - updating their name
+    - updating their password
     
 Admin accessing the website will be able to:
-    - have all the functionality of both viewers and users
-    - be able to create, edit, and delete recipes
-    - be able to view all users
-    - be able to view all user information except passwords
-    - be able to see if all users are User or Admin status
-    - be able to update other user's status to make them Admin, or remove those permissions
-    - be able to see a list of all recipes that contain reviews
-    - be able to see all the category tags
+- have all the functionality of both viewers and users
+- be able to create, edit, and delete recipes
+- be able to view all users
+- be able to view all user information except passwords
+- be able to see if all users are User or Admin status
+- be able to update other user's status to make them Admin, or remove those permissions
+- be able to see a list of all recipes that contain reviews
+- be able to see all the category tags
 
 # Potential Functionality
 Users in the future may:
