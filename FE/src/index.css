@@ -345,7 +345,7 @@ a:focus {
   max-width: 80%;
   aspect-ratio: 1;
   grid-column-start: 1;
-  border-radius: 50%;
+  border-radius: 100%;
   object-fit: cover;
 }
 
@@ -439,7 +439,7 @@ a:focus {
 .singleRecipeCard img {
   grid-column: 1/3;
   grid-row: 1/5;
-  border-radius: 50%;
+  border-radius: 100%;
   object-fit: cover;
 }
 
@@ -630,7 +630,7 @@ a:focus {
   margin: 1rem;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1rem;
-} 
+}
 
 .newRecipeForm input {
   width: 100%;
@@ -942,7 +942,7 @@ a:focus {
   content: "";
   margin: auto;
   border: 5px solid var(--clr-accent-four);
-  border-radius: 50%;
+  border-radius: 100%;
   border-top: 5px solid var(--clr-secondary);
   width: 1.5rem;
   height: 1.5rem;
