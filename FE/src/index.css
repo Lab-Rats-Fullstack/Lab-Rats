@@ -491,7 +491,6 @@ a:focus {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
-
 .review button,
 .commentButton {
   grid-column: 1/-1;
@@ -500,7 +499,6 @@ a:focus {
 
 .reviewButtons {
   width: 100%;
-  grid-row-start: 1;
   grid-column: 2/-1;
   display: flex;
   justify-content: center;
