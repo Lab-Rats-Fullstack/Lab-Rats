@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
-import { Routes, Route, useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
+import { Routes, Route, useNavigate } from "react-router-dom";
 import UserInfo from "./UserInfo";
 import UserRecipes from "./UserRecipes";
 import UserReviews from "./UserReviews";
@@ -10,6 +9,7 @@ import NavButton from "../general/NavButton";
 import UploadImage from "../general/UploadImage";
 import defaultImg from "../../assets/Default_pfp.jpeg";
 import Loading from "../general/Loading";
+import handleUpload from "../general/handleUpload";
 
 const API = "https://culinary-chronicle.onrender.com/api/";
 
@@ -38,13 +38,12 @@ export default function Account({ token, admin, currentUser }) {
   const [buttonStatus, setButtonStatus] = useState(true);
   const [userForm, setUserForm] = useState(false);
   const [userBio, setUserBio] = useState(true);
-  const [encoded, setEncoded] = useState({});
+  const [image, setImage] = useState(null);
+  const [formData, setFormData] = useState(null);
 
   useEffect(() => {
-    setUpdatedUser((prev) => {
-      return { ...prev, ...encoded };
-    });
-  }, [encoded]);
+    console.log(image);
+  }, [image]);
 
   useEffect(() => {
     async function userCheck() {
@@ -91,9 +90,14 @@ export default function Account({ token, admin, currentUser }) {
 
   async function userUpdate(event) {
     event.preventDefault();
+    const urlObj = {};
+    if (formData) {
+      const { url } = await handleUpload(formData);
+      urlObj.imgurl = url;
+    }
     try {
       if (
-        updatedUser.base64 &&
+        !urlObj.imgurl &&
         updatedUser.username == userData.username &&
         updatedUser.email == userData.email &&
         updatedUser.name == userData.name &&
@@ -114,11 +118,12 @@ export default function Account({ token, admin, currentUser }) {
           },
           body: JSON.stringify({
             ...updatedUser,
+            ...urlObj,
             ...updatedPassword,
           }),
         });
         const result = await response.json();
-
+        console.log(result);
         setUserData(result);
         setUpdate((version) => version + 1);
         setUserForm(false);
@@ -190,7 +195,7 @@ export default function Account({ token, admin, currentUser }) {
                   <form onSubmit={userUpdate}>
                     <label>
                       Profile Image:
-                      {userData.imgurl && !encoded.base64 && (
+                      {userData.imgurl && !image && (
                         <img
                           src={userData.imgurl}
                           alt={
@@ -200,9 +205,9 @@ export default function Account({ token, admin, currentUser }) {
                           }
                         />
                       )}
-                      {encoded.base64 && (
+                      {image && (
                         <img
-                          src={encoded.base64 || defaultImg}
+                          src={image || defaultImg}
                           alt={
                             userData.username
                               ? `${userData.username}'s profile picture.`
@@ -211,7 +216,10 @@ export default function Account({ token, admin, currentUser }) {
                         />
                       )}
                       <p>Upload new Profile Image?</p>
-                      <UploadImage setEncoded={setEncoded} />
+                      <UploadImage
+                        setImage={setImage}
+                        setFormData={setFormData}
+                      />
                     </label>
                     <label>
                       Username:
