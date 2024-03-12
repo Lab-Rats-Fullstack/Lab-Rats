@@ -24,13 +24,6 @@ recipesRouter.get("/", async (req, res, next) => {
 recipesRouter.post("/", requireAdmin, async (req, res, next) => {
   const { id: userId } = req.user;
   const { body } = req;
-  if (body.base64) {
-    const { base64: imagePath } = body;
-    const imgUrl = await returnImageUrl(imagePath);
-    body.imgUrl = imgUrl;
-  }
-
-  delete body.base64;
 
   const recipe = { ...body, userId };
   try {
@@ -74,13 +67,6 @@ recipesRouter.patch("/:recipeId", requireAdmin, async (req, res, next) => {
   const { recipeId } = req.params;
   const { body: fields } = req;
   try {
-    if (fields.base64) {
-      const { base64: imagePath } = fields;
-      const imgUrl = await returnImageUrl(imagePath);
-      fields.imgurl = imgUrl;
-    }
-    delete fields.base64;
-
     const updatedRecipe = await updateRecipe(recipeId, fields);
     res.send(updatedRecipe);
   } catch (err) {

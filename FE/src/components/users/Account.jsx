@@ -42,10 +42,6 @@ export default function Account({ token, admin, currentUser }) {
   const [formData, setFormData] = useState(null);
 
   useEffect(() => {
-    console.log(image);
-  }, [image]);
-
-  useEffect(() => {
     async function userCheck() {
       try {
         const response = await fetch(`${API}users/me`, {

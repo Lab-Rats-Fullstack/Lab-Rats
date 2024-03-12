@@ -8,6 +8,7 @@ import NavButton from "../general/NavButton";
 import UploadImage from "../general/UploadImage";
 import defaultImg from "../../assets/Default_pfp.jpeg";
 import Loading from "../general/Loading";
+import handleUpload from "../general/handleUpload";
 const API = "https://culinary-chronicle.onrender.com/api/";
 
 export default function NewRecipe({ token, admin, currentUser }) {
@@ -25,15 +26,12 @@ export default function NewRecipe({ token, admin, currentUser }) {
 
   const [userForm, setUserForm] = useState(false);
   const [userBio, setUserBio] = useState(true);
-  const [encoded, setEncoded] = useState({});
+  const [image, setImage] = useState(null);
+  const [formData, setFormData] = useState(null);
   const [loading, setLoading] = useState(true);
 
   const [updatedUser, setUpdatedUser] = useState({});
-  useEffect(() => {
-    setUpdatedUser((prev) => {
-      return { ...prev, ...encoded };
-    });
-  }, [encoded]);
+
   useEffect(() => {
     async function userCheck() {
       try {
@@ -80,9 +78,14 @@ export default function NewRecipe({ token, admin, currentUser }) {
 
   async function userUpdate(event) {
     event.preventDefault();
+    const urlObj = {};
+    if (formData) {
+      const { url } = await handleUpload(formData);
+      urlObj.imgurl = url;
+    }
     try {
       if (
-        updatedUser.base64 &&
+        !urlObj.imgurl &&
         updatedUser.username == userData.username &&
         updatedUser.admin == userData.admin
       ) {
@@ -98,6 +101,7 @@ export default function NewRecipe({ token, admin, currentUser }) {
           },
           body: JSON.stringify({
             ...updatedUser,
+            ...urlObj,
           }),
         });
         const result = await response.json();
@@ -119,7 +123,7 @@ export default function NewRecipe({ token, admin, currentUser }) {
       {loading ? (
         <Loading />
       ) : (
-        <div className="wrapper">
+        <div>
           {error ? (
             <div className="error">
               <p>{error}</p>
@@ -152,9 +156,19 @@ export default function NewRecipe({ token, admin, currentUser }) {
                   <form onSubmit={userUpdate}>
                     <label>
                       Profile Image:
-                      {encoded && (
+                      {userData.imgurl && !image && (
                         <img
-                          src={encoded.base64 || defaultImg}
+                          src={userData.imgurl}
+                          alt={
+                            userData.username
+                              ? `${userData.username}'s profile picture.`
+                              : "Profile picture"
+                          }
+                        />
+                      )}
+                      {image && (
+                        <img
+                          src={image || defaultImg}
                           alt={
                             userData.username
                               ? `${userData.username}'s profile picture.`
@@ -163,7 +177,10 @@ export default function NewRecipe({ token, admin, currentUser }) {
                         />
                       )}
                       <p>Upload new Profile Image?</p>
-                      <UploadImage setEncoded={setEncoded} />
+                      <UploadImage
+                        setImage={setImage}
+                        setFormData={setFormData}
+                      />
                     </label>
                     <label>
                       Username:

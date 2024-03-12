@@ -123,19 +123,11 @@ usersRouter.patch("/me", requireUser, async (req, res, next) => {
         name: "SelfAdminChangeError",
         message: "You cannot change your own admin status.",
       });
-    }else {
+    } else {
       if (fields.password) {
         fields.password = await bcrypt.hash(fields.password, 10);
       }
-  
-      if (fields.base64) {
-        const { base64: imagePath } = fields;
-        const imgUrl = await returnImageUrl(imagePath);
-        fields.imgurl = imgUrl;
-      }
-  
-      delete fields.base64;
-  
+
       const updatedUser = await updateUser(id, fields);
       res.send(updatedUser);
     }
@@ -170,15 +162,7 @@ usersRouter.patch("/:userId/", requireAdmin, async (req, res, next) => {
       fields.password = await bcrypt.hash(fields.password, 10);
     }
 
-    if (fields.base64) {
-      const { base64: imagePath } = fields;
-      const imgUrl = await returnImageUrl(imagePath);
-      fields.imgurl = imgUrl;
-    }
-
-    delete fields.base64;
-
-    if(fields.admin && (tokenId == id)){
+    if (fields.admin && tokenId == id) {
       delete fields.admin;
       next({
         name: "SelfAdminChangeError",
