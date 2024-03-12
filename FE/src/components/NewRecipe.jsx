@@ -77,7 +77,6 @@ export default function NewRecipe({ token, admin }) {
     return output;
   }
 
-
   useEffect(() => {
     !admin && nav("/");
   }, []);
@@ -89,7 +88,7 @@ export default function NewRecipe({ token, admin }) {
     let instructArray = rearrange(instructionList, "instruction");
     let noteArray = rearrange(notesList, "note");
     let tagsArray = rearrange(tagsList, "tag");
-    if(!tagsArray[0]) tagsArray[0] = "";
+    if (!tagsArray[0]) tagsArray[0] = "";
 
     let data = {
       title: title,
@@ -102,14 +101,17 @@ export default function NewRecipe({ token, admin }) {
     };
     console.log(data);
     try {
-      const response = await fetch("http://localhost:3000/api/recipes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "https://culinary-chronicle.onrender.com/api/recipes",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       const { id } = await response.json();
       nav(`/recipes/${id}`);
@@ -135,18 +137,18 @@ export default function NewRecipe({ token, admin }) {
                 />
             </div>
 
-            <div>
-              <FormTags tagsList={tagsList} setTagsList={setTagsList} />
-            </div>
+          <div>
+            <FormTags tagsList={tagsList} setTagsList={setTagsList} />
+          </div>
 
-            <label>Image: </label>
-              <UploadImage setEncoded={setImage} />
-              {image.base64 && (
-                <img
-                  src={image.base64 || defaultImg}
-                  alt={title ? `${title} image.` : "New Recipe Image."}
-                />
-              )}
+          <label>Image: </label>
+          <UploadImage setEncoded={setImage} />
+          {image.base64 && (
+            <img
+              src={image.base64 || defaultImg}
+              alt={title ? `${title} image.` : "New Recipe Image."}
+            />
+          )}
 
             <label>Estimated Time: </label>
               <select
@@ -227,11 +229,11 @@ export default function NewRecipe({ token, admin }) {
                           +
                         </button>
                       )}
-                  </div>
                 </div>
-              );
-            })}
-
+              </div>
+            );
+          })}
+          
             <label>Notes: </label>
             {notesList.map((singleNote, index) => {
               return (
@@ -255,13 +257,13 @@ export default function NewRecipe({ token, admin }) {
                         +
                       </button>
                     )}
-                  </div>
                 </div>
-              );
-            })}
+              </div>
+            );
+          })}
 
-            <input type="submit" id="newSubmit" value="submit" />
-          </div>
+          <input type="submit" id="newSubmit" value="submit" />
+        </div>
       </form>
     </>
   );

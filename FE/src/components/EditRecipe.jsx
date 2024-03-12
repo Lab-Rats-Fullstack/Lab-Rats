@@ -7,7 +7,7 @@ import Loading from "./Loading.jsx";
 
 export default function EditRecipe({ token, admin }) {
   const [loading, setLoading] = useState(true);
-  const API = "http://localhost:3000/api/";
+  const API = "https://culinary-chronicle.onrender.com/api/";
   const { recipeId } = useParams();
   const navigate = useNavigate();
 
@@ -209,7 +209,7 @@ export default function EditRecipe({ token, admin }) {
   }
 
   return (
-  <>
+    <>
       {loading ? (
         <Loading />
       ) : (
@@ -226,13 +226,13 @@ export default function EditRecipe({ token, admin }) {
                     setTitle(e.target.value);
                   }}
                 />
-            </div>
+              </div>
 
-            <div>
-              <FormTags tagsList={tagsList} setTagsList={setTagsList} />
-            </div>
+              <div>
+                <FormTags tagsList={tagsList} setTagsList={setTagsList} />
+              </div>
 
-            <label>Image: </label>
+              <label>Image: </label>
               <UploadImage setEncoded={setImage} />
               {recipeObj.imgurl && !image.base64 && (
                 <img
@@ -247,7 +247,7 @@ export default function EditRecipe({ token, admin }) {
                 />
               )}
 
-            <label>Estimated Time: </label>
+              <label>Estimated Time: </label>
               <select
                 list="times"
                 id="estTime"
@@ -265,12 +265,12 @@ export default function EditRecipe({ token, admin }) {
                 <option value="90 min">90 min</option>
               </select>
 
-            <label>Ingredients: </label>
+              <label>Ingredients: </label>
               {ingredientList.map((singleIngred, index) => {
                 return (
                   <div key={index}>
                     <div className="inputWrap">
-                      <label id="formNumbers">{index+1}. </label>
+                      <label id="formNumbers">{index + 1}. </label>
                       <input
                         type="text"
                         name="ingredient"
@@ -300,12 +300,12 @@ export default function EditRecipe({ token, admin }) {
                 );
               })}
 
-            <label>Instructions: </label>
-            {instructionList.map((singleInstruct, index) => {
-              return (
-                <div key={index}>
-                  <div className="inputWrap">
-                    <label id="formNumbers">{index+1}. </label>
+              <label>Instructions: </label>
+              {instructionList.map((singleInstruct, index) => {
+                return (
+                  <div key={index}>
+                    <div className="inputWrap">
+                      <label id="formNumbers">{index + 1}. </label>
                       <input
                         type="text"
                         name="instruction"
@@ -330,8 +330,9 @@ export default function EditRecipe({ token, admin }) {
                           +
                         </button>
                       )}
+                      
+                    </div>
                   </div>
-                </div>
               );
             })}
 

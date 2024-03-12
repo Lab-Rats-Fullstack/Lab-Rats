@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Loading from "./Loading";
 
-const API = "http://localhost:3000/api/";
+const API = "https://culinary-chronicle.onrender.com/api/";
 
 export default function Login({ token, setToken, setAdmin, setCurrentUser }) {
   const [loading, setLoading] = useState(false);

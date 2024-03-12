@@ -10,7 +10,7 @@ export default function MainPage({ token, currentUser }) {
   const [featRecipe, setFeatRecipe] = useState({});
   const [tags, setTags] = useState([]);
   const [tagsOutput, setTagsOutput] = useState([]);
-  const API = "http://localhost:3000/api";
+  const API = "https://culinary-chronicle.onrender.com/api";
   const navigate = useNavigate();
 
   useEffect(() => {
