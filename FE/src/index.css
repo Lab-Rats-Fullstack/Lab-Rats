@@ -630,7 +630,7 @@ a:focus {
   margin: 1rem;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1rem;
-} 
+}
 
 .newRecipeForm input {
   width: 100%;
@@ -663,8 +663,7 @@ a:focus {
   padding: 2rem;
   margin: 1rem;
   display: flex;
-  min-width: 100%;
-  max-width: 100%;
+  width: 65%;
   gap: 30px;
   flex-direction: column;
   flex-wrap: wrap;
@@ -697,7 +696,9 @@ a:focus {
 }
 
 .createRecipeForm {
-  width: 65%;
+  width: 100%;
+  display: grid;
+  place-items: center;
 }
 
 #estTime {
@@ -1011,7 +1012,8 @@ a:focus {
     grid-row-start: 8;
   }
   .reviewCard,
-  .commentCard {
+  .commentCard,
+  .wrapper {
     grid-template-columns: 1fr;
   }
 }
