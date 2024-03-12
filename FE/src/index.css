@@ -630,7 +630,7 @@ a:focus {
   margin: 1rem;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1rem;
-}
+} 
 
 .newRecipeForm input {
   width: 100%;
