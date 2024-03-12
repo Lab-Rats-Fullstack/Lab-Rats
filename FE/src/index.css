@@ -640,7 +640,7 @@ a:focus {
 }
 
 .formTitleWrapper {
-  display: flex,
+  display: flex;
 }
 
 .newFormContainer {
@@ -691,6 +691,14 @@ a:focus {
   display: grid;
   place-items: start;
   grid-template-columns: 1fr 1fr;
+  gap: 4rem;
+  margin-block: 2rem;
+}
+
+.adminWrapper {
+  width: 100%;
+  display: grid;
+  place-items: center;
   gap: 4rem;
   margin-block: 2rem;
 }
@@ -817,7 +825,7 @@ a:focus {
 }
 
 .mainPageContainer {
-  margin-top: 2rem;
+  margin-top: 4rem;
   display: grid;
   place-items: center;
   gap: 1rem;
@@ -888,6 +896,7 @@ a:focus {
 
 .loadingContainer {
   display: flex;
+  flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   width: 100vw;

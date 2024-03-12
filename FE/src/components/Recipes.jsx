@@ -6,7 +6,7 @@ import Loading from "./Loading";
 import Pagination from "./Pagination";
 
 export default function Recipes({ token, currentUser, admin }) {
-  const API = "http://localhost:3000/api/";
+  const API = "https://culinary-chronicle.onrender.com/api/";
   const [recipes, setRecipes] = useState([]);
   const [currentRecipes, setCurrentRecipes] = useState([]);
   const [filteredRecipes, setFilteredRecipes] = useState([]);

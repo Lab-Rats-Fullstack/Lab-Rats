@@ -77,7 +77,6 @@ export default function NewRecipe({ token, admin }) {
     return output;
   }
 
-
   useEffect(() => {
     !admin && nav("/");
   }, []);
@@ -89,7 +88,7 @@ export default function NewRecipe({ token, admin }) {
     let instructArray = rearrange(instructionList, "instruction");
     let noteArray = rearrange(notesList, "note");
     let tagsArray = rearrange(tagsList, "tag");
-    if(!tagsArray[0]) tagsArray[0] = "";
+    if (!tagsArray[0]) tagsArray[0] = "";
 
     let data = {
       title: title,
@@ -102,14 +101,17 @@ export default function NewRecipe({ token, admin }) {
     };
     console.log(data);
     try {
-      const response = await fetch("http://localhost:3000/api/recipes", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(data),
-      });
+      const response = await fetch(
+        "https://culinary-chronicle.onrender.com/api/recipes",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify(data),
+        }
+      );
 
       const { id } = await response.json();
       nav(`/recipes/${id}`);
@@ -122,140 +124,143 @@ export default function NewRecipe({ token, admin }) {
     <>
       <form onSubmit={handleSubmit}>
         <div className="newFormContainer">
-            <div className="formTitleWrapper">
-              <label>Title: </label>
-                <input
-                  type="text"
-                  id="newFormTitle"
-                  name="title"
-                  value={title}
-                  onChange={(e) => {
-                    setTitle(e.target.value);
-                  }}
-                />
-            </div>
+          <div className="formTitleWrapper">
+            <label>Title: </label>
+            <input
+              type="text"
+              id="newFormTitle"
+              name="title"
+              value={title}
+              onChange={(e) => {
+                setTitle(e.target.value);
+              }}
+            />
+          </div>
 
-            <div>
-              <FormTags tagsList={tagsList} setTagsList={setTagsList} />
-            </div>
+          <div>
+            <FormTags tagsList={tagsList} setTagsList={setTagsList} />
+          </div>
 
-            <label>Image: </label>
-              <UploadImage setEncoded={setImage} />
-              {image.base64 && (
-                <img
-                  src={image.base64 || defaultImg}
-                  alt={title ? `${title} image.` : "New Recipe Image."}
-                />
-              )}
+          <label>Image: </label>
+          <UploadImage setEncoded={setImage} />
+          {image.base64 && (
+            <img
+              src={image.base64 || defaultImg}
+              alt={title ? `${title} image.` : "New Recipe Image."}
+            />
+          )}
 
-            <label>Estimated Time: </label>
-              <select
-                list="times"
-                id="estTime"
-                name="estTime"
-                onChange={(e) => {
-                  setEstTime(e.target.value);
-                }}
-              >
-                <option value="15 min">15 min</option>
-                <option value="30 min">30 min</option>
-                <option value="45 min">45 min</option>
-                <option value="60 min">60 min</option>
-                <option value="75 min">75 min</option>
-                <option value="90 min">90 min</option>
-              </select>
+          <label>Estimated Time: </label>
+          <select
+            list="times"
+            id="estTime"
+            name="estTime"
+            onChange={(e) => {
+              setEstTime(e.target.value);
+            }}
+          >
+            <option value="15 min">15 min</option>
+            <option value="30 min">30 min</option>
+            <option value="45 min">45 min</option>
+            <option value="60 min">60 min</option>
+            <option value="75 min">75 min</option>
+            <option value="90 min">90 min</option>
+          </select>
 
-            <label>Ingredients: </label>
-              {ingredientList.map((singleIngred, index) => {
-                return (
-                  <div key={index}>
-                    <div className="inputWrap">
-                      <label id="formNumbers">{index+1}. </label>
-                      <input
-                        type="text"
-                        name="ingredient"
-                        value={singleIngred.ingredient}
-                        onChange={(e) => handleIngredientChange(e, index)}
-                      />
-                      {ingredientList.length > 1 && (
-                        <button
-                          type="button"
-                          onClick={() => handleIngredientDelete(index)}
-                        >
-                          -
-                        </button>
-                      )}
-                      {ingredientList.length - 1 === index &&
-                        ingredientList.length < 20 && (
-                          <button type="button" onClick={handleIngredientAdd}>
-                            +
-                          </button>
-                        )}
-                    </div>
-                  </div>
-                );
-              })}
-
-            <label>Instructions: </label>
-            {instructionList.map((singleInstruct, index) => {
-              return (
-                <div key={index}>
-                  <div className="inputWrap">
-                    <label id="formNumbers">{index+1}. </label>
-                      <input
-                        type="text"
-                        name="instruction"
-                        value={singleInstruct.instruction}
-                        onChange={(e) => handleInstructionChange(e, index)}
-                      />
-                    {instructionList.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => handleInstructionDelete(index)}
-                      >
-                        -
-                      </button>
-                    )}
-                    {instructionList.length - 1 === index &&
-                      instructionList.length < 20 && (
-                        <button type="button" onClick={handleInstructionAdd}>
-                          +
-                        </button>
-                      )}
-                  </div>
-                </div>
-              );
-            })}
-
-            <label>Notes: </label>
-            {notesList.map((singleNote, index) => {
-              return (
-                <div key={index}>
-                  <div className="inputWrap">
-                    <label id="formNumbers">{index+1}. </label>
-                    <input
-                      type="text"
-                      name="note"
-                      value={singleNote.note}
-                      onChange={(e) => handleNoteChange(e, index)}
-                    />
-                    {notesList.length > 1 && (
-                      <button type="button" onClick={() => handleNoteDelete(index)}>
-                        -
-                      </button>
-                    )}
-                    {notesList.length - 1 === index && notesList.length < 20 && (
-                      <button type="button" onClick={handleNoteAdd}>
+          <label>Ingredients: </label>
+          {ingredientList.map((singleIngred, index) => {
+            return (
+              <div key={index}>
+                <div className="inputWrap">
+                  <label id="formNumbers">{index + 1}. </label>
+                  <input
+                    type="text"
+                    name="ingredient"
+                    value={singleIngred.ingredient}
+                    onChange={(e) => handleIngredientChange(e, index)}
+                  />
+                  {ingredientList.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleIngredientDelete(index)}
+                    >
+                      -
+                    </button>
+                  )}
+                  {ingredientList.length - 1 === index &&
+                    ingredientList.length < 20 && (
+                      <button type="button" onClick={handleIngredientAdd}>
                         +
                       </button>
                     )}
-                  </div>
                 </div>
-              );
-            })}
+              </div>
+            );
+          })}
 
-            <input type="submit" id="newSubmit" value="submit" />
-          </div>
+          <label>Instructions: </label>
+          {instructionList.map((singleInstruct, index) => {
+            return (
+              <div key={index}>
+                <div className="inputWrap">
+                  <label id="formNumbers">{index + 1}. </label>
+                  <input
+                    type="text"
+                    name="instruction"
+                    value={singleInstruct.instruction}
+                    onChange={(e) => handleInstructionChange(e, index)}
+                  />
+                  {instructionList.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleInstructionDelete(index)}
+                    >
+                      -
+                    </button>
+                  )}
+                  {instructionList.length - 1 === index &&
+                    instructionList.length < 20 && (
+                      <button type="button" onClick={handleInstructionAdd}>
+                        +
+                      </button>
+                    )}
+                </div>
+              </div>
+            );
+          })}
+
+          <label>Notes: </label>
+          {notesList.map((singleNote, index) => {
+            return (
+              <div key={index}>
+                <div className="inputWrap">
+                  <label id="formNumbers">{index + 1}. </label>
+                  <input
+                    type="text"
+                    name="note"
+                    value={singleNote.note}
+                    onChange={(e) => handleNoteChange(e, index)}
+                  />
+                  {notesList.length > 1 && (
+                    <button
+                      type="button"
+                      onClick={() => handleNoteDelete(index)}
+                    >
+                      -
+                    </button>
+                  )}
+                  {notesList.length - 1 === index && notesList.length < 20 && (
+                    <button type="button" onClick={handleNoteAdd}>
+                      +
+                    </button>
+                  )}
+                </div>
+              </div>
+            );
+          })}
+
+          <input type="submit" id="newSubmit" value="submit" />
+        </div>
       </form>
     </>
   );

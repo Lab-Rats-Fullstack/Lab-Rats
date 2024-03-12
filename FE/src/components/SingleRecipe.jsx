@@ -6,7 +6,7 @@ import Loading from "./Loading";
 
 export default function SingleRecipe({ token, admin, currentUser }) {
   const [loading, setLoading] = useState(true);
-  const API_URL = `http://localhost:3000/api/`;
+  const API_URL = `https://culinary-chronicle.onrender.com/api/`;
   const navigate = useNavigate();
   const { recipeId } = useParams();
   const [errMess, setErrMess] = useState(false);

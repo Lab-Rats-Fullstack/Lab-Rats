@@ -11,7 +11,7 @@ import UploadImage from "./UploadImage";
 import defaultImg from "../assets/Default_pfp.jpeg";
 import Loading from "./Loading";
 
-const API = "http://localhost:3000/api/";
+const API = "https://culinary-chronicle.onrender.com/api/";
 
 export default function Account({ token, admin, currentUser }) {
   const [loading, setLoading] = useState(true);
@@ -285,7 +285,8 @@ export default function Account({ token, admin, currentUser }) {
                     <button type="submit" disabled={buttonStatus}>
                       Submit
                     </button>
-                    <button className="cancel"
+                    <button
+                      className="cancel"
                       onClick={() => {
                         setUserBio(true);
                         setUserForm(false);
