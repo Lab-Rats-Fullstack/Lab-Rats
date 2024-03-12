@@ -55,7 +55,7 @@ export default function Pagination({
   useEffect(() => sliceRecipes(recipeList), [currentPage, recipeList]);
 
   return (
-    <div>
+    <>
       {currentRecipes == "" ? (
         <p className="noContent">There are currently no recipes.</p>
       ) : (
@@ -72,6 +72,6 @@ export default function Pagination({
         })
       )}
       <CreatePageButtons />
-    </div>
+    </>
   );
 }
