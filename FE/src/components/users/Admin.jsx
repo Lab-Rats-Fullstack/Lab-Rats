@@ -3,6 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import altImg from "../../assets/Default_pfp.jpeg";
 import Pagination from "../general/Pagination";
 import Loading from "../general/Loading";
+import TagInfo from '../general/TagInfo';
 
 const API = "https://culinary-chronicle.onrender.com/api/";
 
@@ -222,7 +223,7 @@ export default function Admin({ token, admin, currentUser }) {
                             {tagsList.map((tag) => {
                               return (
                                 <div className="tag" key={tag.id}>
-                                  <p>{tag.name}</p>
+                                  <TagInfo tag={tag}/>
                                 </div>
                               );
                             })}

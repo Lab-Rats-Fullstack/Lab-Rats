@@ -3,6 +3,7 @@ import AverageStars from "../general/AverageStars";
 import BinderRings from "./BinderRings";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Loading from "../general/Loading";
+import TagInfo from '../general/TagInfo';
 
 export default function SingleRecipe({ token, admin, currentUser }) {
   const [loading, setLoading] = useState(true);
@@ -470,7 +471,7 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                   {recipe.tags.map((tag) => {
                     return (
                       <p key={tag.id}>
-                        <em>{tag.name}</em>
+                        <TagInfo tag={tag}/>
                       </p>
                     );
                   })}
