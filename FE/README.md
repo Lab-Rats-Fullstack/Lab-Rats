@@ -1,8 +1,31 @@
-# React + Vite
+# Culinary Chronicle Front End
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Home Page
+![main page](./src/assets/main-page)
 
-Currently, two official plugins are available:
+## Recipes
+![main page](./src/assets/all-recipes-top)
+![main page](./src/assets/all-recipes-bottom)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Single Recipe
+![main page](./src/assets/single-recipe-card)
+![main page](./src/assets/single-recipe-instructions)
+![main page](./src/assets/single-recipe-reviews)
+
+## Create/Edit Recipe
+![main page](./src/assets/create-recipe-top)
+![main page](./src/assets/create-recipe-bottom)
+![main page](./src/assets/edit-recipe)
+
+## Login 
+![main page](./src/assets/login)
+
+## Account 
+![main page](./src/assets/account-recipes)
+![main page](./src/assets/account-reviews)
+
+## Admin 
+![main page](./src/assets/admin-all-users)
+![main page](./src/assets/admin-reviewed)
+![main page](./src/assets/admin-tags)
+
