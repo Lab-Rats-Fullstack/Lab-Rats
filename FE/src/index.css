@@ -503,6 +503,11 @@ a:focus {
   grid-template-columns: 1fr 1fr 1fr 1fr;
 }
 
+.review button {
+  grid-column: 1/-1;
+  margin: 0 auto;
+}
+
 .reviewButtons {
   width: 100%;
   grid-row-start: 1;
@@ -998,7 +1003,9 @@ a:focus {
   .singleRecipeTitle,
   .ingredientTitle,
   .ingredients,
-  .averageRating {
+  .averageRating,
+  .singleRecipeTags,
+  .review button {
     grid-column: 1/-1;
     grid-row: auto;
   }
@@ -1015,5 +1022,8 @@ a:focus {
   .commentCard,
   .wrapper {
     grid-template-columns: 1fr;
+  }
+  .reviewStars {
+    margin-inline: 1rem;
   }
 }
