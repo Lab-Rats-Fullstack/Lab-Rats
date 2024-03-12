@@ -193,6 +193,11 @@ export default function Admin({ token, admin, currentUser }) {
                                   <p>Name: {user.name}</p>
                                   <p>Email: {user.email}</p>
                                   <p>Review count: {user.reviewcount}</p>
+                                  {user.admin ?
+                                  <p>Admin Status: Admin</p>
+                                  :
+                                  <p>Admin Status: User</p>
+                                  }
                                 </div>
                               );
                             })}
