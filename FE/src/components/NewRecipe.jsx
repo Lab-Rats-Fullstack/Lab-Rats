@@ -122,20 +122,20 @@ export default function NewRecipe({ token, admin }) {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="createRecipeForm">
         <div className="newFormContainer">
-          <div className="formTitleWrapper">
-            <label>Title: </label>
-            <input
-              type="text"
-              id="newFormTitle"
-              name="title"
-              value={title}
-              onChange={(e) => {
-                setTitle(e.target.value);
-              }}
-            />
-          </div>
+            <div className="formTitleWrapper">
+              <label>Title: </label>
+                <input
+                  className="newFormTitle"
+                  type="text"
+                  name="title"
+                  value={title}
+                  onChange={(e) => {
+                    setTitle(e.target.value);
+                  }}
+                />
+            </div>
 
           <div>
             <FormTags tagsList={tagsList} setTagsList={setTagsList} />
@@ -150,110 +150,113 @@ export default function NewRecipe({ token, admin }) {
             />
           )}
 
-          <label>Estimated Time: </label>
-          <select
-            list="times"
-            id="estTime"
-            name="estTime"
-            onChange={(e) => {
-              setEstTime(e.target.value);
-            }}
-          >
-            <option value="15 min">15 min</option>
-            <option value="30 min">30 min</option>
-            <option value="45 min">45 min</option>
-            <option value="60 min">60 min</option>
-            <option value="75 min">75 min</option>
-            <option value="90 min">90 min</option>
-          </select>
+            <label>Estimated Time: </label>
+              <select
+                list="times"
+                id="estTime"
+                className="estTimeInput"
+                name="estTime"
+                onChange={(e) => {
+                  setEstTime(e.target.value);
+                }}
+              >
+                <option value="15 min">15 min</option>
+                <option value="30 min">30 min</option>
+                <option value="45 min">45 min</option>
+                <option value="60 min">60 min</option>
+                <option value="75 min">75 min</option>
+                <option value="90 min">90 min</option>
+              </select>
 
-          <label>Ingredients: </label>
-          {ingredientList.map((singleIngred, index) => {
-            return (
-              <div key={index}>
-                <div className="inputWrap">
-                  <label id="formNumbers">{index + 1}. </label>
-                  <input
-                    type="text"
-                    name="ingredient"
-                    value={singleIngred.ingredient}
-                    onChange={(e) => handleIngredientChange(e, index)}
-                  />
-                  {ingredientList.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleIngredientDelete(index)}
-                    >
-                      -
-                    </button>
-                  )}
-                  {ingredientList.length - 1 === index &&
-                    ingredientList.length < 20 && (
-                      <button type="button" onClick={handleIngredientAdd}>
-                        +
+            <label>Ingredients: </label>
+              {ingredientList.map((singleIngred, index) => {
+                return (
+                  <div key={index}>
+                    <div className="inputWrap">
+                      <label id="formNumbers">{index+1}. </label>
+                      <input
+                        type="text"
+                        name="ingredient"
+                        className="createFormDynInput"
+                        value={singleIngred.ingredient}
+                        onChange={(e) => handleIngredientChange(e, index)}
+                      />
+                      {ingredientList.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleIngredientDelete(index)}
+                          className="createFormButton"
+                        >
+                          -
+                        </button>
+                      )}
+                      {ingredientList.length - 1 === index &&
+                        ingredientList.length < 20 && (
+                          <button type="button" onClick={handleIngredientAdd} className="createFormButton">
+                            +
+                          </button>
+                        )}
+                    </div>
+                  </div>
+                );
+              })}
+
+            <label>Instructions: </label>
+            {instructionList.map((singleInstruct, index) => {
+              return (
+                <div key={index}>
+                  <div className="inputWrap">
+                    <label id="formNumbers">{index+1}. </label>
+                      <input
+                        type="text"
+                        name="instruction"
+                        className="createFormDynInput"
+                        value={singleInstruct.instruction}
+                        onChange={(e) => handleInstructionChange(e, index)}
+                      />
+                    {instructionList.length > 1 && (
+                      <button
+                        type="button"
+                        onClick={() => handleInstructionDelete(index)}
+                        className="createFormButton"
+                      >
+                        -
                       </button>
                     )}
+                    {instructionList.length - 1 === index &&
+                      instructionList.length < 20 && (
+                        <button type="button" onClick={handleInstructionAdd} className="createFormButton">
+                          +
+                        </button>
+                      )}
                 </div>
               </div>
             );
           })}
-
-          <label>Instructions: </label>
-          {instructionList.map((singleInstruct, index) => {
-            return (
-              <div key={index}>
-                <div className="inputWrap">
-                  <label id="formNumbers">{index + 1}. </label>
-                  <input
-                    type="text"
-                    name="instruction"
-                    value={singleInstruct.instruction}
-                    onChange={(e) => handleInstructionChange(e, index)}
-                  />
-                  {instructionList.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleInstructionDelete(index)}
-                    >
-                      -
-                    </button>
-                  )}
-                  {instructionList.length - 1 === index &&
-                    instructionList.length < 20 && (
-                      <button type="button" onClick={handleInstructionAdd}>
+          
+            <label>Notes: </label>
+            {notesList.map((singleNote, index) => {
+              return (
+                <div key={index}>
+                  <div className="inputWrap">
+                    <label id="formNumbers">{index+1}. </label>
+                    <input
+                      type="text"
+                      name="note"
+                      className="createFormDynInput"
+                      value={singleNote.note}
+                      onChange={(e) => handleNoteChange(e, index)}
+                    />
+                    {notesList.length > 1 && (
+                      <button type="button" onClick={() => handleNoteDelete(index)} className="createFormButton">
+                        -
+                      </button>
+                    )}
+                    {notesList.length - 1 === index && notesList.length < 20 && (
+                      <button type="button" onClick={handleNoteAdd} className="createFormButton">
                         +
                       </button>
                     )}
-                </div>
-              </div>
-            );
-          })}
-
-          <label>Notes: </label>
-          {notesList.map((singleNote, index) => {
-            return (
-              <div key={index}>
-                <div className="inputWrap">
-                  <label id="formNumbers">{index + 1}. </label>
-                  <input
-                    type="text"
-                    name="note"
-                    value={singleNote.note}
-                    onChange={(e) => handleNoteChange(e, index)}
-                  />
-                  {notesList.length > 1 && (
-                    <button
-                      type="button"
-                      onClick={() => handleNoteDelete(index)}
-                    >
-                      -
-                    </button>
-                  )}
-                  {notesList.length - 1 === index && notesList.length < 20 && (
-                    <button type="button" onClick={handleNoteAdd}>
-                      +
-                    </button>
-                  )}
                 </div>
               </div>
             );
