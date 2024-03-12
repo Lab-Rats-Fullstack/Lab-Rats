@@ -1,7 +1,7 @@
 import React from "react";
-import NavButton from "./NavButton";
+import NavButton from "../general/NavButton";
 import { Link } from "react-router-dom";
-import AverageStars from "./AverageStars";
+import AverageStars from "../general/AverageStars";
 
 export default function ReviewInfo({ review, currentUser }) {
   return (

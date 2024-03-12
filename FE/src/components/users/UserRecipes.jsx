@@ -1,6 +1,6 @@
 import { useState } from "react";
-import NavButton from "./NavButton";
-import Pagination from "./Pagination";
+import NavButton from "../general/NavButton";
+import Pagination from "../general/Pagination";
 
 export default function UserRecipes({ userData, admin, currentUser }) {
   const [currentRecipes, setCurrentRecipes] = useState([]);

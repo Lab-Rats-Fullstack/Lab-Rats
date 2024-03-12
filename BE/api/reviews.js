@@ -11,21 +11,25 @@ const {
 } = require("../db");
 
 reviewRouter.post("/:recipeId", requireUser, async (req, res, next) => {
-  console.log("inside endpoint");
   const {
     params: { recipeId },
     user: { id: userId },
     body: { title, content, rating },
   } = req;
 
-  const {rows: [potentiallyAlreadyReviewed]} = await client.query(`
+  const {
+    rows: [potentiallyAlreadyReviewed],
+  } = await client.query(
+    `
     SELECT reviews.id
     FROM reviews
     WHERE reviews.userId=$1
     AND reviews.recipeId=$2;
-  `, [userId, recipeId]);
+  `,
+    [userId, recipeId]
+  );
 
-  if (potentiallyAlreadyReviewed){
+  if (potentiallyAlreadyReviewed) {
     next({
       name: "AlreadyReviewedError",
       message: "You cannot review a recipe twice",

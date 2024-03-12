@@ -1,20 +1,16 @@
 import { useEffect, useState } from "react";
-
 import { Routes, Route, useNavigate, useParams } from "react-router-dom";
-import { Link } from "react-router-dom";
 import UserInfo from "./UserInfo";
 import UserRecipes from "./UserRecipes";
 import UserReviews from "./UserReviews";
 import UserComments from "./UserComments";
-import NavButton from "./NavButton";
-import UploadImage from "./UploadImage";
-import defaultImg from "../assets/Default_pfp.jpeg";
-import Loading from "./Loading";
-
+import NavButton from "../general/NavButton";
+import UploadImage from "../general/UploadImage";
+import defaultImg from "../../assets/Default_pfp.jpeg";
+import Loading from "../general/Loading";
 const API = "https://culinary-chronicle.onrender.com/api/";
 
-export default function Account({ token, admin, currentUser }) {
-  const [loading, setLoading] = useState(true);
+export default function NewRecipe({ token, admin, currentUser }) {
   const [userData, setUserData] = useState({});
   const {
     recipes: recipeList = [],
@@ -23,42 +19,36 @@ export default function Account({ token, admin, currentUser }) {
   } = userData;
 
   const [error, setError] = useState(null);
-  const [fail, setFail] = useState(false);
   const navigate = useNavigate();
+  const { userId } = useParams();
   const [update, setUpdate] = useState(0);
 
-  const [updatedUser, setUpdatedUser] = useState({});
-  const [updatedPassword, setUpdatedPassword] = useState({
-    password: "",
-  });
-
-  const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] = useState("");
-
-  const [buttonStatus, setButtonStatus] = useState(true);
   const [userForm, setUserForm] = useState(false);
   const [userBio, setUserBio] = useState(true);
   const [encoded, setEncoded] = useState({});
+  const [loading, setLoading] = useState(true);
 
+  const [updatedUser, setUpdatedUser] = useState({});
   useEffect(() => {
     setUpdatedUser((prev) => {
       return { ...prev, ...encoded };
     });
   }, [encoded]);
-
   useEffect(() => {
     async function userCheck() {
       try {
-        const response = await fetch(`${API}users/me`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        const result = await response.json();
-        if (token !== null) {
+        if (admin === true) {
+          const response = await fetch(`${API}users/${userId}`, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+          const result = await response.json();
+
           setUserData(result);
+          setLoading(false);
           setUpdatedUser({
             imgurl: result.imgurl,
             username: result.username,
@@ -66,9 +56,19 @@ export default function Account({ token, admin, currentUser }) {
             name: result.name,
             admin: result.admin,
           });
-          setLoading(false);
         } else {
-          setFail(true);
+          const response = await fetch(`${API}users/${userId}`);
+          const result = await response.json();
+
+          setUserData(result);
+          setLoading(false);
+          setUpdatedUser({
+            imgurl: result.imgurl,
+            username: result.username,
+            email: result.email,
+            name: result.name,
+            admin: result.admin,
+          });
         }
       } catch (error) {
         setError(error.message);
@@ -78,35 +78,19 @@ export default function Account({ token, admin, currentUser }) {
     userCheck();
   }, [update]);
 
-  async function signIn() {
-    navigate("/login");
-  }
-
-  useEffect(() => {
-    if (token == null) {
-      setLoading(false);
-      setFail(true);
-    }
-  }, [userData]);
-
   async function userUpdate(event) {
     event.preventDefault();
     try {
       if (
         updatedUser.base64 &&
         updatedUser.username == userData.username &&
-        updatedUser.email == userData.email &&
-        updatedUser.name == userData.name &&
-        updatedUser.admin == userData.admin &&
-        updatedPassword.password == ""
+        updatedUser.admin == userData.admin
       ) {
         setUserBio(true);
         setUserForm(false);
         return;
-      } else if (updatedPassword.password === "") {
-        delete updatedPassword.password;
       } else {
-        const response = await fetch(`${API}users/me`, {
+        const response = await fetch(`${API}users/${userId}`, {
           method: "PATCH",
           headers: {
             "Content-Type": "application/json",
@@ -114,11 +98,10 @@ export default function Account({ token, admin, currentUser }) {
           },
           body: JSON.stringify({
             ...updatedUser,
-            ...updatedPassword,
           }),
         });
         const result = await response.json();
-        console.log(result);
+
         setUserData(result);
         setUpdate((version) => version + 1);
         setUserForm(false);
@@ -130,36 +113,16 @@ export default function Account({ token, admin, currentUser }) {
     }
   }
 
-  useEffect(() => {
-    async function enableButton() {
-      try {
-        if (password == confirmPassword) {
-          setButtonStatus(false);
-        } else {
-          setButtonStatus(true);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
-    enableButton();
-  }, [password, confirmPassword]);
-
   return (
     <>
       {" "}
       {loading ? (
         <Loading />
       ) : (
-        <div>
-          {error && <p>{error}</p>}
-          {fail ? (
-            <div className="fail">
-              <h2>Please Sign In</h2>
-              <br />{" "}
-              <button type="login" onClick={signIn}>
-                Log In
-              </button>
+        <div className="wrapper">
+          {error ? (
+            <div className="error">
+              <p>{error}</p>
             </div>
           ) : (
             <div className="userInfoContainer">
@@ -172,35 +135,24 @@ export default function Account({ token, admin, currentUser }) {
                     admin={admin}
                     currentUser={currentUser}
                   />
-                  <button
-                    onClick={() => {
-                      setUserBio(false);
-                      setUserForm(true);
-                      setPassword("");
-                      setConfirmPassword("");
-                    }}
-                  >
-                    Update Profile
-                  </button>
+                  {admin === true && (
+                    <button
+                      onClick={() => {
+                        setUserBio(false);
+                        setUserForm(true);
+                      }}
+                    >
+                      Update Profile
+                    </button>
+                  )}
                 </div>
               )}
-
               {userForm && (
                 <div className="userUpdateForm">
                   <form onSubmit={userUpdate}>
                     <label>
                       Profile Image:
-                      {userData.imgurl && !encoded.base64 && (
-                        <img
-                          src={userData.imgurl}
-                          alt={
-                            userData.username
-                              ? `${userData.username}'s profile picture.`
-                              : "Profile picture"
-                          }
-                        />
-                      )}
-                      {encoded.base64 && (
+                      {encoded && (
                         <img
                           src={encoded.base64 || defaultImg}
                           alt={
@@ -256,35 +208,23 @@ export default function Account({ token, admin, currentUser }) {
                       />
                     </label>
                     <label>
-                      New Password:
-                      <input
-                        type="password"
-                        value={password}
-                        autoComplete="off"
-                        onChange={(e) => {
-                          setPassword(e.target.value);
-                          setUpdatedPassword((prev) => {
+                      Admin Status:
+                      <select
+                        defaultValue={userData.admin}
+                        onChange={(e) =>
+                          setUpdatedUser((prev) => {
                             return {
                               ...prev,
-                              password: e.target.value,
+                              admin: e.target.value,
                             };
-                          });
-                        }}
-                      />
+                          })
+                        }
+                      >
+                        <option value="false">False</option>
+                        <option value="true">True</option>
+                      </select>
                     </label>
-                    <label>
-                      Confirm Password:
-                      <input
-                        type="password"
-                        value={confirmPassword}
-                        autoComplete="off"
-                        onChange={(e) => setConfirmPassword(e.target.value)}
-                      />
-                    </label>
-                    {buttonStatus == true && <p>Passwords must match</p>}
-                    <button type="submit" disabled={buttonStatus}>
-                      Submit
-                    </button>
+                    <button type="submit">Submit</button>
                     <button
                       className="cancel"
                       onClick={() => {
@@ -301,16 +241,16 @@ export default function Account({ token, admin, currentUser }) {
               <div className="userItems">
                 <div className="userItemsNav">
                   <NavButton
-                    location={`/account/recipes`}
-                    buttonText={"My Recipes"}
+                    location={`/users/${userId}/recipes`}
+                    buttonText={"Recipes"}
                   />
                   <NavButton
-                    location={`/account/reviews`}
-                    buttonText={"My Reviews"}
+                    location={`/users/${userId}/reviews`}
+                    buttonText={"Reviews"}
                   />
                   <NavButton
-                    location={`/account/comments`}
-                    buttonText={"My Comments"}
+                    location={`/users/${userId}/comments`}
+                    buttonText={"Comments"}
                   />
                 </div>
                 <div className="itemContent">

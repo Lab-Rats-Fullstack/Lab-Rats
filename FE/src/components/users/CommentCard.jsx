@@ -1,5 +1,5 @@
 import React from "react";
-import NavButton from "./NavButton";
+import NavButton from "../general/NavButton";
 import { Link } from "react-router-dom";
 
 export default function CommentInfo({ comment, currentUser }) {

@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import NavBar from "./components/NavBar";
-import MainPage from "./components/MainPage";
-import Recipes from "./components/Recipes";
-import SingleRecipe from "./components/SingleRecipe";
-import NewRecipe from "./components/NewRecipe";
-import EditRecipe from "./components/EditRecipe";
-import Login from "./components/Login";
-import Account from "./components/Account";
-import UserProfile from "./components/UserProfile";
-import Admin from "./components/Admin";
-import RecipesByTag from "./components/RecipesByTag";
+import NavBar from "./components/general/NavBar";
+import MainPage from "./components/product/MainPage";
+import Recipes from "./components/product/Recipes";
+import SingleRecipe from "./components/product/SingleRecipe";
+import NewRecipe from "./components/product/NewRecipe";
+import EditRecipe from "./components/product/EditRecipe";
+import Login from "./components/users/Login";
+import Account from "./components/users/Account";
+import UserProfile from "./components/users/UserProfile";
+import Admin from "./components/users/Admin";
+import RecipesByTag from "./components/general/RecipesByTag";
 
 function App() {
   const [token, setToken] = useState(null);

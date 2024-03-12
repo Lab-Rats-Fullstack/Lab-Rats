@@ -1,7 +1,7 @@
 import React from "react";
 import TagInfo from "./TagInfo";
 import NavButton from "./NavButton";
-import defaultImg from "../assets/default food.jpeg";
+import defaultImg from "../../assets/default food.jpeg";
 import { Link } from "react-router-dom";
 import AverageStars from "./AverageStars";
 
