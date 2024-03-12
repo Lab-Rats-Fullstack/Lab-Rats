@@ -397,6 +397,9 @@ a:focus {
   width: 80%;
 }
 
+.reviewTitle {
+}
+
 .bottom {
   grid-template-columns: 100%;
 }
@@ -520,6 +523,7 @@ a:focus {
 
 .reviewTitle {
   grid-column: 1/-1;
+  font-size: 1.5rem;
 }
 
 .titleForReview {
@@ -535,6 +539,33 @@ a:focus {
 
 .reviewContent {
   grid-column: 1/-1;
+}
+
+.cardUsername {
+  grid-column: 3/-1;
+}
+.reviewName {
+  grid-column: span 2;
+}
+
+.reviewCard button,
+.commentCard button,
+.commentContent {
+  grid-column: 1/-1;
+}
+
+.reviewRecipeTitle {
+  grid-column: span 2;
+  font-family: "Homemade Apple", cursive;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--clr-accent-two);
+  cursor: pointer;
+}
+
+.reviewRecipeTitle:hover,
+.reviewRecipeTitle:focus {
+  color: var(--clr-accent-three);
 }
 
 .noComments {
@@ -943,5 +974,9 @@ a:focus {
   }
   .buttonContainer {
     grid-row-start: 8;
+  }
+  .reviewCard,
+  .commentCard {
+    grid-template-columns: 1fr;
   }
 }
