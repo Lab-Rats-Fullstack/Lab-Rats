@@ -74,6 +74,9 @@ export default function Recipes({ token, currentUser, admin }) {
       try {
         const response = await fetch(`${API}tags`);
         const result = await response.json();
+        result.rows.forEach((tag) => {
+          tag['checked'] = false;
+        })
         setTags(result.rows);
       } catch (error) {
         console.error(error);
@@ -98,7 +101,7 @@ export default function Recipes({ token, currentUser, admin }) {
                 onChange={changeSearch}
               />
             </label>
-            <RecipesPageTabs tags={tags} setSelectedTags={setSelectedTags} />
+            <RecipesPageTabs tags={tags} setTags={setTags} setSelectedTags={setSelectedTags} />
           </div>
           {filteredRecipes ? (
             filteredRecipes.length >= 1 ? (
