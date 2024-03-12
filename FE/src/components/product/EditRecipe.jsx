@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import FormTags from "./FormTags.jsx";
-import UploadImage from "./UploadImage.jsx";
-import defaultImg from "../assets/Default_pfp.jpeg";
-import Loading from "./Loading.jsx";
+import UploadImage from "../general/UploadImage.jsx";
+import defaultImg from "../../assets/Default_pfp.jpeg";
+import Loading from "../general/Loading.jsx";
 
 export default function EditRecipe({ token, admin }) {
   const [loading, setLoading] = useState(true);
@@ -188,7 +188,7 @@ export default function EditRecipe({ token, admin }) {
       notes: noteArray,
       tags: tagsArray,
     };
-    console.log(data.title);
+
     try {
       const response = await fetch(`${API}recipes/${recipeId}`, {
         method: "PATCH",
@@ -200,7 +200,6 @@ export default function EditRecipe({ token, admin }) {
       });
 
       const result = await response.json();
-      console.log(result);
     } catch (error) {
       console.error(error);
     }

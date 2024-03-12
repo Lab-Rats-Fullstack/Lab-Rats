@@ -25,7 +25,7 @@ export default function Pagination({
   function sliceRecipes(arr) {
     const start = (currentPage - 1) * numberPerPage;
     const end = start + numberPerPage;
-    console.log(start, end);
+
     const currentPageRecipes = arr.slice(start, end);
     setCurrentRecipes(currentPageRecipes);
   }

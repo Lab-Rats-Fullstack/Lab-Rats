@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormTags from "./FormTags.jsx";
-import UploadImage from "./UploadImage.jsx";
-import defaultImg from "../assets/Default_pfp.jpeg";
+import UploadImage from "../general/UploadImage.jsx";
+import defaultImg from "../../assets/Default_pfp.jpeg";
 
 export default function NewRecipe({ token, admin }) {
   const nav = useNavigate();
@@ -99,7 +99,7 @@ export default function NewRecipe({ token, admin }) {
       notes: noteArray,
       tags: tagsArray,
     };
-    console.log(data);
+    
     try {
       const response = await fetch(
         "https://culinary-chronicle.onrender.com/api/recipes",

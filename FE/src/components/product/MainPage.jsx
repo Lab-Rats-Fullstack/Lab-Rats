@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useEffect } from "react";
-import RecipeCard from "./RecipeCard";
-import Tabs from "./Tabs";
-import Loading from "./Loading";
+import RecipeCard from "../general/RecipeCard";
+import Tabs from "../general/Tabs";
+import Loading from "../general/Loading";
 
 export default function MainPage({ token, currentUser }) {
   const [loading, setLoading] = useState(true);

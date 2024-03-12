@@ -2,7 +2,7 @@ import React from "react";
 
 export default function RecipesPageTabs({ tags, setSelectedTags }) {
   async function handleClick(e){
-    console.log(e.target.checked)
+   
     if (e.target.checked) {
     setSelectedTags((prev)=>[...prev, e.target.value])
     } else {

@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useState } from "react";
-import RecipeCard from "./RecipeCard";
+import RecipeCard from "../general/RecipeCard";
 import RecipesPageTabs from "./RecipesPageTabs";
-import Loading from "./Loading";
-import Pagination from "./Pagination";
+import Loading from "../general/Loading";
+import Pagination from "../general/Pagination";
 
 export default function Recipes({ token, currentUser, admin }) {
   const API = "https://culinary-chronicle.onrender.com/api/";

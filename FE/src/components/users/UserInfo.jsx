@@ -1,10 +1,7 @@
 import React from "react";
-import altImg from "../assets/Default_pfp.jpeg";
+import altImg from "../../assets/Default_pfp.jpeg";
 
 export default function UserInfo({ token, admin, userData, currentUser }) {
-  // console.log(userData);
-  console.log(admin);
-  console.log(currentUser);
   return (
     <div>
       <img
@@ -12,7 +9,8 @@ export default function UserInfo({ token, admin, userData, currentUser }) {
         alt={`User account image for ${userData.username}`}
       />
       <p className="usersUsername">{userData.username}</p>
-      {token !== null && (admin === true || currentUser === userData.username) && (
+      {token !== null &&
+        (admin === true || currentUser === userData.username) && (
           <div className="userPersonal">
             <p>Name: {userData.name}</p>
             <p>Email: {userData.email}</p>

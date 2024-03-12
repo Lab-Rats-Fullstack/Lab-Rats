@@ -39,7 +39,6 @@ export default function FormTags({ tagsList, setTagsList }) {
   function handleTagAdd() {
     // sets the initial value for new tag selects
     setTagsList([...tagsList, { tag: tags[0]?.name }]);
-    console.log(tagsList);
   }
 
   //   sets initial values for tag options

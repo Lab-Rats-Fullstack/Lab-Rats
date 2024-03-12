@@ -1,8 +1,8 @@
 import { useState, useEffect, useInsertionEffect } from "react";
-import AverageStars from "./AverageStars";
+import AverageStars from "../general/AverageStars";
 import BinderRings from "./BinderRings";
 import { useParams, useNavigate, Link } from "react-router-dom";
-import Loading from "./Loading";
+import Loading from "../general/Loading";
 
 export default function SingleRecipe({ token, admin, currentUser }) {
   const [loading, setLoading] = useState(true);

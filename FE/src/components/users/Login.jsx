@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Loading from "./Loading";
+import Loading from "../general/Loading";
 
 const API = "https://culinary-chronicle.onrender.com/api/";
 

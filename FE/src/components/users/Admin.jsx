@@ -1,8 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
-import altImg from "../assets/Default_pfp.jpeg";
-import Pagination from "./Pagination";
-import Loading from "./Loading";
+import altImg from "../../assets/Default_pfp.jpeg";
+import Pagination from "../general/Pagination";
+import Loading from "../general/Loading";
 
 const API = "https://culinary-chronicle.onrender.com/api/";
 
