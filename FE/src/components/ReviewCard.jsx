@@ -8,15 +8,15 @@ export default function ReviewInfo({ review, currentUser }) {
     <div className="reviewCard" key={review.id}>
       <p className="reviewTitle">Review: {review.title}</p>
       <p className="reviewContent">{review.content}</p>
-      <Link className="recipeTitle" to={`/recipes/${review.recipe.id}`}>
+      <Link className="reviewRecipeTitle" to={`/recipes/${review.recipe.id}`}>
         {review.recipe.title}
       </Link>
-      <p className="username">
+      <p className="cardUsername">
         by{" "}
         {review.recipe.user.username === currentUser ? (
           <Link to={`/account`}>@{review.recipe.user.username}</Link>
         ) : (
-          <Link className="username" to={`/users/${review.recipe.user.id}`}>
+          <Link to={`/users/${review.recipe.user.id}`}>
             @{review.recipe.user.username}
           </Link>
         )}
