@@ -66,12 +66,12 @@ export default function FormTags({ tagsList, setTagsList }) {
                 })}
               </select>
               {tagsList.length > 1 && (
-                <button type="button" onClick={() => handleTagDelete(index)}>
+                <button type="button" onClick={() => handleTagDelete(index)} className="createFormButton">
                   -
                 </button>
               )}
               {tagsList.length - 1 === index && tagsList.length < 5 && (
-                <button type="button" onClick={handleTagAdd}>
+                <button type="button" onClick={handleTagAdd} className="createFormButton">
                   +
                 </button>
               )}
