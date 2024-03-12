@@ -4,7 +4,7 @@ import altImg from "../assets/Default_pfp.jpeg";
 import Pagination from "./Pagination";
 import Loading from "./Loading";
 
-const API = "http://localhost:3000/api/";
+const API = "https://culinary-chronicle.onrender.com/api/";
 
 export default function Admin({ token, admin, currentUser }) {
   const [loading, setLoading] = useState(true);
@@ -133,7 +133,7 @@ export default function Admin({ token, admin, currentUser }) {
                 <p>Only admin are granted access to this page.</p>
               ) : (
                 <>
-                  <div className="wrapper">
+                  <div className="adminWrapper">
                     <div className="adminNav">
                       <button
                         onClick={() => {

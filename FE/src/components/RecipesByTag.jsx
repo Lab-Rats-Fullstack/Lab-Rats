@@ -5,7 +5,7 @@ import Pagination from "./Pagination";
 
 export default function RenderRecipesByTag() {
   const [loading, setLoading] = useState(true);
-  const API = "http://localhost:3000/api";
+  const API = "https://culinary-chronicle.onrender.com/api";
   const [recipeList, setRecipeList] = useState([]);
   const [currentRecipes, setCurrentRecipes] = useState([]);
   const { tagname } = useParams();
