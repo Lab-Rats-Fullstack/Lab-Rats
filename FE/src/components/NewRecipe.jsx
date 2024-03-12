@@ -89,6 +89,7 @@ export default function NewRecipe({ token, admin }) {
     let instructArray = rearrange(instructionList, "instruction");
     let noteArray = rearrange(notesList, "note");
     let tagsArray = rearrange(tagsList, "tag");
+    if(!tagsArray[0]) tagsArray[0] = "";
 
     let data = {
       title: title,
