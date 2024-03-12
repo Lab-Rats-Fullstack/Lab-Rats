@@ -397,6 +397,9 @@ a:focus {
   width: 80%;
 }
 
+.reviewTitle {
+}
+
 .bottom {
   grid-template-columns: 100%;
 }
@@ -520,6 +523,7 @@ a:focus {
 
 .reviewTitle {
   grid-column: 1/-1;
+  font-size: 1.5rem;
 }
 
 .titleForReview {
@@ -535,6 +539,33 @@ a:focus {
 
 .reviewContent {
   grid-column: 1/-1;
+}
+
+.cardUsername {
+  grid-column: 3/-1;
+}
+.reviewName {
+  grid-column: span 2;
+}
+
+.reviewCard button,
+.commentCard button,
+.commentContent {
+  grid-column: 1/-1;
+}
+
+.reviewRecipeTitle {
+  grid-column: span 2;
+  font-family: "Homemade Apple", cursive;
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--clr-accent-two);
+  cursor: pointer;
+}
+
+.reviewRecipeTitle:hover,
+.reviewRecipeTitle:focus {
+  color: var(--clr-accent-three);
 }
 
 .noComments {
@@ -606,6 +637,53 @@ a:focus {
 
 .newRecipeForm div input {
   min-width: 50%;
+}
+
+.formTitleWrapper {
+  display: flex,
+}
+
+.newFormContainer {
+  border: 1px solid var(--clr-accent-two);
+  background-color: var(--clr-accent-four);
+  border-radius: 10px;
+  padding: 2rem;
+  margin: 1rem;
+  display: flex;
+  max-width: 30%;
+  gap: 30px;
+  flex-direction: column;
+  flex-wrap: wrap;
+}
+
+.newFormContainer label {
+  color: #964b42;
+  font-weight: bold;
+  font-size: 20px;
+}
+
+#formNumbers {
+  color: var(--clr-accent-two);
+  font-weight: normal;
+  font-size: 14px;
+}
+
+#newSubmit {
+  background-color: var(--clr-secondary);
+  color: var(--clr-accent-four);
+}
+
+#newFormTitle {
+  max-width: 90%;
+}
+
+.inputWrap {
+  border-bottom: 1px solid #964b42;
+  padding: 10px;
+}
+
+#estTime {
+  margin-right: 74%;
 }
 
 .wrapper {
@@ -897,7 +975,8 @@ a:focus {
   .buttonContainer {
     grid-row-start: 8;
   }
-  .wrapper {
+  .reviewCard,
+  .commentCard {
     grid-template-columns: 1fr;
   }
 }
