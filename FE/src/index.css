@@ -697,13 +697,20 @@ a:focus {
 }
 
 .createRecipeForm {
-  width: 60%;
+  width: 65%;
 }
 
 #estTime {
   margin-right: 74%;
 }
 
+.createFormDynInput {
+  width: 85%;
+}
+
+.newFormTitle {
+  width: 40%;
+}
 
 .wrapper {
   width: 100%;

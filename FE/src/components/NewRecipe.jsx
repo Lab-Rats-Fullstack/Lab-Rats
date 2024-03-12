@@ -125,8 +125,8 @@ export default function NewRecipe({ token, admin }) {
             <div className="formTitleWrapper">
               <label>Title: </label>
                 <input
+                  className="newFormTitle"
                   type="text"
-                  id="newFormTitle"
                   name="title"
                   value={title}
                   onChange={(e) => {
@@ -152,6 +152,7 @@ export default function NewRecipe({ token, admin }) {
               <select
                 list="times"
                 id="estTime"
+                className="estTimeInput"
                 name="estTime"
                 onChange={(e) => {
                   setEstTime(e.target.value);
@@ -174,6 +175,7 @@ export default function NewRecipe({ token, admin }) {
                       <input
                         type="text"
                         name="ingredient"
+                        className="createFormDynInput"
                         value={singleIngred.ingredient}
                         onChange={(e) => handleIngredientChange(e, index)}
                       />
@@ -206,6 +208,7 @@ export default function NewRecipe({ token, admin }) {
                       <input
                         type="text"
                         name="instruction"
+                        className="createFormDynInput"
                         value={singleInstruct.instruction}
                         onChange={(e) => handleInstructionChange(e, index)}
                       />
@@ -238,6 +241,7 @@ export default function NewRecipe({ token, admin }) {
                     <input
                       type="text"
                       name="note"
+                      className="createFormDynInput"
                       value={singleNote.note}
                       onChange={(e) => handleNoteChange(e, index)}
                     />
