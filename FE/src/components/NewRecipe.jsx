@@ -120,7 +120,7 @@ export default function NewRecipe({ token, admin }) {
 
   return (
     <>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handleSubmit} className="createRecipeForm">
         <div className="newFormContainer">
             <div className="formTitleWrapper">
               <label>Title: </label>
@@ -181,13 +181,14 @@ export default function NewRecipe({ token, admin }) {
                         <button
                           type="button"
                           onClick={() => handleIngredientDelete(index)}
+                          className="createFormButton"
                         >
                           -
                         </button>
                       )}
                       {ingredientList.length - 1 === index &&
                         ingredientList.length < 20 && (
-                          <button type="button" onClick={handleIngredientAdd}>
+                          <button type="button" onClick={handleIngredientAdd} className="createFormButton">
                             +
                           </button>
                         )}
@@ -212,13 +213,14 @@ export default function NewRecipe({ token, admin }) {
                       <button
                         type="button"
                         onClick={() => handleInstructionDelete(index)}
+                        className="createFormButton"
                       >
                         -
                       </button>
                     )}
                     {instructionList.length - 1 === index &&
                       instructionList.length < 20 && (
-                        <button type="button" onClick={handleInstructionAdd}>
+                        <button type="button" onClick={handleInstructionAdd} className="createFormButton">
                           +
                         </button>
                       )}
@@ -240,12 +242,12 @@ export default function NewRecipe({ token, admin }) {
                       onChange={(e) => handleNoteChange(e, index)}
                     />
                     {notesList.length > 1 && (
-                      <button type="button" onClick={() => handleNoteDelete(index)}>
+                      <button type="button" onClick={() => handleNoteDelete(index)} className="createFormButton">
                         -
                       </button>
                     )}
                     {notesList.length - 1 === index && notesList.length < 20 && (
-                      <button type="button" onClick={handleNoteAdd}>
+                      <button type="button" onClick={handleNoteAdd} className="createFormButton">
                         +
                       </button>
                     )}
