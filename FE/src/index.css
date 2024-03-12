@@ -8,11 +8,6 @@
   --clr-accent-three: #928d51;
   --clr-accent-four: #ebe9e8;
 }
-
-/* * {
-  border: 1px solid blue;
-} */
-
 body {
   width: 100vw;
   padding: 0;
@@ -83,14 +78,6 @@ input[type="button"]:hover,
 input[type="button"]:focus {
   background-color: var(--clr-accent-three);
   color: var(--clr-accent-four);
-}
-
-.createFormButton {
-  min-width: 1rem;
-  max-width: 2rem;
-  min-height: 1rem;
-  max-height: 2rem;
-  margin: 2px;
 }
 
 a {
@@ -630,7 +617,7 @@ a:focus {
   margin: 1rem;
   grid-template-columns: 1fr 1fr 1fr 1fr;
   gap: 1rem;
-} 
+}
 
 .newRecipeForm input {
   width: 100%;
@@ -663,8 +650,7 @@ a:focus {
   padding: 2rem;
   margin: 1rem;
   display: flex;
-  min-width: 100%;
-  max-width: 100%;
+  max-width: 30%;
   gap: 30px;
   flex-direction: column;
   flex-wrap: wrap;
@@ -696,20 +682,8 @@ a:focus {
   padding: 10px;
 }
 
-.createRecipeForm {
-  width: 65%;
-}
-
 #estTime {
   margin-right: 74%;
-}
-
-.createFormDynInput {
-  width: 85%;
-}
-
-.newFormTitle {
-  width: 40%;
 }
 
 .wrapper {

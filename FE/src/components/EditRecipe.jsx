@@ -213,13 +213,14 @@ export default function EditRecipe({ token, admin }) {
       {loading ? (
         <Loading />
       ) : (
-      <form onSubmit={handleSubmit} className="createRecipeForm">
-        <div className="newFormContainer">
-            <div className="formTitleWrapper">
-              <label>Title: </label>
+        <div>
+          <form onSubmit={handleSubmit}>
+            <div className="newFormContainer">
+              <div className="formTitleWrapper">
+                <label>Title: </label>
                 <input
                   type="text"
-                  className="newFormTitle"
+                  id="newFormTitle"
                   name="title"
                   value={title}
                   onChange={(e) => {
@@ -251,7 +252,6 @@ export default function EditRecipe({ token, admin }) {
               <select
                 list="times"
                 id="estTime"
-                className="estTimeInput"
                 name="estTime"
                 onChange={(e) => {
                   setEstTime(e.target.value);
@@ -274,7 +274,6 @@ export default function EditRecipe({ token, admin }) {
                       <input
                         type="text"
                         name="ingredient"
-                        className="createFormDynInput"
                         value={singleIngred.ingredient}
                         onChange={(e) => handleIngredientChange(e, index)}
                       />
@@ -282,16 +281,13 @@ export default function EditRecipe({ token, admin }) {
                         <button
                           type="button"
                           onClick={() => handleIngredientDelete(index)}
-                          className="createFormButton"
                         >
                           -
                         </button>
                       )}
                       {ingredientList.length - 1 === index &&
                         ingredientList.length < 20 && (
-                          <button type="button" onClick={handleIngredientAdd}
-                          className="createFormButton"
-                          >
+                          <button type="button" onClick={handleIngredientAdd}>
                             +
                           </button>
                         )}
@@ -309,68 +305,63 @@ export default function EditRecipe({ token, admin }) {
                       <input
                         type="text"
                         name="instruction"
-                        className="createFormDynInput"
                         value={singleInstruct.instruction}
                         onChange={(e) => handleInstructionChange(e, index)}
                       />
-                    {instructionList.length > 1 && (
-                      <button
-                        type="button"
-                        onClick={() => handleInstructionDelete(index)}
-                        className="createFormButton"
-                      >
-                        -
-                      </button>
-                    )}
-                    {instructionList.length - 1 === index &&
-                      instructionList.length < 20 && (
-                        <button type="button" onClick={handleInstructionAdd}
-                        className="createFormButton"
+                      {instructionList.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleInstructionDelete(index)}
                         >
-                          +
+                          -
                         </button>
                       )}
-                      
+                      {instructionList.length - 1 === index &&
+                        instructionList.length < 20 && (
+                          <button type="button" onClick={handleInstructionAdd}>
+                            +
+                          </button>
+                        )}
                     </div>
                   </div>
-              );
-            })}
+                );
+              })}
 
-            <label>Notes: </label>
-            {notesList.map((singleNote, index) => {
-              return (
-                <div key={index}>
-                  <div className="inputWrap">
-                    <label id="formNumbers">{index+1}. </label>
-                    <input
-                      type="text"
-                      name="note"
-                      className="createFormDynInput"
-                      value={singleNote.note}
-                      onChange={(e) => handleNoteChange(e, index)}
-                    />
-                    {notesList.length > 1 && (
-                      <button type="button" onClick={() => handleNoteDelete(index)}
-                      className="createFormButton"
-                      >
-                        -
-                      </button>
-                    )}
-                    {notesList.length - 1 === index && notesList.length < 20 && (
-                      <button type="button" onClick={handleNoteAdd}
-                      className="createFormButton"
-                      >
-                        +
-                      </button>
-                    )}
+              <label>Notes: </label>
+              {notesList.map((singleNote, index) => {
+                return (
+                  <div key={index}>
+                    <div className="inputWrap">
+                      <label id="formNumbers">{index + 1}. </label>
+                      <input
+                        type="text"
+                        name="note"
+                        value={singleNote.note}
+                        onChange={(e) => handleNoteChange(e, index)}
+                      />
+                      {notesList.length > 1 && (
+                        <button
+                          type="button"
+                          onClick={() => handleNoteDelete(index)}
+                        >
+                          -
+                        </button>
+                      )}
+                      {notesList.length - 1 === index &&
+                        notesList.length < 20 && (
+                          <button type="button" onClick={handleNoteAdd}>
+                            +
+                          </button>
+                        )}
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
 
-            <input type="submit" id="newSubmit" value="submit changes" />
-          </div>
-      </form>
+              <input type="submit" id="newSubmit" value="submit changes" />
+            </div>
+          </form>
+        </div>
       )}
     </>
   );
