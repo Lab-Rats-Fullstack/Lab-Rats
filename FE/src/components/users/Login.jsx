@@ -13,7 +13,8 @@ export default function Login({ token, setToken, setAdmin, setCurrentUser }) {
   const [registerUsername, setRegisterUsername] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState(null);
-  const [failMessage, setFailMessage] = useState("");
+  const [loginFailMessage, setLoginFailMessage] = useState("");
+  const [registerFailMessage, setRegisterFailMessage] = useState("");
   const navigate = useNavigate();
   const [confirmPassword, setConfirmPassword] = useState("");
   const [buttonStatus, setButtonStatus] = useState(true);
@@ -41,7 +42,8 @@ export default function Login({ token, setToken, setAdmin, setCurrentUser }) {
         alert(userAuth.message);
         navigate("/account");
       } else {
-        setFailMessage(userAuth.message);
+        setLoading(false);
+        setLoginFailMessage(userAuth.message);
       }
     } catch (error) {
       setError(error.message);
@@ -73,7 +75,8 @@ export default function Login({ token, setToken, setAdmin, setCurrentUser }) {
         alert(userAuth.message);
         navigate("/account");
       } else {
-        setFailMessage(userAuth.message);
+        setLoading(false);
+        setRegisterFailMessage(userAuth.message);
       }
     } catch (error) {
       setError(error.message);
@@ -97,94 +100,97 @@ export default function Login({ token, setToken, setAdmin, setCurrentUser }) {
 
   return (
     <>
-      <div className="wrapper">
-        <div className="login">
-          <h2>Sign In</h2>
-          {failMessage && <p>{failMessage}</p>}
-          {error && <p>{error}</p>}
-          <form onSubmit={loginUser}>
-            <label>
-              Username:
-              <input
-                value={loginUsername}
-                required={true}
-                onChange={(e) => setLoginUsername(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              Password:
-              <input
-                type="password"
-                value={loginPassword}
-                required={true}
-                onChange={(e) => setLoginPassword(e.target.value)}
-              />
-            </label>
-            <br />
-            <button type="submit">Submit</button>
-          </form>
-        </div>
-        <div className="register">
-          <h2>New User Registration</h2>
-          {failMessage && <p>{failMessage}</p>}
-          {error && <p>{error}</p>}
-          <form onSubmit={registerUser}>
-            <label>
-              Username:
-              <input
-                value={registerUsername}
-                required={true}
-                onChange={(e) => setRegisterUsername(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              Email:
-              <input
-                value={email}
-                required={true}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              Name:
-              <input
-                value={name}
-                required={true}
-                onChange={(e) => setName(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              Password:
-              <input
-                type="password"
-                value={registerPassword}
-                required={true}
-                onChange={(e) => setRegisterPassword(e.target.value)}
-              />
-            </label>
-            <br />
-            <label>
-              Confirm Password:
-              <input
-                type="password"
-                value={confirmPassword}
-                required={true}
-                onChange={(e) => setConfirmPassword(e.target.value)}
-              />
-            </label>
-            {buttonStatus == true && <p>Passwords must match</p>}
-            <br />
-            <button type="submit" disabled={buttonStatus}>
-              Submit
-            </button>
-          </form>
-        </div>
-        {loading && <Loading />}
-      </div>
+    {loading ?
+    <Loading/>
+    :
+    <div className="wrapper">
+    <div className="login">
+      <h2>Sign In</h2>
+      {loginFailMessage && <p>{loginFailMessage}</p>}
+      {error && <p>{error}</p>}
+      <form onSubmit={loginUser}>
+        <label>
+          Username:
+          <input
+            value={loginUsername}
+            required={true}
+            onChange={(e) => setLoginUsername(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Password:
+          <input
+            type="password"
+            value={loginPassword}
+            required={true}
+            onChange={(e) => setLoginPassword(e.target.value)}
+          />
+        </label>
+        <br />
+        <button type="submit">Submit</button>
+      </form>
+    </div>
+    <div className="register">
+      <h2>New User Registration</h2>
+      {registerFailMessage && <p>{registerFailMessage}</p>}
+      {error && <p>{error}</p>}
+      <form onSubmit={registerUser}>
+        <label>
+          Username:
+          <input
+            value={registerUsername}
+            required={true}
+            onChange={(e) => setRegisterUsername(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Email:
+          <input
+            value={email}
+            required={true}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Name:
+          <input
+            value={name}
+            required={true}
+            onChange={(e) => setName(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Password:
+          <input
+            type="password"
+            value={registerPassword}
+            required={true}
+            onChange={(e) => setRegisterPassword(e.target.value)}
+          />
+        </label>
+        <br />
+        <label>
+          Confirm Password:
+          <input
+            type="password"
+            value={confirmPassword}
+            required={true}
+            onChange={(e) => setConfirmPassword(e.target.value)}
+          />
+        </label>
+        {buttonStatus == true && <p>Passwords must match</p>}
+        <br />
+        <button type="submit" disabled={buttonStatus}>
+          Submit
+        </button>
+      </form>
+    </div>
+  </div>
+  }
     </>
   );
 }
