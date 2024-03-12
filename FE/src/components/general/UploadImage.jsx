@@ -1,14 +1,12 @@
-export default function UploadImage({ setEncoded }) {
+export default function UploadImage({ setFormData, setImage }) {
   function handleChange(e) {
-    const encode = encodeImageFileAsURL(e.target.files[0]);
-  }
-
-  function encodeImageFileAsURL(file) {
-    const reader = new FileReader();
-    reader.onloadend = function () {
-      setEncoded({ base64: reader.result });
-    };
-    reader.readAsDataURL(file);
+    const preset_key = "jcpaub7o";
+    const file = e.target.files[0];
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", preset_key);
+    setImage(URL.createObjectURL(file));
+    setFormData(formData);
   }
 
   return (
