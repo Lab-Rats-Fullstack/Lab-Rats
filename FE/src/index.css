@@ -689,8 +689,8 @@ a:focus {
 .wrapper {
   width: 100%;
   display: grid;
-  place-items: center;
-  /* grid-template-columns: 1fr 1fr; */
+  place-items: start;
+  grid-template-columns: 1fr 1fr;
   gap: 4rem;
   margin-block: 2rem;
 }
