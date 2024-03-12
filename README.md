@@ -8,7 +8,7 @@ Due to the nature of the free tier on Render, loading times when the website has
 
 [Jared May](https://www.linkedin.com/in/jaredmaycoding/)
 
-Allison Meadors  -links here-    
+[Allison Meadors](https://www.linkedin.com/in/allison-meadors/)  
 
 [Larry Reaux](https://www.linkedin.com/in/ljreaux/)
 
