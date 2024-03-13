@@ -11,6 +11,7 @@ const {
   getUserByUsername,
   getUserPageById,
   getPublicUserPageById,
+  destroyUserById
 } = require("../db");
 
 const jwt = require("jsonwebtoken");
@@ -166,13 +167,35 @@ usersRouter.patch("/:userId/", requireAdmin, async (req, res, next) => {
       delete fields.admin;
       next({
         name: "SelfAdminChangeError",
-        message: "You cannot change your own admin status, even as an admin.",
+        message: "You cannot change your own admin status, even as an admin."
       });
     } else {
       const updatedUser = await updateUser(id, fields);
       res.send(updatedUser);
     }
   } catch (err) {
+    next(err);
+  }
+});
+
+usersRouter.delete("/:userId/", requireAdmin, async (req, res, next) => {
+  try{
+    const {userId} = req.params;
+    const tokenId = req.user.id;
+
+    if (userId == tokenId){
+      next({
+        name: "SelfDeleteError",
+        message: "You cannot delete yourself, even as an admin."
+      });
+    } else {
+        const deletedUser = await destroyUserById(userId);
+        res.send({
+          message: "Successfully deleted user.",
+          deletedUser: deletedUser
+        });
+    }
+  } catch (err){
     next(err);
   }
 });
