@@ -11,7 +11,7 @@ export default function NewRecipe({ token, admin }) {
   const [estTime, setEstTime] = useState("");
   const [image, setImage] = useState(null);
   const [formData, setFormData] = useState(null);
-  const [tagsList, setTagsList] = useState([{ tag: "" }]);
+  const [tagsList, setTagsList] = useState([{ tag: "Main" }]);
 
   const [ingredientList, setIngredientList] = useState([{ ingredient: "" }]);
   const [instructionList, setInstructionList] = useState([{ instruction: "" }]);
