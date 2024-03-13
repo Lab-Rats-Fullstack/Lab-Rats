@@ -8,7 +8,7 @@
     "seed": "node ./db/seed.js",
     "start": "node index.js",
     "start:dev": "nodemon index.js",
-    "build": "npm i && npm run seed"
+    "build": "npm i"
   },
   "repository": {
     "type": "git",
