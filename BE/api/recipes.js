@@ -24,7 +24,20 @@ recipesRouter.get("/", async (req, res, next) => {
 recipesRouter.post("/", requireAdmin, async (req, res, next) => {
   const { id: userId } = req.user;
   const { body } = req;
-
+  
+  if(body.tags && body.tags != []){
+    let tagListCheck = body.tags;
+    tagListCheck.forEach((tag)=>{
+      const trimmedTag = tag.replaceAll(' ', '');
+      if (trimmedTag == ''){
+        next({
+          name: "BlankTagError",
+          message: "You cannot submit a blank tag",
+        });
+      }
+    });
+  }
+  
   const recipe = { ...body, userId };
   try {
     const newRecipe = await createRecipe(recipe);
@@ -66,6 +79,20 @@ recipesRouter.get("/:recipeId", async (req, res, next) => {
 recipesRouter.patch("/:recipeId", requireAdmin, async (req, res, next) => {
   const { recipeId } = req.params;
   const { body: fields } = req;
+
+  if(fields.tags && fields.tags != []){
+    let tagListCheck = fields.tags;
+    tagListCheck.forEach((tag)=>{
+      const trimmedTag = tag.replaceAll(' ', '');
+      if (trimmedTag == ''){
+        next({
+          name: "BlankTagError",
+          message: "You cannot submit a blank tag",
+        });
+      }
+    });
+  }
+
   try {
     const updatedRecipe = await updateRecipe(recipeId, fields);
     res.send(updatedRecipe);
