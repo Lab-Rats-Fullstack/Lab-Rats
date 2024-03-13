@@ -41,9 +41,6 @@ export default function FormTags({ tagsList, setTagsList }) {
     setTagsList([...tagsList, { tag: tags[0]?.name }]);
   }
 
-  //   sets initial values for tag options
-  //useEffect(() => setTagsList([{ tag: tags[0]?.name }]), []);
-
   return (
     <>
       <div>
