@@ -658,6 +658,16 @@ async function updateRecipe(recipeId, fields = {}) {
     // and create recipe_tags as necessary
     await addTagsToRecipe(recipeId, tagList);
 
+    await client.query(
+      `
+      DELETE FROM tags 
+      WHERE NOT EXISTS (
+        SELECT FROM recipe_tags 
+        WHERE  recipe_tags.tagId = tags.id
+        );
+      `
+    );
+
     return await getRecipeById(recipeId);
   } catch (error) {
     throw error;
@@ -674,6 +684,16 @@ async function destroyRecipeById(recipeId) {
         WHERE recipeId=$1;
     `,
       [recipeId]
+    );
+
+    await client.query(
+      `
+      DELETE FROM tags 
+      WHERE NOT EXISTS (
+        SELECT FROM recipe_tags 
+        WHERE  recipe_tags.tagId = tags.id
+        );
+      `
     );
 
     const { rows: reviewIds } = await client.query(
