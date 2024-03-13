@@ -74,7 +74,7 @@ export default function NewRecipe({ token, admin, currentUser }) {
       }
     }
     userCheck();
-  }, [update]);
+  }, [update, userId]);
 
   async function userUpdate(event) {
     event.preventDefault();
