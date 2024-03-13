@@ -25,7 +25,7 @@ recipesRouter.post("/", requireAdmin, async (req, res, next) => {
   const { id: userId } = req.user;
   const { body } = req;
   
-  if(body.tags && body.tags != []){
+  if(body.tags && body.tags.length != 0){
     let tagListCheck = body.tags;
     tagListCheck.forEach((tag)=>{
       const trimmedTag = tag.replaceAll(' ', '');
@@ -80,7 +80,7 @@ recipesRouter.patch("/:recipeId", requireAdmin, async (req, res, next) => {
   const { recipeId } = req.params;
   const { body: fields } = req;
 
-  if(fields.tags && fields.tags != []){
+  if(fields.tags && fields.tags.length != 0){
     let tagListCheck = fields.tags;
     tagListCheck.forEach((tag)=>{
       const trimmedTag = tag.replaceAll(' ', '');
