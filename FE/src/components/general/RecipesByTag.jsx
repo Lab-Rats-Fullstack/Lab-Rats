@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import Loading from "./Loading";
 import Pagination from "./Pagination";
 
-export default function RenderRecipesByTag() {
+export default function RenderRecipesByTag({admin}) {
   const [loading, setLoading] = useState(true);
   const API = "https://culinary-chronicle.onrender.com/api";
   const [recipeList, setRecipeList] = useState([]);
@@ -36,7 +36,7 @@ export default function RenderRecipesByTag() {
             currentRecipes={currentRecipes}
             setCurrentRecipes={setCurrentRecipes}
             numberPerPage={3}
-            admin={false}
+            admin={admin}
             currentUser={{}}
             token={null}
           />

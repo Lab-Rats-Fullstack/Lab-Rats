@@ -4,7 +4,7 @@ import RecipeCard from "../general/RecipeCard";
 import Tabs from "../general/Tabs";
 import Loading from "../general/Loading";
 
-export default function MainPage({ token, currentUser }) {
+export default function MainPage({ token, currentUser, admin }) {
   const [loading, setLoading] = useState(true);
   const [recipes, setRecipes] = useState([]);
   const [featRecipe, setFeatRecipe] = useState({});
@@ -93,6 +93,7 @@ export default function MainPage({ token, currentUser }) {
                 key={featRecipe.id}
                 recipe={featRecipe}
                 currentUser={currentUser}
+                admin={admin}
               />
             </div>
           ) : (

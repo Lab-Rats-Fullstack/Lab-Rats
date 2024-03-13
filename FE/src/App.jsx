@@ -31,7 +31,7 @@ function App() {
         <Routes>
           <Route
             path="/"
-            element={<MainPage token={token} currentUser={currentUser} />}
+            element={<MainPage token={token} currentUser={currentUser} admin={admin}/>}
           ></Route>
 
           <Route
@@ -56,7 +56,7 @@ function App() {
           ></Route>
           <Route
             path="/tags/:tagname/recipes"
-            element={<RecipesByTag />}
+            element={<RecipesByTag admin={admin}/>}
           ></Route>
           <Route
             path="/recipes/new"
