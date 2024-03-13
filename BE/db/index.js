@@ -842,6 +842,40 @@ async function destroyTagById(tagId) {
   }
 }
 
+async function destroyTagAndRecipeTagsById(tagId) {
+  try {
+
+    await client.query(
+      `
+      DELETE FROM recipe_tags
+      WHERE tagId=$1;
+      `,
+      [tagId]
+    );
+
+    const {rows: [destroyedTag]} = await client.query(
+      `
+      SELECT name
+      FROM tags
+      WHERE id=$1;
+      `,
+      [tagId]
+    );
+
+    await client.query(
+      `
+      DELETE FROM tags
+      WHERE id=$1;
+      `,
+      [tagId]
+    );
+
+    return destroyedTag;
+  } catch (error) {
+    throw error;
+  }
+}
+
 /**
  * RECIPE_TAGS Methods
  */
@@ -1484,4 +1518,5 @@ module.exports = {
   getReviewById,
   getCommentById,
   getPublicUserPageById,
+  destroyTagAndRecipeTagsById
 };

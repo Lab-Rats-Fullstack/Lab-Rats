@@ -1,7 +1,8 @@
 const express = require("express");
 const tagsRouter = express.Router();
+const { requireAdmin } = require("./utils");
 
-const { getAllTags, getRecipesByTagName } = require("../db");
+const { getAllTags, getRecipesByTagName, destroyTagAndRecipeTagsById } = require("../db");
 
 tagsRouter.get("/", async (req, res, next) => {
   try {
@@ -18,6 +19,19 @@ tagsRouter.get("/:tagName/recipes", async (req, res, next) => {
     const recipes = await getRecipesByTagName(tagName);
     res.send(recipes);
   } catch (err) {
+    next(err);
+  }
+});
+
+tagsRouter.delete("/:tagId", requireAdmin, async (req, res, next) => {
+  const {tagId} = req.params;
+  try{
+    const deletedTag = await destroyTagAndRecipeTagsById(tagId);
+    res.send({
+      message: "Tag successfully deleted.",
+      tagName: deletedTag.name
+    });
+  } catch (err){
     next(err);
   }
 });
