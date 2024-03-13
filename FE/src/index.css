@@ -920,6 +920,7 @@ a:focus {
   position: relative;
   width: fit-content;
   line-height: 1rem;
+  margin-inline: 4rem;
 }
 
 .loading::after {
@@ -952,7 +953,7 @@ a:focus {
 
 /*JARED*/
 
-.clearSelectedTags{
+.clearSelectedTags {
   margin-top: 5%;
   margin-left: auto;
 }
