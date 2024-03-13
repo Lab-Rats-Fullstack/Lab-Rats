@@ -59,7 +59,6 @@ export default function Account({ token, admin, currentUser }) {
             username: result.username,
             email: result.email,
             name: result.name,
-            admin: result.admin,
           });
           setLoading(false);
         } else {
@@ -97,7 +96,6 @@ export default function Account({ token, admin, currentUser }) {
         updatedUser.username == userData.username &&
         updatedUser.email == userData.email &&
         updatedUser.name == userData.name &&
-        updatedUser.admin == userData.admin &&
         updatedPassword.password == ""
       ) {
         setUserBio(true);
