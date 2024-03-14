@@ -5,36 +5,47 @@ export default function FormTags({ tagsList, setTagsList, setBlank, setNotLetter
   const [tags, setTags] = useState([]);
 
   useEffect(()=>{
-    const potentialBlankTag = tagsList.find((singleTag) => {
-      return (singleTag.tag.replaceAll(' ', '') == '');
-    });
+    console.log("tagsList:", tagsList);
+  }, [tagsList]);
 
-    const potentialNonLetterTag = tagsList.find((singleTag) => {
-      function hasOtherCharacters(){
-        if (potentialBlankTag){
-          return false;
-        } else{
-          return (!/^[a-zA-Z]+$/.test(singleTag.tag));
-        }
-      }
-      return (hasOtherCharacters());
-    });
-
-    if(potentialBlankTag){
-      setBlank(true);
-    } else {
+  useEffect(()=>{
+    if (tagsList.length == 0){
       setBlank(false);
-    }
-    if(potentialNonLetterTag){
-      setNotLetter(true);
-    } else {
       setNotLetter(false);
-    }
-    if(potentialBlankTag || potentialNonLetterTag){
-      setDisabled(true);
-    } else {
       setDisabled(false);
+    } else {
+      const potentialBlankTag = tagsList.find((singleTag) => {
+        return (singleTag.tag.replaceAll(' ', '') == '');
+      });
+  
+      const potentialNonLetterTag = tagsList.find((singleTag) => {
+        function hasOtherCharacters(){
+          if (singleTag.tag.replaceAll(' ', '') == ''){
+            return false;
+          } else{
+            return (!/^[a-zA-Z]+$/.test(singleTag.tag));
+          }
+        }
+        return (hasOtherCharacters());
+      });
+  
+      if(potentialBlankTag){
+        setBlank(true);
+      } else {
+        setBlank(false);
+      }
+      if(potentialNonLetterTag){
+        setNotLetter(true);
+      } else {
+        setNotLetter(false);
+      }
+      if(potentialBlankTag || potentialNonLetterTag){
+        setDisabled(true);
+      } else {
+        setDisabled(false);
+      }
     }
+    
   }, [tagsList])
 
   useEffect(() => {
@@ -86,7 +97,7 @@ export default function FormTags({ tagsList, setTagsList, setBlank, setNotLetter
           singleTag.tag = '';
           singleTag.selectMode = false;
         } else {
-          singleTag.tag = 'Main';
+          singleTag.tag = tags[0].name;
           singleTag.selectMode = true;
         }
         return singleTag;
@@ -102,6 +113,12 @@ export default function FormTags({ tagsList, setTagsList, setBlank, setNotLetter
     <>
       <div>
         <label>Tags: </label>
+        {tagsList.length == 0 ?
+          <button type="button" onClick={handleTagAdd} className="createFormButton">
+          +
+          </button>
+        :
+        <>
         {tagsList.map((singleTag, index) => {
           return (
             <div key={index}>
@@ -131,7 +148,7 @@ export default function FormTags({ tagsList, setTagsList, setBlank, setNotLetter
                       </label>
               </>
               }
-              {tagsList.length > 1 && (
+              {tagsList.length > 0 && (
                 <button type="button" onClick={() => handleTagDelete(index)} className="createFormButton">
                   -
                 </button>
@@ -144,6 +161,8 @@ export default function FormTags({ tagsList, setTagsList, setBlank, setNotLetter
             </div>
           );
         })}
+      </>
+      }
       </div>
     </>
   );

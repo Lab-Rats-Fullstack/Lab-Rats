@@ -187,7 +187,13 @@ export default function EditRecipe({ token, admin }) {
     let ingredArray = rearrange(ingredientList, "ingredient");
     let instructArray = rearrange(instructionList, "instruction");
     let noteArray = rearrange(notesList, "note");
-    let tagsArray = rearrange(tagsList, "tag");
+    let tagsArray;
+    if (tagsList.length != 0){
+      tagsArray = rearrange(tagsList, "tag");
+    } else {
+      tagsArray = [];
+    }
+    
 
     let data = {
       title: title,
@@ -196,7 +202,7 @@ export default function EditRecipe({ token, admin }) {
       procedure: instructArray,
       ...urlObj,
       notes: noteArray,
-      tags: tagsArray,
+      tags: tagsArray
     };
 
     try {

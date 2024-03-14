@@ -11,7 +11,7 @@ export default function NewRecipe({ token, admin }) {
   const [estTime, setEstTime] = useState("");
   const [image, setImage] = useState(null);
   const [formData, setFormData] = useState(null);
-  const [tagsList, setTagsList] = useState([{ tag: "Main", selectMode: true }]);
+  const [tagsList, setTagsList] = useState([]);
 
   const [blank, setBlank] = useState(false);
   const [notLetter, setNotLetter] = useState(false);
@@ -97,8 +97,12 @@ export default function NewRecipe({ token, admin }) {
     let ingredArray = rearrange(ingredientList, "ingredient");
     let instructArray = rearrange(instructionList, "instruction");
     let noteArray = rearrange(notesList, "note");
-    let tagsArray = rearrange(tagsList, "tag");
-    if (!tagsArray[0]) tagsArray[0] = "";
+    let tagsArray;
+    if (tagsList.length != 0){
+      tagsArray = rearrange(tagsList, "tag");
+    } else {
+      tagsArray = [];
+    }
 
     let data = {
       title: title,
@@ -107,7 +111,7 @@ export default function NewRecipe({ token, admin }) {
       procedure: instructArray,
       ...urlObj,
       notes: noteArray,
-      tags: tagsArray,
+      ...(tagsArray.length !=0  && {tags: tagsArray})
     };
 
     try {
