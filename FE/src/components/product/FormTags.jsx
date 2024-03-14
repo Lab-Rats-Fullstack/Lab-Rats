@@ -4,6 +4,18 @@ export default function FormTags({ tagsList, setTagsList, setDisabled }) {
   const API = "https://culinary-chronicle.onrender.com/api";
   const [tags, setTags] = useState([]);
 
+  useEffect(()=>{
+    const potentialBlankTag = tagsList.find((singleTag) => {
+      return (singleTag.tag.replaceAll(' ', '') == '');
+    });
+    if(potentialBlankTag){
+      setDisabled(true);
+    } else {
+      setDisabled(false);
+    }
+    console.log("tagsList", tagsList);
+  }, [tagsList])
+
   useEffect(() => {
     async function getTags() {
       try {
@@ -31,14 +43,6 @@ export default function FormTags({ tagsList, setTagsList, setDisabled }) {
             return singleTag;
           }
         });
-        const potentialBlankTag = newList.find((singleTag) => {
-          return (singleTag.tag.replaceAll(' ', '') == '');
-        });
-        if(potentialBlankTag){
-          setDisabled(true);
-        } else {
-          setDisabled(false);
-        }
         setTagsList(newList);
   }
 
@@ -70,15 +74,6 @@ export default function FormTags({ tagsList, setTagsList, setDisabled }) {
       }
     });
 
-    const potentialBlankTag = newList.find((singleTag) => {
-      return (singleTag.tag.replaceAll(' ', '') == '');
-    });
-    if(potentialBlankTag){
-      setDisabled(true);
-    } else {
-      setDisabled(false);
-    }
-
     setTagsList(newList);
   }
 
@@ -88,7 +83,7 @@ export default function FormTags({ tagsList, setTagsList, setDisabled }) {
         <label>Tags: </label>
         {tagsList.map((singleTag, index) => {
           return (
-            <div key={singleTag.tag}>
+            <div key={index}>
               {singleTag.selectMode ?
                 <>
                   <button onClick={(e)=>changeModeOnSingleTag(e,index)}>Write your own tag</button>
