@@ -18,6 +18,7 @@ export default function Admin({ token, admin, currentUser }) {
   const [tagsList, setTagsList] = useState({});
   const [deleteATag, setDeleteATag] = useState(false);
   const [deleteAreYouSure, setDeleteAreYouSure] = useState(false);
+  const [fetchTagsAgain, setFetchTagsAgain] = useState(0);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -85,12 +86,14 @@ export default function Admin({ token, admin, currentUser }) {
           }
         });
         setTagsList(potentialAllTags.rows);
+        setDeleteATag(false);
+        setDeleteAreYouSure(false);
       } else {
         setError("No Tags.");
       }
     }
     allTagsFetch();
-  }, []);
+  }, [fetchTagsAgain]);
 
   useEffect(() => {
     async function allUsersFetch() {
@@ -155,8 +158,13 @@ export default function Admin({ token, admin, currentUser }) {
         throw(error);
       }
     }
-    const potDeletedTag = await tagDeleteFetch(tagId);
-    console.log("potDeletedTag", potDeletedTag);
+    const potDeletedTag = await tagDeleteFetch(tagId.id);
+    if (potDeletedTag.tagName) {
+      setFetchTagsAgain((prev)=>prev + 1);
+    } else {
+      setError("No Tags.");
+    }
+
   }
 
   return (
