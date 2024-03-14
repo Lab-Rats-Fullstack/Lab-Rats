@@ -5,7 +5,6 @@ export default function FormTags({ tagsList, setTagsList, setBlank, setNotLetter
   const [tags, setTags] = useState([]);
 
   useEffect(()=>{
-    console.log('tagsList', tagsList);
     const potentialBlankTag = tagsList.find((singleTag) => {
       return (singleTag.tag.replaceAll(' ', '') == '');
     });
@@ -18,7 +17,6 @@ export default function FormTags({ tagsList, setTagsList, setBlank, setNotLetter
           return (!/^[a-zA-Z]+$/.test(singleTag.tag));
         }
       }
-      console.log("hasOtherCharacters ", singleTag.tag, hasOtherCharacters());
       return (hasOtherCharacters());
     });
 
