@@ -1,14 +1,38 @@
 import { useState, useEffect } from "react";
 
-export default function FormTags({ tagsList, setTagsList, setDisabled }) {
+export default function FormTags({ tagsList, setTagsList, setBlank, setNotLetter, setDisabled }) {
   const API = "https://culinary-chronicle.onrender.com/api";
   const [tags, setTags] = useState([]);
 
   useEffect(()=>{
+    console.log('tagsList', tagsList);
     const potentialBlankTag = tagsList.find((singleTag) => {
       return (singleTag.tag.replaceAll(' ', '') == '');
     });
+
+    const potentialNonLetterTag = tagsList.find((singleTag) => {
+      function hasOtherCharacters(){
+        if (potentialBlankTag){
+          return false;
+        } else{
+          return (!/^[a-zA-Z]+$/.test(singleTag.tag));
+        }
+      }
+      console.log("hasOtherCharacters ", singleTag.tag, hasOtherCharacters());
+      return (hasOtherCharacters());
+    });
+
     if(potentialBlankTag){
+      setBlank(true);
+    } else {
+      setBlank(false);
+    }
+    if(potentialNonLetterTag){
+      setNotLetter(true);
+    } else {
+      setNotLetter(false);
+    }
+    if(potentialBlankTag || potentialNonLetterTag){
       setDisabled(true);
     } else {
       setDisabled(false);

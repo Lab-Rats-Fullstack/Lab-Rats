@@ -12,6 +12,9 @@ export default function NewRecipe({ token, admin }) {
   const [image, setImage] = useState(null);
   const [formData, setFormData] = useState(null);
   const [tagsList, setTagsList] = useState([{ tag: "Main", selectMode: true }]);
+
+  const [blank, setBlank] = useState(false);
+  const [notLetter, setNotLetter] = useState(false);
   const [disabled, setDisabled] = useState(false);
 
   const [ingredientList, setIngredientList] = useState([{ ingredient: "" }]);
@@ -145,7 +148,7 @@ export default function NewRecipe({ token, admin }) {
           </div>
 
           <div>
-            <FormTags tagsList={tagsList} setTagsList={setTagsList} setDisabled={setDisabled} />
+            <FormTags tagsList={tagsList} setTagsList={setTagsList} setBlank={setBlank} setNotLetter={setNotLetter} setDisabled={setDisabled} />
           </div>
 
           <label>Image: </label>
@@ -284,7 +287,8 @@ export default function NewRecipe({ token, admin }) {
               </div>
             );
           })}
-          {disabled && <p>Cannot Submit Until There Are No Blank Tags.</p>}
+          {blank && <p>Cannot submit until there are no blank tags.</p>}
+          {notLetter && <p>Cannot submit until there are no tags with characters other than letters.</p>}
           <input type="submit" disabled={disabled} id={disabled ? "disabledNewSubmit" : "newSubmit"} value="submit" />
         </div>
       </form>
