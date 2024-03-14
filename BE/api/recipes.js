@@ -91,8 +91,9 @@ recipesRouter.patch("/:recipeId", requireAdmin, async (req, res, next) => {
         });
       }
     });
-  }
+  } 
 
+  
   try {
     const updatedRecipe = await updateRecipe(recipeId, fields);
     res.send(updatedRecipe);
