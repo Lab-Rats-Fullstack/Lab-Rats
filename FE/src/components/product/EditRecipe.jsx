@@ -19,6 +19,7 @@ export default function EditRecipe({ token, admin }) {
   const [image, setImage] = useState(null);
   const [formData, setFormData] = useState(null);
   const [tagsList, setTagsList] = useState([{ tag: "" }]);
+  const [disabled, setDisabled] = useState(false);
 
   const [ingredientList, setIngredientList] = useState([{ ingredient: "" }]);
   const [instructionList, setInstructionList] = useState([{ instruction: "" }]);
@@ -87,7 +88,7 @@ export default function EditRecipe({ token, admin }) {
             let initialArray = [];
             if (newTagsArray.length >= 1) {
               newTagsArray.map((element) => {
-                initialArray.push({ tag: element });
+                initialArray.push({ tag: element, selectMode: true});
               });
             }
             setTagsList(initialArray);
@@ -234,7 +235,7 @@ export default function EditRecipe({ token, admin }) {
             </div>
 
             <div>
-              <FormTags tagsList={tagsList} setTagsList={setTagsList} />
+              <FormTags tagsList={tagsList} setTagsList={setTagsList} setDisabled={setDisabled} />
             </div>
 
             <label>Image: </label>
@@ -380,8 +381,8 @@ export default function EditRecipe({ token, admin }) {
                 </div>
               );
             })}
-
-            <input type="submit" id="newSubmit" value="submit changes" />
+          {disabled && <p>Cannot Submit Until There Are No Blank Tags.</p>}
+          <input type="submit" disabled={disabled} id={disabled ? "disabledNewSubmit" : "newSubmit"} value="submit changes" />
           </div>
         </form>
       )}
