@@ -16,6 +16,8 @@ export default function Admin({ token, admin, currentUser }) {
   const [usersList, setUsersList] = useState([]);
   const [reviewedRecipesList, setReviewedRecipesList] = useState([]);
   const [tagsList, setTagsList] = useState({});
+  const [deleteATag, setDeleteATag] = useState(false);
+  const [deleteAreYouSure, setDeleteAreYouSure] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
 
@@ -75,6 +77,13 @@ export default function Admin({ token, admin, currentUser }) {
 
       const potentialAllTags = await allTagsCheck();
       if (potentialAllTags.rows.length > 0) {
+        potentialAllTags.rows.forEach((tag, index) => {
+          if (index == 0){
+            tag['checked'] = true;
+          } else {
+            tag['checked'] = false;
+          }
+        });
         setTagsList(potentialAllTags.rows);
       } else {
         setError("No Tags.");
@@ -112,6 +121,43 @@ export default function Admin({ token, admin, currentUser }) {
     }
     allUsersFetch();
   }, []);
+
+  function handleClick(tagId){
+    let newTagsList = tagsList.map((tag) => {
+      if (tag.id == tagId){
+        tag.checked = true;
+      } else {
+        tag.checked = false;
+      }
+
+      return tag;
+    });
+
+    setTagsList(newTagsList);
+  }
+
+  async function handleTagDelete(){
+    const tagId = tagsList.find((tag)=>{
+      return tag.checked;
+    });
+    async function tagDeleteFetch(tagId){
+      try {
+        const response = await fetch(`${API}tags/${tagId}`, {
+          method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `BEARER ${token}`
+          },
+        });
+        const json = await response.json();
+        return json;
+      } catch(error){
+        throw(error);
+      }
+    }
+    const potDeletedTag = await tagDeleteFetch(tagId);
+    console.log("potDeletedTag", potDeletedTag);
+  }
 
   return (
     <>
@@ -218,7 +264,8 @@ export default function Admin({ token, admin, currentUser }) {
                             />
                           </div>
                         )}
-                        {recipeTags && (
+                        {(recipeTags && !deleteATag) && 
+                        <>
                           <div className="allTags">
                             {tagsList.map((tag) => {
                               return (
@@ -228,7 +275,33 @@ export default function Admin({ token, admin, currentUser }) {
                               );
                             })}
                           </div>
-                        )}
+                          <button onClick={()=>setDeleteATag(true)}>Delete A Tag</button>
+                        </>
+                        }
+                        {(recipeTags && deleteATag) &&
+                        <>
+                          <div className="allTags">
+                            {tagsList.map((tag) => {
+                              return (
+                                <label htmlFor={tag.name} key={tag.name}>
+                                  <input type="radio" value={tag.name} checked={tag.checked} onChange={()=>handleClick(tag.id)}/>
+                                  {tag.name}
+                                </label>
+                              );
+                            })}
+                          </div>
+                          <button onClick={()=>setDeleteATag(false)}>Cancel</button>
+                          {deleteAreYouSure ?
+                          <>
+                            <p>Are you sure you want to delete this tag? It will be deleted from all its recipes.</p>
+                            <button onClick={handleTagDelete}>Yes</button>
+                            <button onClick={()=>setDeleteAreYouSure(false)}>No</button>
+                          </>
+                          :
+                          <button onClick={()=>setDeleteAreYouSure(true)}>Delete Selected Tag</button>
+                          } 
+                        </>
+                        } 
                       </div>
                     )}
                   </div>
