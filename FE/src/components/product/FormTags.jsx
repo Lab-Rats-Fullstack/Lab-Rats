@@ -4,10 +4,6 @@ export default function FormTags({ tagsList, setTagsList, setDisabled }) {
   const API = "https://culinary-chronicle.onrender.com/api";
   const [tags, setTags] = useState([]);
 
-  useEffect(()=>{
-    console.log(tagsList);
-  }, [tagsList]);
-
   useEffect(() => {
     async function getTags() {
       try {
@@ -38,7 +34,6 @@ export default function FormTags({ tagsList, setTagsList, setDisabled }) {
         const potentialBlankTag = newList.find((singleTag) => {
           return (singleTag.tag.replaceAll(' ', '') == '');
         });
-        console.log("potential Blank", potentialBlankTag);
         if(potentialBlankTag){
           setDisabled(true);
         } else {
