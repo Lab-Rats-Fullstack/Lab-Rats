@@ -4,8 +4,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <script src="https://cdn.jsdelivr.net/npm/prismjs@1.29.0/prism.min.js"></script>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/prism-theme-one-dark@1.0.0/prism-onedark.min.css">
-    <link rel="stylesheet" href="styles.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/prism-theme-one-dark@1.0.0/prism-onedark.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
     <title>API Documentation</title>
   </head>
   <body>
@@ -16,7 +19,7 @@
             <a href="#users">USERS</a>
             <ul>
               <li>
-               <a href="#users-get">GET /</a> 
+                <a href="#users-get">GET /</a>
               </li>
               <li>
                 <a href="#users-register">POST /register</a>
@@ -31,9 +34,15 @@
                 <a href="#users-me-patch">PATCH /me</a>
               </li>
               <li>
-                <a href="#users-userId-get">GET /:userId
-              </li></a>
-            </ul> 
+                <a href="#users-userId-get">GET /:userId</a>
+              </li>
+              <li>
+                <a href="#users-userId-patch">PATCH /:userId</a>
+              </li>
+              <li>
+                <a href="#users-userId-delete">DELETE /:userId</a>
+              </li>
+            </ul>
           </li>
           <li>
             <a href="#recipes">RECIPES</a>
@@ -67,6 +76,7 @@
             <ul>
               <li><a href="#tags-get-all">GET /</a></li>
               <li><a href="#tags-get-recipes">GET /:tagName/recipes</a></li>
+              <li><a href="#tags-delete">DELETE /:tagId</a></li>
             </ul>
           </li>
         </ul>
@@ -76,18 +86,12 @@
       <h1>API Documentation</h1>
 
       <div id="users">
-        <h2>
-          USERS
-        </h2>
+        <h2>USERS</h2>
         <div id="users-get">
           <h3>GET /</h3>
           <ul>
-            <li>
-              GET request for info on all user.
-            </li>
-            <li>
-              No parameters or authorization required.
-            </li>
+            <li>GET request for info on all user.</li>
+            <li>No parameters or authorization required.</li>
           </ul>
           <div class="request">
             <h3>Sample Request</h3>
@@ -135,11 +139,9 @@ async function getAllUsers() {
         <div id="users-register">
           <h3>POST /register</h3>
           <ul>
+            <li>POST request for registering a new user.</li>
             <li>
-              POST request for registering a new user.
-            </li>
-            <li>
-              Headers: 
+              Headers:
               <ul>
                 <li>None</li>
               </ul>
@@ -193,11 +195,9 @@ async function registerUser(username, name, email, password) {
         <div id="users-login">
           <h3>POST /login</h3>
           <ul>
+            <li>POST request for logging in a user.</li>
             <li>
-              POST request for logging in a user.
-            </li>
-            <li>
-              Headers: 
+              Headers:
               <ul>
                 <li>None</li>
               </ul>
@@ -247,11 +247,9 @@ async function loginUser(username, password) {
         <div id="users-me-get">
           <h3>GET /me</h3>
           <ul>
+            <li>GET request for getting your account information.</li>
             <li>
-              GET request for getting your account information.
-            </li>
-            <li>
-              Headers: 
+              Headers:
               <ul>
                 <li>Authorization with JWT</li>
               </ul>
@@ -303,11 +301,9 @@ async function getMyAccount(token) {
         <div id="users-me-patch">
           <h3>PATCH /me</h3>
           <ul>
+            <li>PATCH request for your account info.</li>
             <li>
-              PATCH request for your account info.
-            </li>
-            <li>
-              Headers: 
+              Headers:
               <ul>
                 <li>Authentication with JWT.</li>
               </ul>
@@ -367,17 +363,15 @@ async function updateMyAccount(token, username, name, email, password, imgurl) {
         <div id="users-userId-get">
           <h3>GET /:userId</h3>
           <ul>
+            <li>GET request for another user's account info.</li>
             <li>
-              GET request for another user's account info.
-            </li>
-            <li>
-              Headers: 
+              Headers:
               <ul>
                 <li>Optional authentication with JWT and admin check.</li>
               </ul>
             </li>
             <li>
-              Body: 
+              Body:
               <ul>
                 <li>none</li>
               </ul>
@@ -496,11 +490,9 @@ async function getUser(userId) {
         <div id="users-userId-patch">
           <h3>PATCH /me</h3>
           <ul>
+            <li>PATCH request for user account info.</li>
             <li>
-              PATCH request for user account info.
-            </li>
-            <li>
-              Headers: 
+              Headers:
               <ul>
                 <li>Authentication with JWT and Admin status required.</li>
               </ul>
@@ -558,21 +550,61 @@ async function updateUserAccount(token, username, name, email, password, imgurl)
             </pre>
           </div>
         </div>
+        <div id="users-userId-delete">
+          <h3>DELETE /:userId</h3>
+          <ul>
+            <li>DELETE request for user.</li>
+            <li>
+              Headers:
+              <ul>
+                <li>Authentication with JWT and admin check.</li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>none</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request for user</h3>
+            <pre>
+              <code class="language-js">
+async function deleteUser(userId) {
+  const user = await fetch(`${APIURL}/api/users/${userId}`, {
+  method: 'DELETE',
+  headers: {
+    'Content-Type': 'application/json',
+    'Authorization': `Bearer ${token}`
+  }
+});
+  return user.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response for user</h3>
+            <pre>
+              <code class="language-js">
+{
+  message: "Successfully deleted user.",
+  deletedUser: deletedUser
+}
+              </code>
+            </pre>
+          </div>
+        </div>
       </div>
 
       <div id="recipes">
-        <h2>
-          RECIPES
-        </h2>
+        <h2>RECIPES</h2>
         <div id="recipes-get">
           <h3>GET /</h3>
           <ul>
-            <li>
-              GET request for info on all recipes.
-            </li>
-            <li>
-              No parameters or authorization required.
-            </li>
+            <li>GET request for info on all recipes.</li>
+            <li>No parameters or authorization required.</li>
           </ul>
           <div class="request">
             <h3>Sample Request</h3>
@@ -659,32 +691,30 @@ async function getRecipes() {
           </div>
         </div>
         <div id="recipes-post">
-            <h3>POST /</h3>
-            <ul>
-              <li>
-                POST request for a new recipe.
-              </li>
-              <li>
-                Headers:
-                <ul>
-                  <li>Authorization with JWT, admin role required.</li>
-                </ul>
-              </li>
-              <li>
-                Body:
-                <ul>
-                  <li>title</li>
-                  <li>ingredients (array)</li>
-                  <li>procedure (array)</li>
-                  <li>imgUrl</li>
-                  <li>notes (array, optional)</li>
-                  <li>tags (array, optional)</li>
-                </ul>
-              </li>
-            </ul>
-            <div class="request">
-              <h3>Sample Request</h3>
-              <pre>
+          <h3>POST /</h3>
+          <ul>
+            <li>POST request for a new recipe.</li>
+            <li>
+              Headers:
+              <ul>
+                <li>Authorization with JWT, admin role required.</li>
+              </ul>
+            </li>
+            <li>
+              Body:
+              <ul>
+                <li>title</li>
+                <li>ingredients (array)</li>
+                <li>procedure (array)</li>
+                <li>imgUrl</li>
+                <li>notes (array, optional)</li>
+                <li>tags (array, optional)</li>
+              </ul>
+            </li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
                 <code class="language-js">
 async function createRecipe(token, title, ingredients, procedure, imgUrl, notes, tags) {
   const recipe = await fetch(`${APIURL}/api/recipes`, {
@@ -706,10 +736,10 @@ async function createRecipe(token, title, ingredients, procedure, imgUrl, notes,
 }
                 </code>
               </pre>
-            </div>
-            <div class="response">
-              <h3>Sample Response</h3>
-              <pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
                 <code class="language-js">
   {
     "id": 14,
@@ -742,28 +772,22 @@ async function createRecipe(token, title, ingredients, procedure, imgUrl, notes,
 }
                 </code>
               </pre>
-            </div>
+          </div>
         </div>
         <div id="recipes-reviewed">
           <h3>GET /reviewedRecipes</h3>
           <ul>
+            <li>GET request for info on all reviewed recipes.</li>
             <li>
-              GET request for info on all reviewed recipes.
-            </li>
-            <li>
-              Headers: 
+              Headers:
               <ul>
-                <li>
-                  Authorization with JWT, admin role required.
-                </li>
+                <li>Authorization with JWT, admin role required.</li>
               </ul>
             </li>
             <li>
-              Body: 
+              Body:
               <ul>
-                <li>
-                  None.
-                </li>
+                <li>None.</li>
               </ul>
             </li>
           </ul>
@@ -832,12 +856,8 @@ async function getReviewedRecipes(token) {
         <div id="recipes-recipeId-get">
           <h3>GET /:recipeId</h3>
           <ul>
-            <li>
-              GET request for info on a specific recipe.
-            </li>
-            <li>
-              No parameters or authorization required.
-            </li>
+            <li>GET request for info on a specific recipe.</li>
+            <li>No parameters or authorization required.</li>
           </ul>
           <div class="request">
             <h3>Sample Request</h3>
@@ -929,15 +949,11 @@ async function getRecipe(recipeId) {
         <div id="recipes-recipeId-patch">
           <h3>PATCH /:recipeId</h3>
           <ul>
+            <li>PATCH request for a specific recipe.</li>
             <li>
-              PATCH request for a specific recipe.
-            </li>
-            <li>
-              Headers: 
+              Headers:
               <ul>
-                <li>
-                  Authorization with JWT, admin role required.
-                </li>
+                <li>Authorization with JWT, admin role required.</li>
               </ul>
             </li>
             <li>
@@ -1017,15 +1033,11 @@ async function patchRecipe(recipeId, token, title, ingredients, procedure, imgUr
         <div id="recipes-recipeId-delete">
           <h3>DELETE /:recipeId</h3>
           <ul>
+            <li>DELETE request for a specific recipe.</li>
             <li>
-              DELETE request for a specific recipe.
-            </li>
-            <li>
-              Headers: 
+              Headers:
               <ul>
-                <li>
-                  Authorization with JWT, admin role required.
-                </li>
+                <li>Authorization with JWT, admin role required.</li>
               </ul>
             </li>
             <li>
@@ -1069,16 +1081,13 @@ async function deleteRecipe(recipeId, token) {
       <div id="reviews">
         <h2>REVIEWS</h2>
         <div id="review-post">
-          <h3>
-           POST /:recipeId
-          </h3>
+          <h3>POST /:recipeId</h3>
           <ul>
             <li>POST request for a new Review.</li>
-            <li>Headers: 
+            <li>
+              Headers:
               <ul>
-                <li>
-                  Authentication with JWT.
-                </li>
+                <li>Authentication with JWT.</li>
               </ul>
             </li>
             <li>
@@ -1136,20 +1145,14 @@ async function postReview(recipeId, token, content, rating) {
           </div>
         </div>
         <div id="review-patch">
-          <h3>
-            PATCH /:reviewId
-          </h3>
+          <h3>PATCH /:reviewId</h3>
           <ul>
             <li>PATCH request for a single review.</li>
             <li>
               Headers:
               <ul>
-                <li>
-                  Authentication with JWT.
-                </li>
-                <li>
-                  Checks for authorized user or admin.
-                </li>
+                <li>Authentication with JWT.</li>
+                <li>Checks for authorized user or admin.</li>
               </ul>
             </li>
             <li>
@@ -1217,20 +1220,14 @@ async function patchReview(reviewId, token, content, rating) {
           </div>
         </div>
         <div id="review-delete">
-          <h3>
-            DELETE /:reviewId
-          </h3>
+          <h3>DELETE /:reviewId</h3>
           <ul>
             <li>DELETE request for a single review.</li>
             <li>
               Headers:
               <ul>
-                <li>
-                  Authentication with JWT.
-                </li>
-                <li>
-                  Checks for authorized user or admin.
-                </li>
+                <li>Authentication with JWT.</li>
+                <li>Checks for authorized user or admin.</li>
               </ul>
             </li>
           </ul>
@@ -1279,21 +1276,14 @@ async function deleteReview(reviewId, token) {
       <div id="comments">
         <h2>COMMENTS</h2>
         <div id="comment-post">
-          <h3>
-           POST /:reviewId
-          </h3>
+          <h3>POST /:reviewId</h3>
           <ul>
+            <li>POST request for a new Comment.</li>
             <li>
-              POST request for a new Comment.
-            </li>
-            <li>Headers: 
+              Headers:
               <ul>
-                <li>
-                  Authentication with JWT.
-                </li>
-                <li>
-                  Only one per user.
-                </li>
+                <li>Authentication with JWT.</li>
+                <li>Only one per user.</li>
               </ul>
             </li>
             <li>
@@ -1345,20 +1335,14 @@ async function postComment(reviewId, token, content) {
           </div>
         </div>
         <div id="comment-patch">
-          <h3>
-            PATCH /:commentId
-          </h3>
+          <h3>PATCH /:commentId</h3>
           <ul>
             <li>PATCH request for a single comment.</li>
             <li>
               Headers:
               <ul>
-                <li>
-                  Authentication with JWT.
-                </li>
-                <li>
-                  Checks for authorized user or admin.
-                </li>
+                <li>Authentication with JWT.</li>
+                <li>Checks for authorized user or admin.</li>
               </ul>
             </li>
             <li>
@@ -1421,20 +1405,14 @@ return comment.json();
           </div>
         </div>
         <div id="comment-delete">
-          <h3>
-            DELETE /:commentId
-          </h3>
+          <h3>DELETE /:commentId</h3>
           <ul>
             <li>DELETE request for a single comment.</li>
             <li>
               Headers:
               <ul>
-                <li>
-                  Authentication with JWT.
-                </li>
-                <li>
-                  Checks for authorized user or admin.
-                </li>
+                <li>Authentication with JWT.</li>
+                <li>Checks for authorized user or admin.</li>
               </ul>
             </li>
           </ul>
@@ -1479,18 +1457,14 @@ async function deleteComment(commentId, token) {
           </div>
         </div>
       </div>
-        
+
       <div id="tags">
         <h2>TAGS</h2>
         <div id="tags-get-all">
           <h3>GET /</h3>
           <ul>
-            <li>
-              GET request for info on all tags.
-            </li>
-            <li>
-              No parameters or authorization required.
-            </li>
+            <li>GET request for info on all tags.</li>
+            <li>No parameters or authorization required.</li>
           </ul>
           <div class="request">
             <h3>Sample Request</h3>
@@ -1531,12 +1505,8 @@ async function getAllTags() {
         <div id="tags-get-one">
           <h3>GET /:tagName/recipes</h3>
           <ul>
-            <li>
-              GET request for info recipes with a given tag.
-            </li>
-            <li>
-              No parameters or authorization required.
-            </li>
+            <li>GET request for info recipes with a given tag.</li>
+            <li>No parameters or authorization required.</li>
           </ul>
           <div class="request">
             <h3>Sample Request</h3>
@@ -1593,8 +1563,42 @@ async function getRecipesByTag(tagName) {
             </pre>
           </div>
         </div>
+        <div id="tags-delete">
+          <h3>DELETE /:tagId</h3>
+          <ul>
+            <li>DELETE request for a tag.</li>
+            <li>Authentication with JWT and admin role required.</li>
+          </ul>
+          <div class="request">
+            <h3>Sample Request</h3>
+            <pre>
+              <code class="language-js">
+async function deleteTag() {
+  const tag = await fetch(`${APIURL}/api/tags`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${token}`
+    }
+  });
+  return tag.json();
+}
+              </code>
+            </pre>
+          </div>
+          <div class="response">
+            <h3>Sample Response</h3>
+            <pre>
+              <code class="language-js">
+{
+  message: "Tag successfully deleted.",
+  tagName: deletedTag.name
+}
+              </code>
+            </pre>
+          </div>
+        </div>
       </div>
-
     </main>
   </body>
 </html>
