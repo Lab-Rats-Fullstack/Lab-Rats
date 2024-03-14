@@ -13,7 +13,6 @@ export default function FormTags({ tagsList, setTagsList, setDisabled }) {
     } else {
       setDisabled(false);
     }
-    console.log("tagsList", tagsList);
   }, [tagsList])
 
   useEffect(() => {
