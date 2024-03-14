@@ -34,6 +34,11 @@ recipesRouter.post("/", requireAdmin, async (req, res, next) => {
           name: "BlankTagError",
           message: "You cannot submit a blank tag",
         });
+      } else if (!/^[a-zA-Z]+$/.test(tag)){
+        next({
+          name: "NonAlphabetError",
+          message: "You cannot submit a tag with characters outside of the alphabet",
+        });
       }
     });
   }
@@ -89,11 +94,15 @@ recipesRouter.patch("/:recipeId", requireAdmin, async (req, res, next) => {
           name: "BlankTagError",
           message: "You cannot submit a blank tag",
         });
+      } else if (!/^[a-zA-Z]+$/.test(tag)){
+        next({
+          name: "NonAlphabetError",
+          message: "You cannot submit a tag with characters outside of the alphabet",
+        });
       }
     });
   } 
 
-  
   try {
     const updatedRecipe = await updateRecipe(recipeId, fields);
     res.send(updatedRecipe);
