@@ -162,7 +162,7 @@ export default function Admin({ token, admin, currentUser }) {
     if (potDeletedTag.tagName) {
       setFetchTagsAgain((prev)=>prev + 1);
     } else {
-      setError("No Tags.");
+      setError("Could Not Delete Tag.");
     }
 
   }
