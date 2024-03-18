@@ -18,7 +18,7 @@ Main page:
 - features a random recipe each time Main page is accessed so that more recipes are seen
 
 Recipes page:
-- contains all recipes in pagination for easier viewing
+- contains all recipes in RecipePagination for easier viewing
 - has a search bar that will search for recipes via Title and category tags
 - has a category tag filter for faster searches
 

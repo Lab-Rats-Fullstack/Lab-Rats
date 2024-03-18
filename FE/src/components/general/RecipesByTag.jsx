@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import Loading from "./Loading";
-import Pagination from "./Pagination";
+import RecipePagination from "./RecipePagination";
 
 export default function RenderRecipesByTag({admin}) {
   const [loading, setLoading] = useState(true);
@@ -31,7 +31,7 @@ export default function RenderRecipesByTag({admin}) {
         <Loading />
       ) : (
         <div className="recipesContainer">
-          <Pagination
+          <RecipePagination
             recipeList={recipeList}
             currentRecipes={currentRecipes}
             setCurrentRecipes={setCurrentRecipes}
