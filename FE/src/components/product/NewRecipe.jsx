@@ -11,7 +11,11 @@ export default function NewRecipe({ token, admin }) {
   const [estTime, setEstTime] = useState("");
   const [image, setImage] = useState(null);
   const [formData, setFormData] = useState(null);
-  const [tagsList, setTagsList] = useState([{ tag: "Main" }]);
+  const [tagsList, setTagsList] = useState([]);
+
+  const [blank, setBlank] = useState(false);
+  const [notLetter, setNotLetter] = useState(false);
+  const [disabled, setDisabled] = useState(false);
 
   const [ingredientList, setIngredientList] = useState([{ ingredient: "" }]);
   const [instructionList, setInstructionList] = useState([{ instruction: "" }]);
@@ -93,8 +97,12 @@ export default function NewRecipe({ token, admin }) {
     let ingredArray = rearrange(ingredientList, "ingredient");
     let instructArray = rearrange(instructionList, "instruction");
     let noteArray = rearrange(notesList, "note");
-    let tagsArray = rearrange(tagsList, "tag");
-    if (!tagsArray[0]) tagsArray[0] = "";
+    let tagsArray;
+    if (tagsList.length != 0){
+      tagsArray = rearrange(tagsList, "tag");
+    } else {
+      tagsArray = [];
+    }
 
     let data = {
       title: title,
@@ -103,7 +111,7 @@ export default function NewRecipe({ token, admin }) {
       procedure: instructArray,
       ...urlObj,
       notes: noteArray,
-      tags: tagsArray,
+      ...(tagsArray.length !=0  && {tags: tagsArray})
     };
 
     try {
@@ -144,7 +152,7 @@ export default function NewRecipe({ token, admin }) {
           </div>
 
           <div>
-            <FormTags tagsList={tagsList} setTagsList={setTagsList} />
+            <FormTags tagsList={tagsList} setTagsList={setTagsList} setBlank={setBlank} setNotLetter={setNotLetter} setDisabled={setDisabled} />
           </div>
 
           <label>Image: </label>
@@ -283,8 +291,9 @@ export default function NewRecipe({ token, admin }) {
               </div>
             );
           })}
-
-          <input type="submit" id="newSubmit" value="submit" />
+          {blank && <p>Cannot submit until there are no blank tags.</p>}
+          {notLetter && <p>Cannot submit until there are no tags with characters other than letters.</p>}
+          <input type="submit" disabled={disabled} id={disabled ? "disabledNewSubmit" : "newSubmit"} value="submit" />
         </div>
       </form>
     </>

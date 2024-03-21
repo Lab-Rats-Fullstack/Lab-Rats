@@ -3,7 +3,8 @@ import AverageStars from "../general/AverageStars";
 import BinderRings from "./BinderRings";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import Loading from "../general/Loading";
-import TagInfo from '../general/TagInfo';
+import TagInfo from "../general/TagInfo";
+import StarButtons from "../general/StarButtons";
 
 export default function SingleRecipe({ token, admin, currentUser }) {
   const [loading, setLoading] = useState(true);
@@ -104,20 +105,12 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                 onChange={(e) => setReviewTitle(e.target.value)}
               ></input>
             </label>
-            <label>
+            <label className="starButtonContainer">
               Rating:{" "}
-              <select
-                id="stars"
-                value={reviewRating}
-                onChange={(e) => setReviewRating(e.target.value)}
-                name="stars"
-              >
-                <option value={1}>1</option>
-                <option value={2}>2</option>
-                <option value={3}>3</option>
-                <option value={4}>4</option>
-                <option value={5}>5</option>
-              </select>
+              <StarButtons
+                setReviewRating={setReviewRating}
+                reviewRating={reviewRating}
+              />
             </label>
             <label>
               Content:{" "}
@@ -433,6 +426,8 @@ export default function SingleRecipe({ token, admin, currentUser }) {
     }
   }
 
+  useEffect(() => console.log(reviewRating), [reviewRating]);
+
   return (
     <>
       {" "}
@@ -471,7 +466,7 @@ export default function SingleRecipe({ token, admin, currentUser }) {
                   {recipe.tags.map((tag) => {
                     return (
                       <p key={tag.id}>
-                        <TagInfo tag={tag}/>
+                        <TagInfo tag={tag} />
                       </p>
                     );
                   })}

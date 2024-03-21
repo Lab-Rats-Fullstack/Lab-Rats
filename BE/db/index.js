@@ -640,23 +640,34 @@ async function updateRecipe(recipeId, fields = {}) {
       return await getRecipeById(recipeId);
     }
 
-    // make any new tags that need to be made
-    const tagList = await createTags(tags);
-    const tagListIdString = tagList.map((tag) => `${tag.id}`).join(", ");
+    if (tags.length == 0){
+      await client.query (
+        `
+        DELETE FROM recipe_tags
+        WHERE recipeId=$1
+        `,
+        [recipeId]
+      )
+    } else {
+        // make any new tags that need to be made
+        const tagList = await createTags(tags);
+        const tagListIdString = tagList.map((tag) => `${tag.id}`).join(", ");
 
-    // delete any recipe_tags from the database which aren't in that tagList
-    await client.query(
-      `
-      DELETE FROM recipe_tags
-      WHERE tagId
-      NOT IN (${tagListIdString})
-      AND recipeId=$1;
-    `,
-      [recipeId]
-    );
+        // delete any recipe_tags from the database which aren't in that tagList
+        await client.query(
+          `
+          DELETE FROM recipe_tags
+          WHERE tagId
+          NOT IN (${tagListIdString})
+          AND recipeId=$1;
+        `,
+          [recipeId]
+        );
 
-    // and create recipe_tags as necessary
-    await addTagsToRecipe(recipeId, tagList);
+        // and create recipe_tags as necessary
+        await addTagsToRecipe(recipeId, tagList);
+
+    }
 
     await client.query(
       `

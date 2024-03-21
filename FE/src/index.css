@@ -56,7 +56,7 @@ img {
   object-fit: cover;
 }
 
-button,
+button:not(.star),
 input[type="button"] {
   font-family: "Fira Sans Condensed", sans-serif;
   font-weight: 400;
@@ -797,8 +797,18 @@ a:focus {
     39% 35%
   );
   display: inline-block;
-  height: 4em;
   width: 4em;
+  aspect-ratio: 1;
+}
+
+.starButtonContainer {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.starButton {
+  background-color: var(--clr-accent-three);
+  width: 1.5rem;
 }
 
 .average {
