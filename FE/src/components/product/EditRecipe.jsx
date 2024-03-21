@@ -20,6 +20,10 @@ export default function EditRecipe({ token, admin }) {
   const [formData, setFormData] = useState(null);
   const [tagsList, setTagsList] = useState([{ tag: "" }]);
 
+  const [blank, setBlank] = useState(false);
+  const [notLetter, setNotLetter] = useState(false);
+  const [disabled, setDisabled] = useState(false);
+
   const [ingredientList, setIngredientList] = useState([{ ingredient: "" }]);
   const [instructionList, setInstructionList] = useState([{ instruction: "" }]);
   const [notesList, setNotesList] = useState([{ note: "" }]);
@@ -87,7 +91,7 @@ export default function EditRecipe({ token, admin }) {
             let initialArray = [];
             if (newTagsArray.length >= 1) {
               newTagsArray.map((element) => {
-                initialArray.push({ tag: element });
+                initialArray.push({ tag: element, selectMode: true});
               });
             }
             setTagsList(initialArray);
@@ -183,7 +187,13 @@ export default function EditRecipe({ token, admin }) {
     let ingredArray = rearrange(ingredientList, "ingredient");
     let instructArray = rearrange(instructionList, "instruction");
     let noteArray = rearrange(notesList, "note");
-    let tagsArray = rearrange(tagsList, "tag");
+    let tagsArray;
+    if (tagsList.length != 0){
+      tagsArray = rearrange(tagsList, "tag");
+    } else {
+      tagsArray = [];
+    }
+    
 
     let data = {
       title: title,
@@ -192,7 +202,7 @@ export default function EditRecipe({ token, admin }) {
       procedure: instructArray,
       ...urlObj,
       notes: noteArray,
-      tags: tagsArray,
+      tags: tagsArray
     };
 
     try {
@@ -234,7 +244,7 @@ export default function EditRecipe({ token, admin }) {
             </div>
 
             <div>
-              <FormTags tagsList={tagsList} setTagsList={setTagsList} />
+              <FormTags tagsList={tagsList} setTagsList={setTagsList} setBlank={setBlank} setNotLetter={setNotLetter} setDisabled={setDisabled} />
             </div>
 
             <label>Image: </label>
@@ -380,8 +390,9 @@ export default function EditRecipe({ token, admin }) {
                 </div>
               );
             })}
-
-            <input type="submit" id="newSubmit" value="submit changes" />
+          {blank && <p>Cannot submit until there are no blank tags.</p>}
+          {notLetter && <p>Cannot submit until there are no tags with characters other than letters.</p>}
+          <input type="submit" disabled={disabled} id={disabled ? "disabledNewSubmit" : "newSubmit"} value="submit changes" />
           </div>
         </form>
       )}
