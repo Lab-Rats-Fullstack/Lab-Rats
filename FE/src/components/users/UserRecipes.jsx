@@ -1,6 +1,6 @@
 import { useState } from "react";
 import NavButton from "../general/NavButton";
-import Pagination from "../general/Pagination";
+import RecipePagination from "../general/RecipePagination";
 
 export default function UserRecipes({ userData, admin, currentUser }) {
   const [currentRecipes, setCurrentRecipes] = useState([]);
@@ -12,7 +12,7 @@ export default function UserRecipes({ userData, admin, currentUser }) {
         {admin === true && currentUser === userData.username && (
           <NavButton location={`/recipes/new`} buttonText={"Create Recipe"} />
         )}
-        <Pagination
+        <RecipePagination
           recipeList={recipeList}
           currentRecipes={currentRecipes}
           setCurrentRecipes={setCurrentRecipes}

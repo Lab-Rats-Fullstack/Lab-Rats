@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import altImg from "../../assets/Default_pfp.jpeg";
-import Pagination from "../general/Pagination";
+import RecipePagination from "../general/RecipePagination";
 import Loading from "../general/Loading";
 import TagInfo from '../general/TagInfo';
+import Pagination from "../general/Pagination";
 
 const API = "https://culinary-chronicle.onrender.com/api/";
 
@@ -125,6 +126,39 @@ export default function Admin({ token, admin, currentUser }) {
     allUsersFetch();
   }, []);
 
+  const UserCard = ({user})=> {
+    return <>
+    <div className="userCard" key={user.id}>
+      <img
+        src={user.imgurl || altImg}
+        alt={`User account image for ${user.username}`}
+      />
+      <h3>Username:</h3>
+      {user.username === currentUser ? (
+        <Link className="username" to={`/account`}>
+          @{user.username}
+        </Link>
+      ) : (
+        <Link
+          className="username"
+          to={`/users/${user.id}`}
+        >
+          @{user.username}
+        </Link>
+      )}
+      <p>Name: {user.name}</p>
+      <p>Email: {user.email}</p>
+      <p>Review count: {user.reviewcount}</p>
+      {user.admin ?
+      <p>Admin Status: Admin</p>
+      :
+      <p>Admin Status: User</p>
+      }
+    </div>
+    </>
+  }
+  const [currentCards, setCurrentCards] = useState([])
+
   function handleClick(tagId){
     let newTagsList = tagsList.map((tag) => {
       if (tag.id == tagId){
@@ -225,43 +259,26 @@ export default function Admin({ token, admin, currentUser }) {
                         {allUsers && (
                           <div className="allUsers">
                             <h2>All Users</h2>
-                            {usersList.map((user) => {
+                            {/* {usersList.map((user) => {
                               return (
-                                <div className="userCard" key={user.id}>
-                                  <img
-                                    src={user.imgurl || altImg}
-                                    alt={`User account image for ${user.username}`}
-                                  />
-                                  <h3>Username:</h3>
-                                  {user.username === currentUser ? (
-                                    <Link className="username" to={`/account`}>
-                                      @{user.username}
-                                    </Link>
-                                  ) : (
-                                    <Link
-                                      className="username"
-                                      to={`/users/${user.id}`}
-                                    >
-                                      @{user.username}
-                                    </Link>
-                                  )}
-                                  <p>Name: {user.name}</p>
-                                  <p>Email: {user.email}</p>
-                                  <p>Review count: {user.reviewcount}</p>
-                                  {user.admin ?
-                                  <p>Admin Status: Admin</p>
-                                  :
-                                  <p>Admin Status: User</p>
-                                  }
-                                </div>
+                                <UserCard user={user}/>
                               );
-                            })}
+                            })} */}
+                            <Pagination
+                         Card={UserCard}
+                         cardArr={usersList}
+                         currentCards={currentCards}
+                         setCurrentCards={setCurrentCards}
+                         cardType={"user"}
+                         numberPerPage={3}
+                         currentUser={currentUser}
+                         />
                           </div>
                         )}
                         {reviewedRecipes && (
                           <div className="reviewedRecipes">
                             <h2>All Reviewed Recipes</h2>
-                            <Pagination
+                            <RecipePagination
                               recipeList={reviewedRecipesList}
                               currentRecipes={currentRecipes}
                               setCurrentRecipes={setCurrentRecipes}

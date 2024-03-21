@@ -1,17 +1,22 @@
-import React from 'react';
+import React, { useState } from 'react';
 import ReviewCard from './ReviewCard';
+import Pagination from '../general/Pagination';
 
 export default function UserReviews ({userData, currentUser}) {
     const {reviews: reviewList=[]} = userData;
+    const [currentCards, setCurrentCards] = useState([])
     return (
         <div className="userReviewContainer">
-            <div className = 'userReviews'>
-                <h2>Reviews</h2>
-                {reviewList == "" ? <p className="noContent">There are currently no reviews.</p> : reviewList.map((review)=>{
-                    return (
-                        <ReviewCard key ={review.id} review = {review} currentUser={currentUser}/>
-                    )
-                })}
+            <div>
+                <Pagination
+                Card={ReviewCard}
+                cardArr={reviewList}
+                currentCards={currentCards}
+                setCurrentCards={setCurrentCards}
+                cardType={"review"}
+                numberPerPage={3}
+                currentUser={currentUser}
+                />
             </div>
         </div>
     )
